@@ -1,0 +1,34 @@
+{
+  "name": "budget-auto-repair",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "generate-types": "wrangler types"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^14.1.3",
+    "@astrojs/preact": "^6.0.1",
+    "@astrojs/sitemap": "^3.7.3",
+    "@fontsource/ibm-plex-sans": "^5.3.0",
+    "@fontsource/space-grotesk": "^5.3.0",
+    "@tailwindcss/vite": "^4.3.3",
+    "astro": "^7.1.1",
+    "browser-image-compression": "^2.0.2",
+    "preact": "^10.29.7",
+    "resend": "^6.17.2",
+    "tailwindcss": "^4.3.3",
+    "wrangler": "^4.112.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "typescript": "^6.0.3"
+  }
+}

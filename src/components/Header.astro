@@ -1,0 +1,109 @@
+---
+import Icon from './Icon.astro';
+import { business } from '../lib/business';
+
+const navLinks = [
+  { href: '/', label: 'Home' },
+  { href: '/services', label: 'Services' },
+  { href: '/quote', label: 'Get a Quote' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-40 border-b border-black/5 bg-paper/90 backdrop-blur-md">
+  <div class="container-shop flex items-center justify-between gap-4 py-3">
+    <a href="/" class="flex items-center">
+      <img src="/logo.png" alt={business.name} class="h-9 w-auto sm:h-10" width="1080" height="361" />
+    </a>
+
+    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+      {navLinks.map((link) => {
+        const isActive = currentPath === link.href;
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              'rounded-control px-4 py-2 text-sm font-medium transition-colors',
+              isActive
+                ? 'bg-ink text-paper'
+                : 'text-ink-soft hover:bg-steel-100',
+            ]}
+            aria-current={isActive ? 'page' : undefined}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+
+    <div class="hidden items-center gap-3 md:flex">
+      <a
+        href={business.phoneHref}
+        class="flex items-center gap-2 text-sm font-semibold text-ink-soft transition-colors hover:text-accent"
+      >
+        <Icon name="phone" class="size-4" />
+        {business.phoneDisplay}
+      </a>
+      <a
+        href="/quote"
+        class="rounded-control bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+      >
+        Get a Free Quote
+      </a>
+    </div>
+
+    <button
+      type="button"
+      id="mobile-menu-toggle"
+      class="grid size-10 place-items-center rounded-control border border-black/10 text-ink md:hidden"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+    >
+      <span class="sr-only">Open menu</span>
+      <Icon name="menu" id="menu-icon-open" class="size-5" />
+      <Icon name="x" id="menu-icon-close" class="hidden size-5" />
+    </button>
+  </div>
+
+  <div id="mobile-menu" class="hidden border-t border-black/5 bg-paper md:hidden">
+    <nav class="container-shop flex flex-col gap-1 py-4" aria-label="Mobile">
+      {navLinks.map((link) => (
+        <a
+          href={link.href}
+          class="rounded-control px-4 py-3 text-base font-medium text-ink-soft hover:bg-steel-100"
+        >
+          {link.label}
+        </a>
+      ))}
+      <a
+        href={business.phoneHref}
+        class="mt-2 flex items-center justify-center gap-2 rounded-control border border-ink/15 px-4 py-3 text-base font-semibold text-ink"
+      >
+        <Icon name="phone" class="size-4" />
+        Call {business.phoneDisplay}
+      </a>
+      <a
+        href="/quote"
+        class="flex items-center justify-center rounded-control bg-accent px-4 py-3 text-base font-semibold text-white"
+      >
+        Get a Free Quote
+      </a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('mobile-menu-toggle');
+  const menu = document.getElementById('mobile-menu');
+  const openIcon = document.getElementById('menu-icon-open');
+  const closeIcon = document.getElementById('menu-icon-close');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = menu?.classList.contains('hidden') === false;
+    menu?.classList.toggle('hidden');
+    openIcon?.classList.toggle('hidden');
+    closeIcon?.classList.toggle('hidden');
+    toggle.setAttribute('aria-expanded', String(!isOpen));
+  });
+</script>

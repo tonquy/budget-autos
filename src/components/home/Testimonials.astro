@@ -1,0 +1,71 @@
+---
+import Icon from '../Icon.astro';
+import { testimonials } from '../../lib/business';
+
+// Duplicated once so the track can loop seamlessly from -50% back to 0%.
+const track = [...testimonials, ...testimonials];
+---
+
+<section class="overflow-hidden bg-paper py-20 sm:py-28">
+  <div class="container-shop">
+    <div class="max-w-lg">
+      <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+        What neighbors are saying.
+      </h2>
+      <p class="mt-3 text-steel-700">Real feedback from people who've sat in our waiting room.</p>
+    </div>
+  </div>
+
+  <div class="marquee-viewport mt-10">
+    <div class="marquee-track">
+      {track.map((t) => (
+        <div class="w-76 shrink-0 rounded-card border border-black/5 bg-surface p-6 shadow-card sm:w-88">
+          <div class="flex items-center justify-between">
+            <Icon name="quote" class="size-6 text-accent" />
+            <div class="flex text-accent" aria-hidden="true">
+              {Array.from({ length: 5 }).map(() => (
+                <Icon name="star" class="size-3.5 fill-current" />
+              ))}
+            </div>
+          </div>
+          <p class="mt-4 leading-relaxed text-ink">{t.quote}</p>
+          <p class="mt-4 text-sm">
+            <span class="font-semibold text-ink">{t.name}</span>
+            <span class="text-steel-500"> &middot; {t.role}</span>
+          </p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .marquee-viewport {
+    -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    gap: 1.25rem;
+    padding-inline: 1.25rem;
+    animation: marquee-scroll 42s linear infinite;
+    will-change: transform;
+  }
+
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track {
+      animation: none;
+    }
+  }
+</style>

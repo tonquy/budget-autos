@@ -1,0 +1,4 @@
+# Copy to .dev.vars for local development. Do not commit real secrets.
+
+RESEND_API_KEY=
+TURNSTILE_SECRET_KEY=1x0000000000000000000000000000000AA

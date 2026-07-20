@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import TrustBar from '../components/home/TrustBar.astro';
+import ServicesPreview from '../components/home/ServicesPreview.astro';
+import QuoteCallout from '../components/home/QuoteCallout.astro';
+import Testimonials from '../components/home/Testimonials.astro';
+import LocationBlock from '../components/home/LocationBlock.astro';
+import { business } from '../lib/business';
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title={business.name}
+  description={`${business.name} is a family-owned auto repair shop in ${business.address.city}, ${business.address.state}. Get a free quote in minutes - just send us a photo.`}
+>
+  <Hero />
+  <TrustBar />
+  <ServicesPreview />
+  <QuoteCallout />
+  <Testimonials />
+  <LocationBlock />
+</BaseLayout>

@@ -1,0 +1,68 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import heroImage from '../../assets/images/hero-garage.jpg';
+import { business, yearsInBusiness } from '../../lib/business';
+---
+
+<section class="overflow-hidden bg-paper pt-12 pb-20 sm:pt-16 sm:pb-28">
+  <div class="container-shop grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-8">
+    <div class="max-w-xl">
+      <h1 class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl lg:text-[3.4rem]">
+        Your car, fixed right<span class="text-accent">.</span> No surprises on the bill.
+      </h1>
+      <p class="mt-5 text-lg leading-relaxed text-steel-700">
+        {business.shortName} has kept {business.address.city} on the road since {business.foundedYear}. Send us a photo of the problem and we'll text back a real price - most days, within the hour.
+      </p>
+
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a
+          href="/quote"
+          class="inline-flex items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+        >
+          <Icon name="camera" class="size-5" />
+          Get a Free Quote
+        </a>
+        <a
+          href={business.phoneHref}
+          class="inline-flex items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
+        >
+          <Icon name="phone" class="size-5" />
+          {business.phoneDisplay}
+        </a>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-steel-700">
+        <div class="flex items-center gap-1.5">
+          <div class="flex text-accent" aria-hidden="true">
+            {Array.from({ length: 5 }).map(() => (
+              <Icon name="star" class="size-4 fill-current" />
+            ))}
+          </div>
+          <span class="font-semibold text-ink">4.9</span> from 300+ neighbors
+        </div>
+        <div class="hidden h-4 w-px bg-steel-300 sm:block"></div>
+        <span>{yearsInBusiness}+ years in {business.address.city}</span>
+      </div>
+    </div>
+
+    <div class="relative">
+      <div class="overflow-hidden rounded-card shadow-lifted">
+        <Image
+          src={heroImage}
+          alt={`Mechanic servicing a customer's vehicle on a lift at ${business.name}`}
+          widths={[480, 768, 1024]}
+          sizes="(min-width: 1024px) 40vw, 90vw"
+          class="aspect-[4/5] w-full object-cover sm:aspect-[5/4] lg:aspect-[4/5]"
+        />
+      </div>
+      <div class="absolute -bottom-6 -left-6 hidden max-w-[15rem] rounded-card bg-ink px-5 py-4 text-white shadow-lifted sm:block">
+        <div class="flex items-center gap-2 text-accent">
+          <Icon name="shield-check" class="size-5" />
+          <span class="font-display text-sm font-semibold">Warranty backed</span>
+        </div>
+        <p class="mt-1.5 text-sm leading-snug text-steel-300">{business.warranty}</p>
+      </div>
+    </div>
+  </div>
+</section>

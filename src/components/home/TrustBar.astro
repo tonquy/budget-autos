@@ -1,0 +1,22 @@
+---
+import Icon from '../Icon.astro';
+import { yearsInBusiness } from '../../lib/business';
+
+const stats = [
+  { icon: 'calendar-days', label: `${yearsInBusiness}+ years serving the area` },
+  { icon: 'shield-check', label: '24-month warranty on repairs' },
+  { icon: 'badge-check', label: 'Licensed & insured technicians' },
+  { icon: 'thumbs-up', label: 'Free quotes, no pressure' },
+];
+---
+
+<section class="border-y border-black/5 bg-surface">
+  <div class="container-shop grid grid-cols-2 gap-6 py-8 sm:grid-cols-4 sm:gap-4">
+    {stats.map((stat) => (
+      <div class="flex items-center gap-3">
+        <Icon name={stat.icon} class="size-6 shrink-0 text-accent" />
+        <span class="text-sm font-medium leading-snug text-ink-soft">{stat.label}</span>
+      </div>
+    ))}
+  </div>
+</section>

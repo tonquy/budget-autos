@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { business } from '../lib/business';
+
+export const prerender = true;
+const lastUpdated = 'January 2026';
+---
+
+<BaseLayout
+  title="Terms of Service"
+  description={`Terms for using the ${business.name} website and quote request form.`}
+>
+  <section class="bg-paper py-16 sm:py-20">
+    <div class="container-shop max-w-2xl">
+      <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Terms of Service</h1>
+      <p class="mt-2 text-sm text-steel-500">Last updated {lastUpdated}</p>
+
+      <div class="mt-8 space-y-8 text-steel-700">
+        <p class="text-sm leading-relaxed text-steel-500">
+          This is placeholder terms text for the {business.name} website mockup. Replace it with
+          language reviewed by a qualified attorney before the site goes live.
+        </p>
+
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ink">Quote requests are estimates only</h2>
+          <p class="mt-2 leading-relaxed">
+            Prices shown on this site are starting-at estimates for common repairs. Any quote you
+            receive from us by phone, text, or email is an estimate based on the information and
+            photos you provide, and is subject to change once a technician inspects your vehicle in
+            person. No repair work begins without your approval.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ink">Submitting information</h2>
+          <p class="mt-2 leading-relaxed">
+            By submitting the quote request form, you confirm that the information and photos you
+            provide are accurate to the best of your knowledge and that you have the right to share
+            them with us.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ink">No guarantee of response time</h2>
+          <p class="mt-2 leading-relaxed">
+            We aim to respond to quote requests quickly during business hours, but response times
+            are not guaranteed. For urgent issues, please call us directly.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ink">Website use</h2>
+          <p class="mt-2 leading-relaxed">
+            This website is provided for informational purposes and to help you request a repair
+            quote. Content, pricing, and availability are subject to change without notice.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="font-display text-lg font-semibold text-ink">Contact us</h2>
+          <p class="mt-2 leading-relaxed">
+            Questions about these terms? Reach us at{' '}
+            <a href={`mailto:${business.email}`} class="text-accent hover:text-accent-dark">{business.email}</a>{' '}
+            or <a href={business.phoneHref} class="text-accent hover:text-accent-dark">{business.phoneDisplay}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

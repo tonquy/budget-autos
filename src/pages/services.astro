@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business, services } from '../lib/business';
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="Services & Pricing"
+  description={`Repair and maintenance pricing at ${business.name} in ${business.address.city}, ${business.address.state}. Transparent starting-at prices on every service we offer.`}
+>
+  <section class="border-b border-black/5 bg-surface py-16 sm:py-20">
+    <div class="container-shop max-w-2xl">
+      <h1 class="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+        Services & pricing.
+      </h1>
+      <p class="mt-4 text-lg leading-relaxed text-steel-700">
+        Prices below are starting points for the most common version of each job - your exact price depends on your vehicle and what we find once we look. No work starts until you say go.
+      </p>
+      <div class="mt-6 flex flex-wrap gap-3">
+        <a
+          href="/quote"
+          class="inline-flex items-center gap-2 rounded-control bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+        >
+          <Icon name="camera" class="size-4" />
+          Get a Free Quote
+        </a>
+        <a
+          href={business.phoneHref}
+          class="inline-flex items-center gap-2 rounded-control border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink hover:bg-steel-100"
+        >
+          <Icon name="phone" class="size-4" />
+          {business.phoneDisplay}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-paper py-16 sm:py-20">
+    <div class="container-shop max-w-3xl divide-y divide-black/5">
+      {services.map((service) => (
+        <div id={service.slug} class="flex flex-col gap-4 py-8 sm:flex-row sm:items-start sm:gap-6">
+          <span class="grid size-12 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
+            <Icon name={service.icon} class="size-6" />
+          </span>
+          <div class="flex-1">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+              <h2 class="font-display text-xl font-semibold text-ink">{service.name}</h2>
+              <span class="text-sm font-semibold text-steel-700">starting at {service.startingAt}</span>
+            </div>
+            <p class="mt-2 leading-relaxed text-steel-700">{service.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-black/5 bg-ink py-16 text-white sm:py-20">
+    <div class="container-shop flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+      <div class="max-w-md">
+        <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+          Don't see what's wrong with your car listed?
+        </h2>
+        <p class="mt-2 text-steel-300">
+          Send us a photo and a quick description - we'll figure out what it is and quote it for you.
+        </p>
+      </div>
+      <a
+        href="/quote"
+        class="inline-flex shrink-0 items-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+      >
+        Start your free quote
+        <Icon name="arrow-up-right" class="size-5" />
+      </a>
+    </div>
+  </section>
+</BaseLayout>
