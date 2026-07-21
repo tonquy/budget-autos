@@ -42,6 +42,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Keep anchored sections clear of the sticky header when jumping to #ids. */
+    scroll-padding-top: 5rem;
     font-family: var(--font-body);
   }
 

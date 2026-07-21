@@ -10,29 +10,64 @@ export const prerender = true;
   title="Services & Pricing"
   description={`Repair and maintenance pricing at ${business.name} in ${business.address.city}, ${business.address.state}. Transparent starting-at prices on every service we offer.`}
 >
-  <section class="border-b border-black/5 bg-surface py-16 sm:py-20">
-    <div class="container-shop max-w-2xl">
-      <h1 class="font-display text-4xl font-bold tracking-tight text-ink sm:text-5xl">
-        Services & pricing.
-      </h1>
-      <p class="mt-4 text-lg leading-relaxed text-steel-700">
-        Prices below are starting points for the most common version of each job - your exact price depends on your vehicle and what we find once we look. No work starts until you say go.
-      </p>
-      <div class="mt-6 flex flex-wrap gap-3">
-        <a
-          href="/quote"
-          class="inline-flex items-center gap-2 rounded-control bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
-        >
-          <Icon name="camera" class="size-4" />
-          Get a Free Quote
-        </a>
-        <a
-          href={business.phoneHref}
-          class="inline-flex items-center gap-2 rounded-control border border-ink/15 px-5 py-2.5 text-sm font-semibold text-ink hover:bg-steel-100"
-        >
-          <Icon name="phone" class="size-4" />
-          {business.phoneDisplay}
-        </a>
+  <section class="overflow-hidden border-b border-black/5 bg-surface py-14 sm:py-20">
+    <div class="container-shop grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+      <div class="max-w-xl">
+        <h1 class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl">
+          Fair prices, up front<span class="text-accent">.</span>
+        </h1>
+        <p class="mt-4 text-lg leading-relaxed text-steel-700">
+          Every price below is a starting point for the most common version of the job. Your exact quote depends on your vehicle and what we find once we look, and no work starts until you say go.
+        </p>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+          <a
+            href="/quote"
+            class="inline-flex items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+          >
+            <Icon name="camera" class="size-5" />
+            Get a Free Quote
+          </a>
+          <a
+            href={business.phoneHref}
+            class="inline-flex items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
+          >
+            <Icon name="phone" class="size-5" />
+            {business.phoneDisplay}
+          </a>
+        </div>
+      </div>
+
+      <div class="rounded-card bg-ink p-6 text-white shadow-lifted sm:p-8">
+        <p class="font-display text-base font-semibold text-white">What every quote includes</p>
+        <ul class="mt-5 space-y-5">
+          <li class="flex items-start gap-3.5">
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
+              <Icon name="badge-check" class="size-5" />
+            </span>
+            <div>
+              <p class="font-semibold text-white">You approve the price first</p>
+              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">No work starts until you give us the go-ahead.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3.5">
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
+              <Icon name="thumbs-up" class="size-5" />
+            </span>
+            <div>
+              <p class="font-semibold text-white">Free quote, no pressure</p>
+              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">Ask us anything. There's no obligation to book.</p>
+            </div>
+          </li>
+          <li class="flex items-start gap-3.5">
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
+              <Icon name="shield-check" class="size-5" />
+            </span>
+            <div>
+              <p class="font-semibold text-white">Warranty backed</p>
+              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">{business.warranty}.</p>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </section>
@@ -40,7 +75,7 @@ export const prerender = true;
   <section class="bg-paper py-16 sm:py-20">
     <div class="container-shop max-w-3xl divide-y divide-black/5">
       {services.map((service) => (
-        <div id={service.slug} class="flex flex-col gap-4 py-8 sm:flex-row sm:items-start sm:gap-6">
+        <div id={service.slug} class="scroll-mt-24 flex flex-col gap-4 py-8 sm:flex-row sm:items-start sm:gap-6">
           <span class="grid size-12 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
             <Icon name={service.icon} class="size-6" />
           </span>
@@ -70,7 +105,7 @@ export const prerender = true;
         href="/quote"
         class="inline-flex shrink-0 items-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
       >
-        Start your free quote
+        Get a Free Quote
         <Icon name="arrow-up-right" class="size-5" />
       </a>
     </div>

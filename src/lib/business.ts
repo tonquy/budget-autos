@@ -30,6 +30,12 @@ export const business = {
   ],
   // Not published publicly - placeholder until the client confirms real terms.
   warranty: 'Warranty on parts and labor - ask us for details',
+  // Placeholder rating + review count for a small independent shop. Swap for the
+  // shop's real Google rating and review total once confirmed.
+  reviews: {
+    rating: '4.8',
+    count: 87,
+  },
   socials: {
     facebook: 'https://www.facebook.com/',
     google: 'https://share.google/0sYU3Xlnrk6zdFhTO',

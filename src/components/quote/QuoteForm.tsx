@@ -1,13 +1,16 @@
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
 import imageCompression from 'browser-image-compression';
-import { MAX_PHOTOS, contactPreferences } from '../../lib/quoteSchema';
-import { services } from '../../lib/business';
+import { MAX_FILES, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, contactPreferences } from '../../lib/quoteSchema';
+import { business, services } from '../../lib/business';
 
 type ContactPreference = (typeof contactPreferences)[number];
 
-type PhotoItem = {
+type MediaKind = 'image' | 'video';
+
+type MediaItem = {
   id: string;
   file: File;
+  kind: MediaKind;
   previewUrl: string;
   status: 'compressing' | 'ready' | 'error';
 };
@@ -41,6 +44,12 @@ const contactLabels: Record<ContactPreference, string> = {
   email: 'Email me',
 };
 
+function fileKind(file: File): MediaKind | null {
+  if (file.type.startsWith('image/')) return 'image';
+  if (file.type.startsWith('video/')) return 'video';
+  return null;
+}
+
 async function compressPhoto(file: File): Promise<File> {
   if (!file.type.startsWith('image/') || file.type === 'image/gif') {
     return file;
@@ -60,7 +69,8 @@ async function compressPhoto(file: File): Promise<File> {
 
 export default function QuoteForm() {
   const formId = useId();
-  const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const [media, setMedia] = useState<MediaItem[]>([]);
+  const [mediaNotice, setMediaNotice] = useState<string | null>(null);
   const [contactPreference, setContactPreference] = useState<ContactPreference>('call');
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -105,38 +115,75 @@ export default function QuoteForm() {
 
   useEffect(() => {
     return () => {
-      photos.forEach((p) => URL.revokeObjectURL(p.previewUrl));
+      media.forEach((m) => URL.revokeObjectURL(m.previewUrl));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function addFiles(fileList: FileList | null) {
     if (!fileList || fileList.length === 0) return;
-    const incoming = Array.from(fileList).slice(0, MAX_PHOTOS - photos.length);
-    if (incoming.length === 0) return;
+    setMediaNotice(null);
 
-    const pending: PhotoItem[] = incoming.map((file) => ({
+    const remainingSlots = MAX_FILES - media.length;
+    if (remainingSlots <= 0) {
+      setMediaNotice(`You can attach up to ${MAX_FILES} files.`);
+      return;
+    }
+
+    const accepted: { file: File; kind: MediaKind }[] = [];
+    let rejectedType = false;
+    let rejectedSize = false;
+
+    for (const file of Array.from(fileList)) {
+      const kind = fileKind(file);
+      if (!kind) {
+        rejectedType = true;
+        continue;
+      }
+      const cap = kind === 'video' ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+      // Images get compressed below, so only guard clearly oversized originals here.
+      if (kind === 'video' && file.size > cap) {
+        rejectedSize = true;
+        continue;
+      }
+      accepted.push({ file, kind });
+    }
+
+    const notices: string[] = [];
+    if (rejectedType) notices.push('Only photos and videos can be attached.');
+    if (rejectedSize) notices.push(`Videos must be under ${Math.round(MAX_VIDEO_BYTES / (1024 * 1024))}MB.`);
+
+    const capped = accepted.slice(0, remainingSlots);
+    if (accepted.length > remainingSlots) {
+      notices.push(`Only the first ${MAX_FILES} files are attached.`);
+    }
+    if (notices.length > 0) setMediaNotice(notices.join(' '));
+    if (capped.length === 0) return;
+
+    const pending: MediaItem[] = capped.map(({ file, kind }) => ({
       id: `${file.name}-${file.size}-${Math.random().toString(36).slice(2)}`,
       file,
+      kind,
       previewUrl: URL.createObjectURL(file),
-      status: 'compressing',
+      status: kind === 'image' ? 'compressing' : 'ready',
     }));
 
-    setPhotos((prev) => [...prev, ...pending]);
+    setMedia((prev) => [...prev, ...pending]);
 
     for (const item of pending) {
+      if (item.kind !== 'image') continue;
       const compressed = await compressPhoto(item.file);
-      setPhotos((prev) =>
-        prev.map((p) => (p.id === item.id ? { ...p, file: compressed, status: 'ready' } : p)),
+      setMedia((prev) =>
+        prev.map((m) => (m.id === item.id ? { ...m, file: compressed, status: 'ready' } : m)),
       );
     }
   }
 
-  function removePhoto(id: string) {
-    setPhotos((prev) => {
-      const target = prev.find((p) => p.id === id);
+  function removeMedia(id: string) {
+    setMedia((prev) => {
+      const target = prev.find((m) => m.id === id);
       if (target) URL.revokeObjectURL(target.previewUrl);
-      return prev.filter((p) => p.id !== id);
+      return prev.filter((m) => m.id !== id);
     });
   }
 
@@ -149,8 +196,8 @@ export default function QuoteForm() {
     const formData = new FormData(form);
     formData.set('contactPreference', contactPreference);
     formData.set('turnstileToken', turnstileTokenRef.current);
-    formData.delete('photos');
-    photos.forEach((p) => formData.append('photos', p.file, p.file.name));
+    formData.delete('media');
+    media.forEach((m) => formData.append('media', m.file, m.file.name));
 
     if (TURNSTILE_SITE_KEY && !turnstileTokenRef.current) {
       setErrorMessage('Please complete the verification above before submitting.');
@@ -194,11 +241,14 @@ export default function QuoteForm() {
         </div>
         <h2 class="mt-5 font-display text-2xl font-bold text-ink">Request sent.</h2>
         <p class="mt-2 text-steel-700">
-          Thanks - we&rsquo;ve got your request and photos. We&rsquo;ll be in touch soon, usually within the hour during shop hours.
+          Thanks - we&rsquo;ve got your request and files. We&rsquo;ll be in touch soon, usually within the hour during shop hours.
         </p>
       </div>
     );
   }
+
+  const inputClass =
+    'w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent';
 
   return (
     <form class="space-y-8" onSubmit={handleSubmit}>
@@ -219,14 +269,7 @@ export default function QuoteForm() {
             <label htmlFor={`${formId}-name`} class="mb-1.5 block text-sm font-medium text-ink-soft">
               Full name
             </label>
-            <input
-              id={`${formId}-name`}
-              name="name"
-              type="text"
-              required
-              autoComplete="name"
-              class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
-            />
+            <input id={`${formId}-name`} name="name" type="text" required autoComplete="name" class={inputClass} />
             {fieldErrors.name && <p class="mt-1 text-xs text-red-600">{fieldErrors.name[0]}</p>}
           </div>
           <div>
@@ -239,28 +282,25 @@ export default function QuoteForm() {
               type="tel"
               required
               autoComplete="tel"
-              placeholder="(423) 555-0148"
-              class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
+              placeholder={business.phoneDisplay}
+              class={inputClass}
             />
             {fieldErrors.phone && <p class="mt-1 text-xs text-red-600">{fieldErrors.phone[0]}</p>}
           </div>
           <div class="sm:col-span-2">
             <label htmlFor={`${formId}-email`} class="mb-1.5 block text-sm font-medium text-ink-soft">
-              Email <span class="text-steel-500">(optional)</span>
+              Email{' '}
+              <span class="text-steel-500">
+                {contactPreference === 'email' ? '(required for email replies)' : '(optional)'}
+              </span>
             </label>
-            <input
-              id={`${formId}-email`}
-              name="email"
-              type="email"
-              autoComplete="email"
-              class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
-            />
+            <input id={`${formId}-email`} name="email" type="email" autoComplete="email" class={inputClass} />
             {fieldErrors.email && <p class="mt-1 text-xs text-red-600">{fieldErrors.email[0]}</p>}
           </div>
         </div>
 
         <div>
-          <p class="mb-2 block text-sm font-medium text-ink-soft">How should we reach you back?</p>
+          <p class="mb-2 block text-sm font-medium text-ink-soft">Preferred contact method</p>
           <div class="flex flex-wrap gap-2">
             {contactPreferences.map((pref) => (
               <label
@@ -287,37 +327,88 @@ export default function QuoteForm() {
       </fieldset>
 
       <fieldset class="space-y-4">
-        <legend class="font-display text-lg font-semibold text-ink">Your vehicle & the issue</legend>
+        <legend class="font-display text-lg font-semibold text-ink">Your vehicle</legend>
+        <p class="-mt-1 text-sm text-steel-500">
+          Share whatever you know - all of this is optional, but it helps us quote faster.
+        </p>
         <div class="grid gap-4 sm:grid-cols-2">
           <div>
-            <label htmlFor={`${formId}-vehicle`} class="mb-1.5 block text-sm font-medium text-ink-soft">
-              Vehicle <span class="text-steel-500">(optional)</span>
+            <label htmlFor={`${formId}-year`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+              Year
             </label>
             <input
-              id={`${formId}-vehicle`}
-              name="vehicle"
+              id={`${formId}-year`}
+              name="vehicleYear"
               type="text"
-              placeholder="e.g. 2018 Toyota Camry"
-              class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
+              inputMode="numeric"
+              maxLength={4}
+              placeholder="2018"
+              class={inputClass}
             />
+            {fieldErrors.vehicleYear && <p class="mt-1 text-xs text-red-600">{fieldErrors.vehicleYear[0]}</p>}
           </div>
           <div>
-            <label htmlFor={`${formId}-serviceType`} class="mb-1.5 block text-sm font-medium text-ink-soft">
-              What do you need? <span class="text-steel-500">(optional)</span>
+            <label htmlFor={`${formId}-make`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+              Make
             </label>
-            <select
-              id={`${formId}-serviceType`}
-              name="serviceType"
-              class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
-            >
-              <option value="">Not sure / something else</option>
-              {services.map((s) => (
-                <option key={s.slug} value={s.name}>
-                  {s.name}
-                </option>
-              ))}
-            </select>
+            <input id={`${formId}-make`} name="vehicleMake" type="text" placeholder="Toyota" class={inputClass} />
+            {fieldErrors.vehicleMake && <p class="mt-1 text-xs text-red-600">{fieldErrors.vehicleMake[0]}</p>}
           </div>
+          <div>
+            <label htmlFor={`${formId}-model`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+              Model
+            </label>
+            <input id={`${formId}-model`} name="vehicleModel" type="text" placeholder="Camry" class={inputClass} />
+            {fieldErrors.vehicleModel && <p class="mt-1 text-xs text-red-600">{fieldErrors.vehicleModel[0]}</p>}
+          </div>
+          <div>
+            <label htmlFor={`${formId}-mileage`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+              Mileage
+            </label>
+            <input
+              id={`${formId}-mileage`}
+              name="mileage"
+              type="text"
+              inputMode="numeric"
+              placeholder="86,000"
+              class={inputClass}
+            />
+            {fieldErrors.mileage && <p class="mt-1 text-xs text-red-600">{fieldErrors.mileage[0]}</p>}
+          </div>
+          <div class="sm:col-span-2">
+            <label htmlFor={`${formId}-vin`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+              VIN
+            </label>
+            <input
+              id={`${formId}-vin`}
+              name="vin"
+              type="text"
+              autoCapitalize="characters"
+              autoComplete="off"
+              spellcheck={false}
+              maxLength={17}
+              placeholder="17-character vehicle ID (on the dash or door jamb)"
+              class={`${inputClass} uppercase`}
+            />
+            {fieldErrors.vin && <p class="mt-1 text-xs text-red-600">{fieldErrors.vin[0]}</p>}
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset class="space-y-4">
+        <legend class="font-display text-lg font-semibold text-ink">The issue</legend>
+        <div>
+          <label htmlFor={`${formId}-serviceType`} class="mb-1.5 block text-sm font-medium text-ink-soft">
+            What do you need? <span class="text-steel-500">(optional)</span>
+          </label>
+          <select id={`${formId}-serviceType`} name="serviceType" class={inputClass}>
+            <option value="">Not sure / something else</option>
+            {services.map((s) => (
+              <option key={s.slug} value={s.name}>
+                {s.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label htmlFor={`${formId}-message`} class="mb-1.5 block text-sm font-medium text-ink-soft">
@@ -329,7 +420,7 @@ export default function QuoteForm() {
             required
             rows={4}
             placeholder="e.g. There's a grinding noise when I brake, especially at low speed."
-            class="w-full rounded-control border border-black/10 bg-surface px-4 py-2.5 text-sm text-ink outline-none focus:border-accent"
+            class={inputClass}
           />
           {fieldErrors.message && <p class="mt-1 text-xs text-red-600">{fieldErrors.message[0]}</p>}
         </div>
@@ -337,14 +428,14 @@ export default function QuoteForm() {
 
       <fieldset class="space-y-3">
         <legend class="font-display text-lg font-semibold text-ink">
-          Photos <span class="text-sm font-normal text-steel-500">(optional, but it helps a lot)</span>
+          Photos &amp; videos <span class="text-sm font-normal text-steel-500">(optional, but it helps a lot)</span>
         </legend>
 
         <div class="flex flex-wrap gap-3">
           <button
             type="button"
             onClick={() => cameraInputRef.current?.click()}
-            disabled={photos.length >= MAX_PHOTOS}
+            disabled={media.length >= MAX_FILES}
             class="inline-flex items-center gap-2 rounded-control border border-ink/15 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -358,7 +449,7 @@ export default function QuoteForm() {
           <button
             type="button"
             onClick={() => libraryInputRef.current?.click()}
-            disabled={photos.length >= MAX_PHOTOS}
+            disabled={media.length >= MAX_FILES}
             class="inline-flex items-center gap-2 rounded-control border border-ink/15 px-4 py-2.5 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
@@ -368,7 +459,7 @@ export default function QuoteForm() {
                 <circle cx="9" cy="9" r="2" />
               </g>
             </svg>
-            Choose from library
+            Add photos or videos
           </button>
         </div>
 
@@ -383,18 +474,30 @@ export default function QuoteForm() {
         <input
           ref={libraryInputRef}
           type="file"
-          accept="image/*"
+          accept="image/*,video/*"
           multiple
           class="hidden"
           onChange={(e) => addFiles((e.target as HTMLInputElement).files)}
         />
 
-        {photos.length > 0 && (
+        {media.length > 0 && (
           <div class="grid grid-cols-3 gap-3 sm:grid-cols-4">
-            {photos.map((photo) => (
-              <div key={photo.id} class="group relative aspect-square overflow-hidden rounded-card border border-black/10">
-                <img src={photo.previewUrl} alt="" class="h-full w-full object-cover" />
-                {photo.status === 'compressing' && (
+            {media.map((item) => (
+              <div key={item.id} class="group relative aspect-square overflow-hidden rounded-card border border-black/10">
+                {item.kind === 'video' ? (
+                  <video src={item.previewUrl} class="h-full w-full object-cover" muted playsInline preload="metadata" />
+                ) : (
+                  <img src={item.previewUrl} alt="" class="h-full w-full object-cover" />
+                )}
+                {item.kind === 'video' && (
+                  <span class="absolute bottom-1 left-1 inline-flex items-center gap-1 rounded bg-ink/70 px-1.5 py-0.5 text-[10px] font-semibold text-white">
+                    <svg viewBox="0 0 24 24" width="10" height="10" aria-hidden="true">
+                      <path fill="currentColor" d="M8 5.14v14l11-7z" />
+                    </svg>
+                    Video
+                  </span>
+                )}
+                {item.status === 'compressing' && (
                   <div class="absolute inset-0 grid place-items-center bg-ink/50">
                     <svg viewBox="0 0 24 24" width="20" height="20" class="animate-spin text-white" aria-hidden="true">
                       <path
@@ -410,9 +513,9 @@ export default function QuoteForm() {
                 )}
                 <button
                   type="button"
-                  onClick={() => removePhoto(photo.id)}
-                  aria-label="Remove photo"
-                  class="absolute right-1 top-1 grid size-6 place-items-center rounded-full bg-ink/70 text-white opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+                  onClick={() => removeMedia(item.id)}
+                  aria-label="Remove file"
+                  class="absolute right-1 top-1 grid size-6 place-items-center rounded-full bg-ink/70 text-white transition-colors hover:bg-ink"
                 >
                   <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
                     <path
@@ -429,7 +532,11 @@ export default function QuoteForm() {
             ))}
           </div>
         )}
-        <p class="text-xs text-steel-500">Up to {MAX_PHOTOS} photos. JPG, PNG, WEBP, or HEIC.</p>
+        {mediaNotice && <p class="text-xs text-amber-700">{mediaNotice}</p>}
+        <p class="text-xs text-steel-500">
+          Up to {MAX_FILES} files. Photos (JPG, PNG, WEBP, HEIC) or short videos (MP4, MOV) up to{' '}
+          {Math.round(MAX_VIDEO_BYTES / (1024 * 1024))}MB each.
+        </p>
       </fieldset>
 
       {TURNSTILE_SITE_KEY && <div ref={turnstileContainerRef} />}

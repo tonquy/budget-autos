@@ -1,6 +1,13 @@
 import { business } from './business';
 import type { QuoteFormValues } from './quoteSchema';
 
+export type MediaSummary = {
+  imageCount: number;
+  videoCount: number;
+  attachedCount: number;
+  notAttachedCount: number;
+};
+
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, '&amp;')
@@ -15,6 +22,25 @@ const contactLabels: Record<QuoteFormValues['contactPreference'], string> = {
   email: 'Email me',
 };
 
+function vehicleDescription(data: QuoteFormValues) {
+  return [data.vehicleYear, data.vehicleMake, data.vehicleModel]
+    .map((part) => (part ?? '').trim())
+    .filter(Boolean)
+    .join(' ');
+}
+
+function mediaLine(summary: MediaSummary) {
+  const parts: string[] = [];
+  if (summary.imageCount) parts.push(`${summary.imageCount} photo${summary.imageCount === 1 ? '' : 's'}`);
+  if (summary.videoCount) parts.push(`${summary.videoCount} video${summary.videoCount === 1 ? '' : 's'}`);
+  if (parts.length === 0) return '';
+  let line = parts.join(', ');
+  if (summary.notAttachedCount > 0) {
+    line += ` (${summary.notAttachedCount} too large to attach - saved in storage)`;
+  }
+  return line;
+}
+
 function row(label: string, value: string) {
   if (!value) return '';
   return `
@@ -24,8 +50,9 @@ function row(label: string, value: string) {
     </tr>`;
 }
 
-export function ownerNotificationEmail(data: QuoteFormValues, photoCount: number) {
-  const subject = `New quote request from ${data.name}${data.vehicle ? ` (${data.vehicle})` : ''}`;
+export function ownerNotificationEmail(data: QuoteFormValues, media: MediaSummary) {
+  const vehicle = vehicleDescription(data);
+  const subject = `New quote request from ${data.name}${vehicle ? ` (${vehicle})` : ''}`;
 
   const html = `
   <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px;margin:0 auto;">
@@ -38,9 +65,11 @@ export function ownerNotificationEmail(data: QuoteFormValues, photoCount: number
         ${row('Preferred contact', contactLabels[data.contactPreference])}
         ${row('Phone', data.phone)}
         ${row('Email', data.email ?? '')}
-        ${row('Vehicle', data.vehicle ?? '')}
+        ${row('Vehicle', vehicle)}
+        ${row('VIN', data.vin ?? '')}
+        ${row('Mileage', data.mileage ?? '')}
         ${row('Service type', data.serviceType ?? '')}
-        ${row('Photos attached', String(photoCount))}
+        ${row('Attachments', mediaLine(media))}
       </table>
       <p style="margin:18px 0 6px;color:#8b8a83;font-size:13px;">What they said:</p>
       <p style="margin:0;padding:14px 16px;background:#f8f6f2;border-radius:8px;color:#17181c;font-size:14px;line-height:1.5;white-space:pre-wrap;">${escapeHtml(
@@ -57,9 +86,11 @@ export function ownerNotificationEmail(data: QuoteFormValues, photoCount: number
     `Preferred contact: ${contactLabels[data.contactPreference]}`,
     `Phone: ${data.phone}`,
     data.email ? `Email: ${data.email}` : '',
-    data.vehicle ? `Vehicle: ${data.vehicle}` : '',
+    vehicle ? `Vehicle: ${vehicle}` : '',
+    data.vin ? `VIN: ${data.vin}` : '',
+    data.mileage ? `Mileage: ${data.mileage}` : '',
     data.serviceType ? `Service type: ${data.serviceType}` : '',
-    `Photos attached: ${photoCount}`,
+    mediaLine(media) ? `Attachments: ${mediaLine(media)}` : '',
     '',
     'Message:',
     data.message,

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import MobileActionBar from '../components/MobileActionBar.astro';
 import { pageTitle, localBusinessJsonLd } from '../lib/seo';
 import { business } from '../lib/business';
 
@@ -59,5 +60,8 @@ const jsonLd = localBusinessJsonLd(siteUrl);
       <slot />
     </main>
     <Footer />
+    <!-- Spacer so the fixed mobile action bar never covers the footer's last row. -->
+    <div class="h-20 md:hidden" aria-hidden="true"></div>
+    <MobileActionBar />
   </body>
 </html>

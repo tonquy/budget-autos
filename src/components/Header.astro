@@ -53,57 +53,195 @@ const currentPath = Astro.url.pathname;
       </a>
     </div>
 
-    <button
-      type="button"
-      id="mobile-menu-toggle"
-      class="grid size-10 place-items-center rounded-control border border-black/10 text-ink md:hidden"
-      aria-expanded="false"
-      aria-controls="mobile-menu"
-    >
-      <span class="sr-only">Open menu</span>
-      <Icon name="menu" id="menu-icon-open" class="size-5" />
-      <Icon name="x" id="menu-icon-close" class="hidden size-5" />
-    </button>
-  </div>
-
-  <div id="mobile-menu" class="hidden border-t border-black/5 bg-paper md:hidden">
-    <nav class="container-shop flex flex-col gap-1 py-4" aria-label="Mobile">
-      {navLinks.map((link) => (
-        <a
-          href={link.href}
-          class="rounded-control px-4 py-3 text-base font-medium text-ink-soft hover:bg-steel-100"
-        >
-          {link.label}
-        </a>
-      ))}
-      <a
-        href={business.phoneHref}
-        class="mt-2 flex items-center justify-center gap-2 rounded-control border border-ink/15 px-4 py-3 text-base font-semibold text-ink"
-      >
-        <Icon name="phone" class="size-4" />
-        Call {business.phoneDisplay}
-      </a>
-      <a
-        href="/quote"
-        class="flex items-center justify-center rounded-control bg-accent px-4 py-3 text-base font-semibold text-white"
-      >
-        Get a Free Quote
-      </a>
-    </nav>
+    <div class="size-11 md:hidden" aria-hidden="true"></div>
   </div>
 </header>
+
+<!-- Mobile menu lives outside <header>: the header's backdrop-filter would
+     otherwise become the containing block for these fixed elements. -->
+<button
+    type="button"
+    id="mobile-menu-toggle"
+    class="fixed right-5 top-3 z-60 grid size-11 place-items-center rounded-control border border-black/10 bg-surface/80 text-ink backdrop-blur-sm transition-colors sm:right-8 md:hidden"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+  >
+    <span class="sr-only">Menu</span>
+    <span class="hamburger" aria-hidden="true">
+      <span></span>
+      <span></span>
+      <span></span>
+    </span>
+  </button>
+
+  <div
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Site menu"
+    class="fixed inset-0 z-50 bg-ink/95 text-white backdrop-blur-xl md:hidden"
+  >
+    <div class="container-shop flex h-full flex-col pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-3">
+      <a href="/" class="menu-item inline-flex w-max items-center rounded-lg bg-white/95 px-2 py-1" style="--i:0">
+        <img src="/logo.png" alt={business.name} class="h-8 w-auto" width="1080" height="361" />
+      </a>
+
+      <nav class="mt-10 flex flex-1 flex-col" aria-label="Mobile primary">
+        <div class="border-b border-white/10">
+          {navLinks.map((link, i) => {
+            const isActive = currentPath === link.href;
+            return (
+              <a
+                href={link.href}
+                class:list={[
+                  'menu-item group flex items-center justify-between border-t border-white/10 py-5',
+                  isActive ? 'text-accent' : 'text-white',
+                ]}
+                style={`--i:${i + 1}`}
+                aria-current={isActive ? 'page' : undefined}
+              >
+                <span class="font-display text-3xl font-semibold tracking-tight transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
+                  {link.label}
+                </span>
+                <Icon
+                  name="arrow-up-right"
+                  class="size-6 text-accent transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-1"
+                />
+              </a>
+            );
+          })}
+        </div>
+
+        <div class="mt-auto flex flex-col gap-3 pt-10">
+          <a
+            href={business.phoneHref}
+            class="menu-item flex items-center justify-center gap-2 rounded-control border border-white/20 px-5 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
+            style="--i:4"
+          >
+            <Icon name="phone" class="size-5" />
+            Call {business.phoneDisplay}
+          </a>
+          <a
+            href="/quote"
+            class="menu-item flex items-center justify-center gap-2 rounded-control bg-accent px-5 py-3.5 text-base font-semibold text-white shadow-lifted transition-colors hover:bg-accent-dark"
+            style="--i:5"
+          >
+            <Icon name="camera" class="size-5" />
+            Get a Free Quote
+          </a>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+<style>
+  .hamburger {
+    position: relative;
+    display: block;
+    width: 22px;
+    height: 14px;
+  }
+  .hamburger span {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 0.4s cubic-bezier(0.32, 0.72, 0, 1),
+      opacity 0.25s ease;
+  }
+  .hamburger span:nth-child(1) {
+    top: 0;
+  }
+  .hamburger span:nth-child(2) {
+    top: 6px;
+  }
+  .hamburger span:nth-child(3) {
+    top: 12px;
+  }
+
+  #mobile-menu-toggle[aria-expanded='true'] {
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(255, 255, 255, 0.08);
+  }
+  #mobile-menu-toggle[aria-expanded='true'] .hamburger span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+  #mobile-menu-toggle[aria-expanded='true'] .hamburger span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+  #mobile-menu-toggle[aria-expanded='true'] .hamburger span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  #mobile-menu {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.45s cubic-bezier(0.32, 0.72, 0, 1),
+      visibility 0.45s;
+  }
+  #mobile-menu.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .menu-item {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 0.5s cubic-bezier(0.32, 0.72, 0, 1),
+      transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+  }
+  #mobile-menu.is-open .menu-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(var(--i, 0) * 60ms + 100ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hamburger span,
+    #mobile-menu,
+    .menu-item {
+      transition: none !important;
+    }
+    .menu-item {
+      transform: none;
+    }
+  }
+</style>
 
 <script>
   const toggle = document.getElementById('mobile-menu-toggle');
   const menu = document.getElementById('mobile-menu');
-  const openIcon = document.getElementById('menu-icon-open');
-  const closeIcon = document.getElementById('menu-icon-close');
+
+  function setOpen(open: boolean) {
+    if (!toggle || !menu) return;
+    menu.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      menu.querySelector<HTMLAnchorElement>('nav a')?.focus();
+    }
+  }
 
   toggle?.addEventListener('click', () => {
-    const isOpen = menu?.classList.contains('hidden') === false;
-    menu?.classList.toggle('hidden');
-    openIcon?.classList.toggle('hidden');
-    closeIcon?.classList.toggle('hidden');
-    toggle.setAttribute('aria-expanded', String(!isOpen));
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // Close on link tap so navigation feels instant and the overlay never lingers.
+  menu?.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', () => setOpen(false));
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && toggle?.getAttribute('aria-expanded') === 'true') {
+      setOpen(false);
+      toggle.focus();
+    }
   });
 </script>
