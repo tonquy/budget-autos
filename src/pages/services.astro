@@ -1,7 +1,23 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { business, services } from '../lib/business';
+import bayImage from '../assets/images/services-bay.png';
+import engineImage from '../assets/images/detail-engine.png';
+import brakesImage from '../assets/images/detail-brakes.png';
+import diagnosticsImage from '../assets/images/detail-diagnostics.png';
+import suspensionImage from '../assets/images/detail-suspension.png';
+import electricalImage from '../assets/images/detail-electrical.png';
+
+const serviceImages: Record<string, ImageMetadata> = {
+  diagnostics: diagnosticsImage,
+  'engine-maintenance': engineImage,
+  'brake-services': brakesImage,
+  'suspension-alignment': suspensionImage,
+  'electrical-systems': electricalImage,
+  'general-repairs': bayImage,
+};
 
 export const prerender = true;
 ---
@@ -73,20 +89,29 @@ export const prerender = true;
   </section>
 
   <section class="bg-paper py-16 sm:py-20">
-    <div class="container-shop max-w-3xl divide-y divide-black/5">
+    <div class="container-shop grid gap-4 sm:grid-cols-2">
       {services.map((service) => (
-        <div id={service.slug} class="scroll-mt-24 flex flex-col gap-4 py-8 sm:flex-row sm:items-start sm:gap-6">
-          <span class="grid size-12 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
-            <Icon name={service.icon} class="size-6" />
+        <article
+          id={service.slug}
+          class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted sm:min-h-72 sm:p-7"
+        >
+          <Image
+            src={serviceImages[service.slug]}
+            alt={service.name}
+            widths={[480, 768, 1024]}
+            sizes="(min-width: 640px) 50vw, 100vw"
+            class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          />
+          <div class="absolute inset-0 -z-10 bg-linear-to-t from-ink/95 via-ink/55 to-ink/15"></div>
+          <span class="mb-auto grid size-11 place-items-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-sm">
+            <Icon name={service.icon} class="size-5" />
           </span>
-          <div class="flex-1">
-            <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <h2 class="font-display text-xl font-semibold text-ink">{service.name}</h2>
-              <span class="text-sm font-semibold text-steel-700">starting at {service.startingAt}</span>
-            </div>
-            <p class="mt-2 leading-relaxed text-steel-700">{service.description}</p>
+          <div class="mt-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+            <h2 class="font-display text-xl font-semibold text-white sm:text-2xl">{service.name}</h2>
+            <span class="text-sm font-semibold text-accent">starting at {service.startingAt}</span>
           </div>
-        </div>
+          <p class="mt-2 max-w-md text-sm leading-relaxed text-steel-200">{service.description}</p>
+        </article>
       ))}
     </div>
   </section>
