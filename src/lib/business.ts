@@ -39,7 +39,7 @@ export const business = {
     count: 87,
   },
   socials: {
-    facebook: 'https://www.facebook.com/',
+    facebook: 'https://www.facebook.com/budgetautosny',
     google: 'https://share.google/0sYU3Xlnrk6zdFhTO',
   },
 } as const;
