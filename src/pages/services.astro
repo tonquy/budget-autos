@@ -35,14 +35,7 @@ export const prerender = true;
         <p class="mt-4 text-lg leading-relaxed text-steel-700">
           Tell us what&rsquo;s going on and we&rsquo;ll come back with a quote for your vehicle. No work starts until you say go.
         </p>
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-          <a
-            href="/quote"
-            class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
-          >
-            <Icon name="camera" class="size-5" />
-            Get a Free Quote
-          </a>
+        <div class="mt-7">
           <a
             href="/#location"
             class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
@@ -116,22 +109,13 @@ export const prerender = true;
   </section>
 
   <section class="border-t border-black/5 bg-ink py-16 text-white sm:py-20">
-    <div class="container-shop flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
-      <div class="max-w-md">
-        <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-          Don't see what's wrong with your car listed?
-        </h2>
-        <p class="mt-2 text-steel-300">
-          Send us a photo and a quick description - we'll figure out what it is and quote it for you.
-        </p>
-      </div>
-      <a
-        href="/quote"
-        class="inline-flex shrink-0 items-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
-      >
-        Get a Free Quote
-        <Icon name="arrow-up-right" class="size-5" />
-      </a>
+    <div class="container-shop max-w-2xl">
+      <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+        Don't see what's wrong with your car listed?
+      </h2>
+      <p class="mt-2 text-steel-300">
+        Send a photo from the Free Quote button in the header — we'll figure out what it is and get back to you.
+      </p>
     </div>
   </section>
 </BaseLayout>
