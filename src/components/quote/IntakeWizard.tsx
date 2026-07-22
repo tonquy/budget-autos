@@ -45,7 +45,13 @@ declare global {
   }
 }
 
-const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '';
+// Turnstile site keys are public by design (they are rendered into the page for
+// every visitor), so it is safe to ship the production key as a fallback. This
+// keeps the widget working even when the build-time PUBLIC_TURNSTILE_SITE_KEY
+// env var is missing in CI (e.g. Cloudflare Workers Builds, where local .env is
+// not available). Using `|| fallback` also handles the "defined but empty" case.
+const TURNSTILE_SITE_KEY =
+  import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() || '0x4AAAAAAD7eom-KB1HZ1Qex';
 const TURNSTILE_SCRIPT_ID = 'turnstile-script';
 
 type Step =
