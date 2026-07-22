@@ -39,17 +39,10 @@ const currentPath = Astro.url.pathname;
 
     <div class="hidden items-center gap-3 md:flex">
       <a
-        href={business.phoneHref}
-        class="flex items-center gap-2 text-sm font-semibold text-ink-soft transition-colors hover:text-accent"
-      >
-        <Icon name="phone" class="size-4" />
-        {business.phoneDisplay}
-      </a>
-      <a
         href="/quote"
-        class="rounded-control bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+        class="rounded-control bg-accent px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
       >
-        Get a Free Quote
+        Free Quote
       </a>
     </div>
 
@@ -62,7 +55,8 @@ const currentPath = Astro.url.pathname;
 <button
     type="button"
     id="mobile-menu-toggle"
-    class="fixed right-5 top-3 z-60 grid size-11 place-items-center rounded-control border border-black/10 bg-surface/80 text-ink backdrop-blur-sm transition-colors sm:right-8 md:hidden"
+    class="fixed right-5 z-60 grid size-11 place-items-center rounded-control border border-black/10 bg-surface/80 text-ink backdrop-blur-sm transition-colors touch-manipulation sm:right-8 md:hidden"
+    style="top: max(0.75rem, env(safe-area-inset-top));"
     aria-expanded="false"
     aria-controls="mobile-menu"
   >
@@ -114,17 +108,9 @@ const currentPath = Astro.url.pathname;
 
         <div class="mt-auto flex flex-col gap-3 pt-10">
           <a
-            href={business.phoneHref}
-            class="menu-item flex items-center justify-center gap-2 rounded-control border border-white/20 px-5 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
-            style="--i:4"
-          >
-            <Icon name="phone" class="size-5" />
-            Call {business.phoneDisplay}
-          </a>
-          <a
             href="/quote"
             class="menu-item flex items-center justify-center gap-2 rounded-control bg-accent px-5 py-3.5 text-base font-semibold text-white shadow-lifted transition-colors hover:bg-accent-dark"
-            style="--i:5"
+            style="--i:4"
           >
             <Icon name="camera" class="size-5" />
             Get a Free Quote

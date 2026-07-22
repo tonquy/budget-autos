@@ -19,7 +19,6 @@ export function localBusinessJsonLd(siteUrl: string) {
     '@type': 'AutoRepair',
     name: business.name,
     image: `${siteUrl}/og-default.jpg`,
-    telephone: business.phoneDisplay,
     email: business.email,
     address: {
       '@type': 'PostalAddress',
@@ -43,7 +42,6 @@ export function localBusinessJsonLd(siteUrl: string) {
         closes: '14:00',
       },
     ],
-    priceRange: '$$',
     url: siteUrl,
   };
 }

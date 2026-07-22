@@ -18,17 +18,17 @@ import { business, yearsInBusiness } from '../../lib/business';
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a
           href="/quote"
-          class="inline-flex items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+          class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
         >
           <Icon name="camera" class="size-5" />
           Get a Free Quote
         </a>
         <a
-          href={business.phoneHref}
-          class="inline-flex items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
+          href="/services"
+          class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
         >
-          <Icon name="phone" class="size-5" />
-          {business.phoneDisplay}
+          <Icon name="wrench" class="size-5" />
+          Browse services
         </a>
       </div>
 

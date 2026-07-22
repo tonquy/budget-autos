@@ -23,32 +23,32 @@ export const prerender = true;
 ---
 
 <BaseLayout
-  title="Services & Pricing"
-  description={`Repair and maintenance pricing at ${business.name} in ${business.address.city}, ${business.address.state}. Transparent starting-at prices on every service we offer.`}
+  title="Services"
+  description={`Repair and maintenance services at ${business.name} in ${business.address.city}, ${business.address.state}. Request a free quote for your vehicle.`}
 >
   <section class="overflow-hidden border-b border-black/5 bg-surface py-14 sm:py-20">
     <div class="container-shop grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
       <div class="max-w-xl">
         <h1 class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl">
-          Fair prices, up front<span class="text-accent">.</span>
+          What we fix<span class="text-accent">.</span>
         </h1>
         <p class="mt-4 text-lg leading-relaxed text-steel-700">
-          Every price below is a starting point for the most common version of the job. Your exact quote depends on your vehicle and what we find once we look, and no work starts until you say go.
+          Tell us what&rsquo;s going on and we&rsquo;ll come back with a quote for your vehicle. No work starts until you say go.
         </p>
         <div class="mt-7 flex flex-col gap-3 sm:flex-row">
           <a
             href="/quote"
-            class="inline-flex items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+            class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
           >
             <Icon name="camera" class="size-5" />
             Get a Free Quote
           </a>
           <a
-            href={business.phoneHref}
-            class="inline-flex items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
+            href="/#location"
+            class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
           >
-            <Icon name="phone" class="size-5" />
-            {business.phoneDisplay}
+            <Icon name="map-pin" class="size-5" />
+            Visit the shop
           </a>
         </div>
       </div>
@@ -61,7 +61,7 @@ export const prerender = true;
               <Icon name="badge-check" class="size-5" />
             </span>
             <div>
-              <p class="font-semibold text-white">You approve the price first</p>
+              <p class="font-semibold text-white">You approve first</p>
               <p class="mt-0.5 text-sm leading-relaxed text-steel-300">No work starts until you give us the go-ahead.</p>
             </div>
           </li>
@@ -106,9 +106,8 @@ export const prerender = true;
           <span class="mb-auto grid size-11 place-items-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-sm">
             <Icon name={service.icon} class="size-5" />
           </span>
-          <div class="mt-6 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+          <div class="mt-6">
             <h2 class="font-display text-xl font-semibold text-white sm:text-2xl">{service.name}</h2>
-            <span class="text-sm font-semibold text-accent">starting at {service.startingAt}</span>
           </div>
           <p class="mt-2 max-w-md text-sm leading-relaxed text-steel-200">{service.description}</p>
         </article>

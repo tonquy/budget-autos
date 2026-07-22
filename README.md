@@ -3,13 +3,14 @@
 A marketing site + "get a quote" system for an independent auto repair shop, built with Astro,
 Tailwind CSS, and Preact, deployed on Cloudflare Workers.
 
-This is currently a **demo mockup** with placeholder branding, copy, pricing, and contact details.
+This is currently a **demo mockup** with placeholder branding, copy, and contact details.
 Everything content-related lives in one file (see below) so it's a quick swap once the client sends
 real information.
 
 ## What's here
 
-- Homepage, Services & pricing, and a unified "Get a Quote" page with photo upload
+- Homepage, Services, and a guided "Get a Quote" intake wizard with photo/video upload
+- Pricing is quote-only - nothing listed on the site; customers request a quote and the shop replies
 - A working `/api/quote` backend: validates the form, verifies a Cloudflare Turnstile challenge,
   stores any uploaded photos in an R2 bucket, and emails the shop owner via Resend (with the photos
   attached directly to the email, plus an optional confirmation email to the customer)

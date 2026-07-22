@@ -5,7 +5,7 @@ import { Resend } from 'resend';
 import { z } from 'zod';
 import { business } from '../../lib/business';
 import { customerConfirmationEmail, ownerNotificationEmail } from '../../lib/emailTemplates';
-import { MAX_FILES, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, quoteFormSchema } from '../../lib/quoteSchema';
+import { MAX_FILES, MAX_IMAGE_BYTES, MAX_VIDEO_BYTES, intakeSchema } from '../../lib/quoteSchema';
 import { verifyTurnstileToken } from '../../lib/turnstile';
 
 export const prerender = false;
@@ -38,20 +38,41 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return jsonResponse({ ok: false, error: 'Could not read submission.' }, 400);
   }
 
+  const getStr = (key: string) => String(formData.get(key) ?? '');
+  const getArr = (key: string) =>
+    formData
+      .getAll(key)
+      .map((v) => String(v))
+      .filter(Boolean);
+
   const raw = {
-    name: String(formData.get('name') ?? ''),
-    phone: String(formData.get('phone') ?? ''),
-    email: String(formData.get('email') ?? ''),
-    vehicleYear: String(formData.get('vehicleYear') ?? ''),
-    vehicleMake: String(formData.get('vehicleMake') ?? ''),
-    vehicleModel: String(formData.get('vehicleModel') ?? ''),
-    vin: String(formData.get('vin') ?? ''),
-    mileage: String(formData.get('mileage') ?? ''),
-    serviceType: String(formData.get('serviceType') ?? ''),
-    message: String(formData.get('message') ?? ''),
-    contactPreference: String(formData.get('contactPreference') ?? 'call'),
-    turnstileToken: String(formData.get('turnstileToken') ?? ''),
-    company: String(formData.get('company') ?? ''),
+    flow: getStr('flow'),
+    name: getStr('name'),
+    phone: getStr('phone'),
+    email: getStr('email'),
+    contactPreference: getStr('contactPreference') || 'call',
+    vehicleYear: getStr('vehicleYear'),
+    vehicleMake: getStr('vehicleMake'),
+    vehicleModel: getStr('vehicleModel'),
+    vin: getStr('vin'),
+    mileage: getStr('mileage'),
+    message: getStr('message'),
+    estimateHelp: getArr('estimateHelp'),
+    knownBasis: getArr('knownBasis'),
+    beginChoice: getStr('beginChoice'),
+    diagnosticCodes: getStr('diagnosticCodes'),
+    helpNeeded: getStr('helpNeeded'),
+    symptomStarted: getStr('symptomStarted'),
+    symptomWhen: getArr('symptomWhen'),
+    warningLights: getArr('warningLights'),
+    symptoms: getArr('symptoms'),
+    drivable: getStr('drivable'),
+    alreadyDone: getStr('alreadyDone'),
+    category: getStr('category'),
+    assistantSummary: getStr('assistantSummary'),
+    nextStep: getStr('nextStep'),
+    turnstileToken: getStr('turnstileToken'),
+    company: getStr('company'),
   };
 
   // Honeypot: real visitors never populate this hidden field.
@@ -59,7 +80,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return jsonResponse({ ok: true });
   }
 
-  const parsed = quoteFormSchema.safeParse(raw);
+  const parsed = intakeSchema.safeParse(raw);
   if (!parsed.success) {
     const { fieldErrors } = z.flattenError(parsed.error);
     return jsonResponse({ ok: false, error: 'Please check the form and try again.', fieldErrors }, 400);
