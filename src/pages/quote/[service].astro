@@ -1,0 +1,60 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import ServiceQuoteForm from '../../components/quote/ServiceQuoteForm';
+import { business, services } from '../../lib/business';
+
+// One statically-generated page per advertised service. Visitors land here when
+// they click a specific service (e.g. Brake Services), so we skip the wizard's
+// diagnostic questions and show a slim form with the service prefilled.
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { service: service.slug },
+    props: { service },
+  }));
+}
+
+export const prerender = true;
+
+const { service } = Astro.props;
+---
+
+<BaseLayout
+  title={`${service.name} Quote`}
+  description={`Request a free ${service.name.toLowerCase()} quote from ${business.name} in ${business.address.city}, ${business.address.state}. Just your name, vehicle, and what's wrong.`}
+>
+  <section class="bg-paper py-5 sm:py-12 lg:py-16">
+    <div class="mx-auto w-full max-w-xl px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl">
+      <div class="mb-6 flex items-start gap-3 sm:mb-8 sm:gap-4">
+        <span class="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent sm:size-12">
+          <Icon name={service.icon} class="size-5 sm:size-6" />
+        </span>
+        <div>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">{service.name}</p>
+          <h1 class="mt-1 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+            Get a quote for your {service.name.toLowerCase()}.
+          </h1>
+          <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
+            Tell us your name, your vehicle, and what&rsquo;s going on - we&rsquo;ll get back to you with a real
+            price. No account, no obligation.
+          </p>
+        </div>
+      </div>
+
+      <div
+        id="intake-wizard"
+        class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10"
+      >
+        <ServiceQuoteForm serviceName={service.name} client:load />
+      </div>
+
+      <p class="mt-5 text-center text-sm text-steel-600">
+        Not sure what&rsquo;s wrong?{' '}
+        <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
+          Answer a few questions instead
+        </a>
+        .
+      </p>
+    </div>
+  </section>
+</BaseLayout>

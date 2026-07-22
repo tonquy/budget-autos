@@ -1,9 +1,12 @@
 ---
 import Icon from './Icon.astro';
 
-// On the quote page the form itself is the primary action, so the bar is hidden
-// entirely there. Everywhere else it surfaces a single thumb-reachable CTA.
-const isQuotePage = Astro.url.pathname.replace(/\/$/, '') === '/quote';
+// On any quote page (the wizard at /quote or a per-service form at /quote/*) the
+// form itself is the primary action, so the bar is hidden entirely there -
+// otherwise the fixed CTA overlaps the form's submit button on mobile.
+// Everywhere else it surfaces a single thumb-reachable CTA.
+const path = Astro.url.pathname.replace(/\/$/, '');
+const isQuotePage = path === '/quote' || path.startsWith('/quote/');
 ---
 
 {

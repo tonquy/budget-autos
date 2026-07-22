@@ -28,7 +28,7 @@ const preview = services.slice(0, 6);
     <div class="mt-10 divide-y divide-black/5">
       {preview.map((service) => (
         <a
-          href="/quote"
+          href={`/quote/${service.slug}`}
           class="group flex flex-col gap-4 py-6 transition-colors sm:flex-row sm:items-start sm:gap-6"
         >
           <span class="grid size-12 shrink-0 place-items-center rounded-full bg-accent-soft text-accent transition-colors group-hover:bg-accent group-hover:text-white">
