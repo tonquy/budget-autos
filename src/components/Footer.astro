@@ -65,7 +65,10 @@ const year = new Date().getFullYear();
   </div>
 
   <div class="container-shop flex flex-col gap-3 border-t border-white/10 py-6 text-xs text-steel-500 sm:flex-row sm:items-center sm:justify-between">
-    <p>&copy; {year} {business.name}. All rights reserved.</p>
+    <div class="space-y-1">
+      <p>&copy; {year} {business.name}. All rights reserved.</p>
+      <p>{business.laborGuide}</p>
+    </div>
     <div class="flex gap-5">
       <a href="/privacy" class="hover:text-steel-100">Privacy Policy</a>
       <a href="/terms" class="hover:text-steel-100">Terms of Service</a>

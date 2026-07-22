@@ -26,67 +26,13 @@ export const prerender = true;
   title="Services"
   description={`Repair and maintenance services at ${business.name} in ${business.address.city}, ${business.address.state}. Request a free quote for your vehicle.`}
 >
-  <section class="overflow-hidden border-b border-black/5 bg-surface py-14 sm:py-20">
-    <div class="container-shop grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-      <div class="max-w-xl">
-        <h1 class="font-display text-4xl font-bold leading-[1.08] tracking-tight text-ink sm:text-5xl">
-          What we fix<span class="text-accent">.</span>
-        </h1>
-        <p class="mt-4 text-lg leading-relaxed text-steel-700">
-          Tell us what&rsquo;s going on and we&rsquo;ll come back with a quote for your vehicle. No work starts until you say go.
-        </p>
-        <div class="mt-7">
-          <a
-            href="/#location"
-            class="inline-flex min-h-12 touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-6 py-3.5 text-base font-semibold text-ink transition-colors hover:bg-steel-100"
-          >
-            <Icon name="map-pin" class="size-5" />
-            Visit the shop
-          </a>
-        </div>
-      </div>
-
-      <div class="rounded-card bg-ink p-6 text-white shadow-lifted sm:p-8">
-        <p class="font-display text-base font-semibold text-white">What every quote includes</p>
-        <ul class="mt-5 space-y-5">
-          <li class="flex items-start gap-3.5">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
-              <Icon name="badge-check" class="size-5" />
-            </span>
-            <div>
-              <p class="font-semibold text-white">You approve first</p>
-              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">No work starts until you give us the go-ahead.</p>
-            </div>
-          </li>
-          <li class="flex items-start gap-3.5">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
-              <Icon name="thumbs-up" class="size-5" />
-            </span>
-            <div>
-              <p class="font-semibold text-white">Free quote, no pressure</p>
-              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">Ask us anything. There's no obligation to book.</p>
-            </div>
-          </li>
-          <li class="flex items-start gap-3.5">
-            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-accent">
-              <Icon name="shield-check" class="size-5" />
-            </span>
-            <div>
-              <p class="font-semibold text-white">Warranty backed</p>
-              <p class="mt-0.5 text-sm leading-relaxed text-steel-300">{business.warranty}.</p>
-            </div>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
   <section class="bg-paper py-16 sm:py-20">
     <div class="container-shop grid gap-4 sm:grid-cols-2">
       {services.map((service) => (
-        <article
+        <a
+          href="/quote"
           id={service.slug}
-          class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted sm:min-h-72 sm:p-7"
+          class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted transition-transform hover:-translate-y-0.5 sm:min-h-72 sm:p-7"
         >
           <Image
             src={serviceImages[service.slug]}
@@ -99,11 +45,15 @@ export const prerender = true;
           <span class="mb-auto grid size-11 place-items-center rounded-full bg-white/15 text-white ring-1 ring-white/20 backdrop-blur-sm">
             <Icon name={service.icon} class="size-5" />
           </span>
-          <div class="mt-6">
+          <div class="mt-6 flex items-end justify-between gap-3">
             <h2 class="font-display text-xl font-semibold text-white sm:text-2xl">{service.name}</h2>
+            <Icon
+              name="arrow-up-right"
+              class="size-5 shrink-0 text-accent transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            />
           </div>
           <p class="mt-2 max-w-md text-sm leading-relaxed text-steel-200">{service.description}</p>
-        </article>
+        </a>
       ))}
     </div>
   </section>
@@ -116,6 +66,7 @@ export const prerender = true;
       <p class="mt-2 text-steel-300">
         Send a photo from the Free Quote button in the header — we'll figure out what it is and get back to you.
       </p>
+      <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
     </div>
   </section>
 </BaseLayout>

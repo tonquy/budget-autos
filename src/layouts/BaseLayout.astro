@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileActionBar from '../components/MobileActionBar.astro';
+import ChatWidget from '../components/chat/ChatWidget';
 import { pageTitle, localBusinessJsonLd } from '../lib/seo';
 import { business } from '../lib/business';
 
@@ -61,5 +62,6 @@ const jsonLd = localBusinessJsonLd(siteUrl);
     </main>
     <Footer />
     <MobileActionBar />
+    <ChatWidget client:idle />
   </body>
 </html>

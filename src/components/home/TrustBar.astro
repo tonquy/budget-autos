@@ -1,6 +1,6 @@
 ---
 import Icon from '../Icon.astro';
-import { yearsInBusiness } from '../../lib/business';
+import { business, yearsInBusiness } from '../../lib/business';
 
 const stats = [
   { icon: 'calendar-days', label: `${yearsInBusiness}+ years serving the area` },
@@ -18,5 +18,10 @@ const stats = [
         <span class="text-sm font-medium leading-snug text-ink-soft">{stat.label}</span>
       </div>
     ))}
+  </div>
+  <div class="container-shop border-t border-black/5 py-4">
+    <p class="text-center text-xs leading-relaxed text-steel-500 sm:text-sm">
+      {business.laborGuide}
+    </p>
   </div>
 </section>

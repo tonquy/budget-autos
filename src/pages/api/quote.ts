@@ -87,7 +87,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
   const data = parsed.data;
 
-  const turnstileSecret = env.TURNSTILE_SECRET_KEY;
+  const turnstileSecret = env.TURNSTILE_SECRET;
   const isVerified = await verifyTurnstileToken(data.turnstileToken, turnstileSecret, clientAddress);
   if (!isVerified) {
     return jsonResponse({ ok: false, error: 'Verification failed. Please try again.' }, 400);

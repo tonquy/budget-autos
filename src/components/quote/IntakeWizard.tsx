@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
 import type { ComponentChildren } from 'preact';
+import { business } from '../../lib/business';
 import {
   emptyIntakeData,
   Icon,
@@ -30,6 +31,9 @@ declare global {
         container: HTMLElement,
         options: {
           sitekey: string;
+          // Analytics attribution for the Turnstile Spin integration. Explicit-render
+          // equivalent of data-action="turnstile-spin-v2" on a cf-turnstile div.
+          action?: string;
           callback: (token: string) => void;
           'expired-callback'?: () => void;
           'error-callback'?: () => void;
@@ -159,6 +163,7 @@ export default function IntakeWizard() {
       if (window.turnstile && turnstileContainerRef.current) {
         turnstileWidgetRef.current = window.turnstile.render(turnstileContainerRef.current, {
           sitekey: TURNSTILE_SITE_KEY,
+          action: 'turnstile-spin-v2',
           callback: (token) => {
             turnstileTokenRef.current = token;
           },
@@ -316,6 +321,7 @@ export default function IntakeWizard() {
           Thanks - we&rsquo;ve got your request and files. We&rsquo;ll be in touch soon, usually within the hour
           during shop hours.
         </p>
+        <p class="mx-auto mt-6 max-w-md text-xs leading-relaxed text-steel-500">{business.laborGuide}</p>
       </div>
     );
   }
@@ -446,6 +452,7 @@ export default function IntakeWizard() {
               </>
             )}
           </PrimaryButton>
+          <p class="text-xs leading-relaxed text-steel-500">{business.laborGuide}</p>
         </div>
       )}
     </form>

@@ -40,11 +40,11 @@ Open `http://localhost:4321`.
 Two files hold local-only configuration (both gitignored, both already populated with safe
 defaults so the site works out of the box):
 
-- **`.env`** - `PUBLIC_TURNSTILE_SITE_KEY`, currently set to Cloudflare's public "always passes"
-  Turnstile test site key.
-- **`.dev.vars`** - `TURNSTILE_SECRET_KEY` (matching test secret key) and `RESEND_API_KEY` (left
-  blank). Without a real Resend key, `/api/quote` logs the full submission to the terminal instead
-  of emailing it, so the quote form still works end-to-end for a demo.
+- **`.env`** - `PUBLIC_TURNSTILE_SITE_KEY`, the public Cloudflare Turnstile site key
+  (`0x4AAAAAAD7eom-KB1HZ1Qex`) for the real widget.
+- **`.dev.vars`** - `TURNSTILE_SECRET` (the matching Turnstile secret), `GEMINI_API_KEY` (chat),
+  and `RESEND_API_KEY`. Without a real Resend key, `/api/quote` logs the full submission to the
+  terminal instead of emailing it, so the quote form still works end-to-end for a demo.
 
 `.env.example` and `.dev.vars.example` document the same variables for a fresh checkout.
 
@@ -60,9 +60,9 @@ defaults so the site works out of the box):
    ```sh
    npx wrangler secret put RESEND_API_KEY
    ```
-4. **Cloudflare Turnstile** - create a real Turnstile widget in the Cloudflare dashboard, then:
-   - put the real site key in `PUBLIC_TURNSTILE_SITE_KEY` (in your production `.env` / build config)
-   - set the real secret: `npx wrangler secret put TURNSTILE_SECRET_KEY`
+4. **Cloudflare Turnstile** - the real widget (site key `0x4AAAAAAD7eom-KB1HZ1Qex`) is already wired:
+   - `PUBLIC_TURNSTILE_SITE_KEY` holds the site key (in your production `.env` / build config)
+   - set the real secret: `npx wrangler secret put TURNSTILE_SECRET`
 5. **Owner/from email addresses** - update `OWNER_NOTIFICATION_EMAIL` and `QUOTE_FROM_EMAIL` in
    `wrangler.jsonc` (the `QUOTE_FROM_EMAIL` domain must be verified in Resend).
 6. **Deploy:**

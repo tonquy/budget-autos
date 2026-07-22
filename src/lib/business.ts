@@ -29,6 +29,9 @@ export const business = {
   ],
   // Not published publicly - placeholder until the client confirms real terms.
   warranty: 'Warranty on parts and labor - ask us for details',
+  // Industry-standard labor guide the shop uses for quoting.
+  laborGuide:
+    'All estimates and work are quoted based on Mitchell 1 Labor Structure.',
   // Placeholder rating + review count for a small independent shop. Swap for the
   // shop's real Google rating and review total once confirmed.
   reviews: {

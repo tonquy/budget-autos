@@ -1,5 +1,6 @@
 import { business } from './business';
 import { flowLabels, type IntakeFormValues } from './quoteSchema';
+import type { ChatIntake, ChatMessage } from './chatIntake';
 
 export type MediaSummary = {
   imageCount: number;
@@ -139,6 +140,93 @@ export function ownerNotificationEmail(data: IntakeFormValues, media: MediaSumma
     data.assistantSummary ? `\nSymptom summary:\n${data.assistantSummary}` : '',
     `\n${messageLabel(data.flow)}:\n${data.message}`,
     data.helpNeeded ? `\nWhat help they need:\n${data.helpNeeded}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return { subject, html, text };
+}
+
+const chatContactLabels: Record<string, string> = {
+  call: 'Call',
+  text: 'Text',
+  email: 'Email',
+};
+
+// Lead + full transcript emailed to the shop when the chat assistant has
+// gathered enough to follow up.
+export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage[]) {
+  const vehicle = [intake.vehicleYear, intake.vehicleMake, intake.vehicleModel]
+    .map((p) => (p ?? '').trim())
+    .filter(Boolean)
+    .join(' ');
+
+  const name = intake.name?.trim() || 'Website visitor';
+  const subject = `New chat intake from ${name}${vehicle ? ` (${vehicle})` : ''}`;
+
+  const detailRows = [
+    row('Name', intake.name ?? ''),
+    row('Phone', intake.phone ?? ''),
+    row('Email', intake.email ?? ''),
+    row('Preferred contact', intake.contactPreference ? chatContactLabels[intake.contactPreference] ?? '' : ''),
+    row('Vehicle', vehicle),
+    row('Mileage', intake.mileage ?? ''),
+    row('Category', intake.category ?? ''),
+  ]
+    .filter(Boolean)
+    .join('');
+
+  const blocks = [
+    textBlock('Problem (in their words)', intake.problemDescription ?? ''),
+    textBlock('Symptoms', intake.symptoms ?? ''),
+    textBlock('Advisor summary', intake.summaryForShop ?? ''),
+  ]
+    .filter(Boolean)
+    .join('');
+
+  const transcriptHtml = transcript
+    .map((m) => {
+      const who = m.role === 'user' ? 'Customer' : 'Assistant';
+      const color = m.role === 'user' ? '#17181c' : '#8b8a83';
+      return `<p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:${color};"><strong>${who}:</strong> ${escapeHtml(
+        m.content,
+      )}</p>`;
+    })
+    .join('');
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px;margin:0 auto;">
+    <div style="background:#17181c;padding:24px 28px;border-radius:12px 12px 0 0;">
+      <p style="margin:0;color:#d9611f;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">Live chat intake</p>
+      <h1 style="margin:6px 0 0;color:#fff;font-size:22px;">${escapeHtml(name)}</h1>
+    </div>
+    <div style="border:1px solid #eceae4;border-top:none;border-radius:0 0 12px 12px;padding:24px 28px;">
+      <table style="width:100%;border-collapse:collapse;">
+        ${detailRows}
+      </table>
+      ${blocks}
+      <p style="margin:22px 0 6px;color:#8b8a83;font-size:13px;">Full conversation</p>
+      <div style="padding:14px 16px;background:#f8f6f2;border-radius:8px;">
+        ${transcriptHtml}
+      </div>
+      <p style="margin:22px 0 0;font-size:13px;color:#8b8a83;">${escapeHtml(business.laborGuide)}</p>
+    </div>
+  </div>`;
+
+  const text = [
+    'New chat intake',
+    `Name: ${intake.name ?? ''}`,
+    intake.phone ? `Phone: ${intake.phone}` : '',
+    intake.email ? `Email: ${intake.email}` : '',
+    intake.contactPreference ? `Preferred contact: ${chatContactLabels[intake.contactPreference] ?? intake.contactPreference}` : '',
+    vehicle ? `Vehicle: ${vehicle}` : '',
+    intake.mileage ? `Mileage: ${intake.mileage}` : '',
+    intake.category ? `Category: ${intake.category}` : '',
+    intake.problemDescription ? `\nProblem:\n${intake.problemDescription}` : '',
+    intake.symptoms ? `\nSymptoms:\n${intake.symptoms}` : '',
+    intake.summaryForShop ? `\nAdvisor summary:\n${intake.summaryForShop}` : '',
+    '\nConversation:',
+    ...transcript.map((m) => `${m.role === 'user' ? 'Customer' : 'Assistant'}: ${m.content}`),
   ]
     .filter(Boolean)
     .join('\n');
