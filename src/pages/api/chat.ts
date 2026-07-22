@@ -116,9 +116,16 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse({ ok: false, error: 'The assistant is having trouble right now.' }, 502);
   }
 
-  // Normalise the intake through zod so downstream code and the email get a
-  // predictable shape even if the model omits fields.
-  const intake: ChatIntake = chatIntakeSchema.parse(modelResult.intake ?? {});
+  // Merge the intake carried forward from the client with what the model
+  // returned this turn: the model wins on any field it fills, but we never
+  // lose a value it forgot to echo (e.g. name/phone captured earlier). This
+  // keeps the completeness check - and therefore the email send - reliable.
+  const modelIntake = chatIntakeSchema.parse(modelResult.intake ?? {});
+  const carried = chatIntakeSchema.parse(priorIntake ?? {});
+  const intake: ChatIntake = { ...carried };
+  for (const [key, value] of Object.entries(modelIntake) as [keyof ChatIntake, string][]) {
+    if (value) intake[key] = value;
+  }
   const reply = (modelResult.reply ?? '').trim() || 'Sorry, could you say that another way?';
   const complete = intakeIsComplete(intake);
   const wantsSubmit = Boolean(modelResult.readyToSubmit) && complete && !alreadySubmitted;

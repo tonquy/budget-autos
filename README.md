@@ -63,8 +63,9 @@ defaults so the site works out of the box):
 4. **Cloudflare Turnstile** - the real widget (site key `0x4AAAAAAD7eom-KB1HZ1Qex`) is already wired:
    - `PUBLIC_TURNSTILE_SITE_KEY` holds the site key (in your production `.env` / build config)
    - set the real secret: `npx wrangler secret put TURNSTILE_SECRET`
-5. **Owner/from email addresses** - update `OWNER_NOTIFICATION_EMAIL` and `QUOTE_FROM_EMAIL` in
-   `wrangler.jsonc` (the `QUOTE_FROM_EMAIL` domain must be verified in Resend).
+5. **Owner/from email addresses** - live: both `OWNER_NOTIFICATION_EMAIL` and `QUOTE_FROM_EMAIL`
+   in `wrangler.jsonc` are `info@budgetautosrepair.com`, sent from the Resend-verified
+   `budgetautosrepair.com` domain. Quote and chat leads both land in that inbox.
 6. **Deploy:**
    ```sh
    npm run build
