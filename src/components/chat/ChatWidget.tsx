@@ -41,6 +41,22 @@ function ChatIcon({ name, class: className = '' }: { name: 'chat' | 'close' | 's
   );
 }
 
+function isCoarsePointer() {
+  try {
+    return window.matchMedia('(pointer: coarse)').matches;
+  } catch {
+    return false;
+  }
+}
+
+function isMobileViewport() {
+  try {
+    return window.matchMedia('(max-width: 767px)').matches;
+  } catch {
+    return false;
+  }
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -50,12 +66,15 @@ export default function ChatWidget() {
   const [submitted, setSubmitted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Auto-open once per browser session so visitors notice it.
+  // On mobile, wait a beat longer so the first paint / action bar settle first.
   useEffect(() => {
     try {
       if (!sessionStorage.getItem(SESSION_KEY)) {
-        const t = setTimeout(() => setOpen(true), 900);
+        const delay = isMobileViewport() ? 1600 : 900;
+        const t = setTimeout(() => setOpen(true), delay);
         sessionStorage.setItem(SESSION_KEY, '1');
         return () => clearTimeout(t);
       }
@@ -69,8 +88,44 @@ export default function ChatWidget() {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
   }, [messages, loading, open]);
 
+  // Desktop: focus the composer when opened. Mobile: skip — autofocus pops the
+  // keyboard and immediately shrinks the sheet, which feels janky.
   useEffect(() => {
-    if (open) inputRef.current?.focus();
+    if (!open) return;
+    if (!isCoarsePointer()) inputRef.current?.focus();
+  }, [open]);
+
+  // Lock background scroll while the mobile sheet is open.
+  useEffect(() => {
+    if (!open || !isMobileViewport()) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [open]);
+
+  // When the mobile keyboard opens, keep the focused composer visible by
+  // scrolling it into view inside the sheet (visualViewport shrinks with the keyboard).
+  useEffect(() => {
+    if (!open) return;
+    const vv = window.visualViewport;
+    if (!vv) return;
+
+    function onResize() {
+      if (!isMobileViewport()) return;
+      // Nudge the active input into the visible area above the keyboard.
+      if (document.activeElement === inputRef.current) {
+        inputRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }
+
+    vv.addEventListener('resize', onResize);
+    vv.addEventListener('scroll', onResize);
+    return () => {
+      vv.removeEventListener('resize', onResize);
+      vv.removeEventListener('scroll', onResize);
+    };
   }, [open]);
 
   async function send() {
@@ -130,112 +185,156 @@ export default function ChatWidget() {
   const bubbles = [{ role: 'assistant' as const, content: OPENER }, ...messages];
 
   return (
-    <div class="fixed bottom-22 left-4 z-50 flex flex-col items-start md:bottom-5">
+    <>
+      {/* Mobile dimmer behind the sheet — tap to dismiss. */}
       {open && (
-        <div
-          role="dialog"
-          aria-label="Chat with Budget Auto"
-          class="mb-3 flex h-[min(30rem,70vh)] w-[min(23rem,calc(100vw-2rem))] flex-col overflow-hidden rounded-card border border-black/10 bg-surface shadow-lifted"
-        >
-          {/* Header */}
-          <div class="flex items-center justify-between gap-2 bg-ink px-4 py-3 text-white">
-            <div class="flex items-center gap-2.5">
-              <span class="grid size-8 place-items-center rounded-full bg-accent text-white">
-                <ChatIcon name="chat" class="size-4" />
-              </span>
-              <div class="leading-tight">
-                <p class="font-display text-sm font-semibold">Budget Auto</p>
-                <p class="text-[11px] text-steel-300">Service advisor - usually replies in minutes</p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              aria-label="Minimize chat"
-              class="grid size-8 shrink-0 place-items-center rounded-full text-steel-300 transition-colors hover:bg-white/10 hover:text-white"
-            >
-              <ChatIcon name="minimize" class="size-5" />
-            </button>
-          </div>
-
-          {/* Messages */}
-          <div ref={scrollRef} class="flex-1 space-y-3 overflow-y-auto bg-paper px-4 py-4">
-            {bubbles.map((m, i) => (
-              <div key={i} class={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
-                <div
-                  class={
-                    m.role === 'user'
-                      ? 'max-w-[85%] rounded-card rounded-br-sm bg-accent px-3.5 py-2.5 text-sm leading-relaxed text-white'
-                      : 'max-w-[85%] rounded-card rounded-bl-sm border border-black/5 bg-surface px-3.5 py-2.5 text-sm leading-relaxed text-ink'
-                  }
-                >
-                  {m.content}
-                </div>
-              </div>
-            ))}
-
-            {loading && (
-              <div class="flex justify-start">
-                <div class="flex gap-1 rounded-card rounded-bl-sm border border-black/5 bg-surface px-4 py-3">
-                  <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.2s]" />
-                  <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.1s]" />
-                  <span class="size-1.5 animate-bounce rounded-full bg-steel-300" />
-                </div>
-              </div>
-            )}
-
-            {submitted && (
-              <div class="flex items-start gap-2 rounded-card border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-ink">
-                <ChatIcon name="check" class="mt-0.5 size-4 shrink-0 text-success" />
-                <span>Your details are on the way to the shop. They'll reach out soon - usually within the hour during shop hours.</span>
-              </div>
-            )}
-          </div>
-
-          {/* Input */}
-          <div class="border-t border-black/10 bg-surface p-3">
-            <div class="flex items-end gap-2">
-              <textarea
-                ref={inputRef}
-                value={input}
-                rows={1}
-                onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
-                onKeyDown={onKeyDown}
-                placeholder="Type your message..."
-                class="max-h-28 min-h-11 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-2.5 text-base text-ink outline-none transition-colors focus:border-accent sm:text-sm"
-              />
-              <button
-                type="button"
-                onClick={() => void send()}
-                disabled={loading || !input.trim()}
-                aria-label="Send message"
-                class="grid size-11 shrink-0 place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <ChatIcon name="send" class="size-[18px]" />
-              </button>
-            </div>
-            <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">
-              Have photos of the problem or an estimate?{' '}
-              <a href="/quote" class="font-medium text-accent hover:underline">
-                Use the Free Quote form
-              </a>
-              .
-            </p>
-          </div>
-        </div>
+        <button
+          type="button"
+          aria-label="Close chat"
+          class="fixed inset-0 z-50 bg-ink/45 md:hidden"
+          onClick={() => setOpen(false)}
+        />
       )}
 
-      {/* Launcher */}
-      <button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? 'Close chat' : 'Open chat'}
-        aria-expanded={open}
-        class="inline-flex items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+      <div
+        class={
+          open
+            ? // Open: pin to the bottom edge on mobile (sheet fills most of the screen),
+              // floating card on desktop.
+              'fixed inset-x-0 bottom-0 z-50 flex flex-col md:inset-auto md:bottom-5 md:left-4 md:items-start'
+            : // Closed: launcher sits above the mobile Free Quote bar + home indicator.
+              'fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-start md:bottom-5'
+        }
       >
-        <ChatIcon name={open ? 'close' : 'chat'} class="size-5" />
-        {!open && <span>Chat with us</span>}
-      </button>
-    </div>
+        {open && (
+          <div
+            ref={panelRef}
+            role="dialog"
+            aria-label="Chat with Budget Auto"
+            aria-modal="true"
+            class={
+              'flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
+              // Mobile sheet: explicit dvh height (not % of an auto parent — that collapses).
+              'max-md:h-[92dvh] max-md:max-h-[92dvh] max-md:rounded-t-2xl max-md:border-b-0 ' +
+              // Desktop card: unchanged floating panel above the launcher.
+              'md:mb-3 md:h-[min(30rem,70vh)] md:w-[min(23rem,calc(100vw-2rem))] md:rounded-card'
+            }
+          >
+            {/* Header */}
+            <div class="flex shrink-0 items-center justify-between gap-2 bg-ink px-4 py-3.5 text-white max-md:pt-[max(0.875rem,env(safe-area-inset-top))]">
+              <div class="flex min-w-0 items-center gap-2.5">
+                <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-8">
+                  <ChatIcon name="chat" class="size-4" />
+                </span>
+                <div class="min-w-0 leading-tight">
+                  <p class="font-display text-sm font-semibold sm:text-sm">Budget Auto</p>
+                  <p class="truncate text-[11px] text-steel-300">Service advisor · usually replies in minutes</p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                aria-label="Close chat"
+                class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full text-steel-300 transition-colors hover:bg-white/10 hover:text-white sm:size-8"
+              >
+                <ChatIcon name="close" class="size-5" />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div
+              ref={scrollRef}
+              class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain bg-paper px-4 py-4 [-webkit-overflow-scrolling:touch]"
+            >
+              {bubbles.map((m, i) => (
+                <div key={i} class={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+                  <div
+                    class={
+                      m.role === 'user'
+                        ? 'max-w-[85%] rounded-card rounded-br-sm bg-accent px-3.5 py-2.5 text-[15px] leading-relaxed text-white sm:text-sm'
+                        : 'max-w-[85%] rounded-card rounded-bl-sm border border-black/5 bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed text-ink sm:text-sm'
+                    }
+                  >
+                    {m.content}
+                  </div>
+                </div>
+              ))}
+
+              {loading && (
+                <div class="flex justify-start">
+                  <div class="flex gap-1 rounded-card rounded-bl-sm border border-black/5 bg-surface px-4 py-3">
+                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.2s]" />
+                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.1s]" />
+                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300" />
+                  </div>
+                </div>
+              )}
+
+              {submitted && (
+                <div class="flex items-start gap-2 rounded-card border border-success/30 bg-success/10 px-3.5 py-2.5 text-[15px] text-ink sm:text-sm">
+                  <ChatIcon name="check" class="mt-0.5 size-4 shrink-0 text-success" />
+                  <span>
+                    Your details are on the way to the shop. They&rsquo;ll reach out soon - usually within the hour
+                    during shop hours.
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Composer — padded for the iPhone home indicator on mobile */}
+            <div
+              class="shrink-0 border-t border-black/10 bg-surface p-3"
+              style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+            >
+              <div class="flex items-end gap-2">
+                <textarea
+                  ref={inputRef}
+                  value={input}
+                  rows={1}
+                  enterKeyHint="send"
+                  autoComplete="off"
+                  autoCorrect="on"
+                  onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
+                  onKeyDown={onKeyDown}
+                  placeholder="Type your message..."
+                  class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-colors focus:border-accent sm:min-h-11 sm:py-2.5 sm:text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => void send()}
+                  disabled={loading || !input.trim()}
+                  aria-label="Send message"
+                  class="grid size-12 shrink-0 touch-manipulation place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50 sm:size-11"
+                >
+                  <ChatIcon name="send" class="size-[18px]" />
+                </button>
+              </div>
+              <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">
+                Have photos of the problem or an estimate?{' '}
+                <a href="/quote" class="font-medium text-accent hover:underline">
+                  Use the Free Quote form
+                </a>
+                .
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Launcher — hidden on mobile while the sheet is open (close lives in the header). */}
+        <button
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? 'Close chat' : 'Open chat'}
+          aria-expanded={open}
+          class={
+            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark ' +
+            (open ? 'hidden md:inline-flex' : '')
+          }
+        >
+          <ChatIcon name={open ? 'close' : 'chat'} class="size-5" />
+          {!open && <span>Chat with us</span>}
+        </button>
+      </div>
+    </>
   );
 }
