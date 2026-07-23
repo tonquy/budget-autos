@@ -103,8 +103,6 @@ export const nextStepOptions = [
   'Just send me an estimate',
 ] as const;
 
-const CURRENT_YEAR = new Date().getFullYear();
-
 const optionalText = (max: number) => z.string().trim().max(max).optional().or(z.literal(''));
 
 // Loose array of short choice strings. The client only ever submits values from
@@ -135,21 +133,9 @@ export const intakeSchema = z
       }),
     contactPreference: z.enum(contactPreferences),
 
-    // Vehicle
-    vehicleYear: z
-      .string()
-      .trim()
-      .optional()
-      .or(z.literal(''))
-      .refine(
-        (val) => {
-          if (!val) return true;
-          if (!/^\d{4}$/.test(val)) return false;
-          const year = Number(val);
-          return year >= 1900 && year <= CURRENT_YEAR + 1;
-        },
-        { message: 'Enter a 4-digit year, or leave it blank.' },
-      ),
+    // Vehicle — year is free text like make/model (no 4-digit gate; that was
+    // rejecting real submissions over invisible/autofill characters).
+    vehicleYear: optionalText(10),
     vehicleMake: optionalText(50),
     vehicleModel: optionalText(60),
     vin: z
