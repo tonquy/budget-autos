@@ -297,7 +297,7 @@ export default function ChatWidget() {
                   onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
                   onKeyDown={onKeyDown}
                   placeholder="Type your message..."
-                  class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-colors focus:border-accent sm:min-h-11 sm:py-2.5 sm:text-sm"
+                  class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-[box-shadow,border-color] focus:ring-2 focus:ring-accent/45 sm:min-h-11 sm:py-2.5 sm:text-sm"
                 />
                 <button
                   type="button"
