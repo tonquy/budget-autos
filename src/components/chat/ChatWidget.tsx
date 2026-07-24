@@ -68,16 +68,15 @@ export default function ChatWidget() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // Auto-open once per browser session so visitors notice it.
-  // On mobile, wait a beat longer so the first paint / action bar settle first.
+  // Auto-open once per session on desktop only. Skipping mobile keeps the first
+  // paint lighter for PageSpeed (no full-screen sheet / layout shift on load).
   useEffect(() => {
     try {
-      if (!sessionStorage.getItem(SESSION_KEY)) {
-        const delay = isMobileViewport() ? 1600 : 900;
-        const t = setTimeout(() => setOpen(true), delay);
-        sessionStorage.setItem(SESSION_KEY, '1');
-        return () => clearTimeout(t);
-      }
+      if (isMobileViewport()) return;
+      if (sessionStorage.getItem(SESSION_KEY)) return;
+      const t = setTimeout(() => setOpen(true), 900);
+      sessionStorage.setItem(SESSION_KEY, '1');
+      return () => clearTimeout(t);
     } catch {
       // sessionStorage can throw in private mode - just skip auto-open.
     }
