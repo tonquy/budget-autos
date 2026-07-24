@@ -87,6 +87,13 @@ export const services: Service[] = [
     icon: 'battery-charging',
   },
   {
+    slug: 'presale-inspection',
+    name: 'Presale Inspection',
+    description:
+      'Buying or selling? We walk the whole vehicle, document it with photos, and pull the Carfax so you know the real story before money changes hands.',
+    icon: 'clipboard-check',
+  },
+  {
     slug: 'general-repairs',
     name: 'General Repairs',
     description: "From belts and hoses to the stuff that doesn't fit a category - if it's broken, we'll take a look.",
