@@ -326,8 +326,8 @@ export default function ChatWidget() {
           aria-label={open ? 'Close chat' : 'Open chat'}
           aria-expanded={open}
           class={
-            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark ' +
-            (open ? 'hidden md:inline-flex' : '')
+            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-colors hover:bg-accent-dark ' +
+            (open ? 'hidden md:inline-flex' : 'chat-launcher-nudge')
           }
         >
           <ChatIcon name={open ? 'close' : 'chat'} class="size-5" />

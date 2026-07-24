@@ -95,8 +95,30 @@
     }
   }
 
+  /* Soft attention nudge for the closed chat launcher — small, slow bounce. */
+  .chat-launcher-nudge {
+    animation: chat-launcher-nudge 2.4s ease-in-out infinite;
+  }
+
+  @keyframes chat-launcher-nudge {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-6px);
+    }
+    55% {
+      transform: translateY(0);
+    }
+    70% {
+      transform: translateY(-3px);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .wizard-step-enter {
+    .wizard-step-enter,
+    .chat-launcher-nudge {
       animation: none;
     }
   }
