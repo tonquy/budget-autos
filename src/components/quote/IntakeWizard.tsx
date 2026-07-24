@@ -268,6 +268,12 @@ export default function IntakeWizard() {
       }
 
       setSubmitState('success');
+      try {
+        sessionStorage.setItem('budgetauto-quote-submitted', '1');
+      } catch {
+        /* private mode — thank-you PageView still fires; Lead may be skipped */
+      }
+      window.location.assign('/thank-you');
     } catch {
       setSubmitState('error');
       setErrorMessage('Something went wrong sending your request. Please try again or call us.');
@@ -323,11 +329,7 @@ export default function IntakeWizard() {
           <Icon name="circle-check-big" class="size-7" />
         </div>
         <h2 class="mt-5 font-display text-2xl font-bold text-ink">Request sent.</h2>
-        <p class="mx-auto mt-2 max-w-md text-steel-700">
-          Thanks - we&rsquo;ve got your request and files. We&rsquo;ll be in touch soon, usually within the hour
-          during shop hours.
-        </p>
-        <p class="mx-auto mt-6 max-w-md text-xs leading-relaxed text-steel-500">{business.laborGuide}</p>
+        <p class="mx-auto mt-2 max-w-md text-steel-700">Sending you to the confirmation page&hellip;</p>
       </div>
     );
   }

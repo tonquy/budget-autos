@@ -7,10 +7,11 @@ import Icon from './Icon.astro';
 // Everywhere else it surfaces a single thumb-reachable CTA.
 const path = Astro.url.pathname.replace(/\/$/, '');
 const isQuotePage = path === '/quote' || path.startsWith('/quote/');
+const hideActionBar = isQuotePage || path === '/thank-you';
 ---
 
 {
-  !isQuotePage && (
+  !hideActionBar && (
     <>
       {/* Spacer so the fixed bar never covers the footer's last row. */}
       <div class="h-20 md:hidden" aria-hidden="true" />

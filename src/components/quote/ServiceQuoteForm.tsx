@@ -160,26 +160,17 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
       }
 
       setSubmitState('success');
+      try {
+        sessionStorage.setItem('budgetauto-quote-submitted', '1');
+      } catch {
+        /* private mode — thank-you PageView still fires; Lead may be skipped */
+      }
+      window.location.assign('/thank-you');
+      return;
     } catch {
       setSubmitState('error');
       setErrorMessage('Something went wrong sending your request. Please try again or call us.');
     }
-  }
-
-  if (submitState === 'success') {
-    return (
-      <div class="py-6 text-center sm:py-10">
-        <div class="mx-auto grid size-14 place-items-center rounded-full bg-accent-soft text-accent">
-          <Icon name="circle-check-big" class="size-7" />
-        </div>
-        <h2 class="mt-5 font-display text-2xl font-bold text-ink">Request sent.</h2>
-        <p class="mx-auto mt-2 max-w-md text-steel-700">
-          Thanks - we&rsquo;ve got your {serviceName.toLowerCase()} request. We&rsquo;ll be in touch soon, usually
-          within the hour during shop hours.
-        </p>
-        <p class="mx-auto mt-6 max-w-md text-xs leading-relaxed text-steel-500">{business.laborGuide}</p>
-      </div>
-    );
   }
 
   return (
