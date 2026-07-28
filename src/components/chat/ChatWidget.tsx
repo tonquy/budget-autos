@@ -4,7 +4,7 @@ import type { ChatIntake, ChatMessage } from '../../lib/chatIntake';
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "Hi! I'm the Budget Auto service advisor. Tell me what's going on with your vehicle and I'll walk you through a few quick questions to get you a fair quote.";
+  "Hi! I'm the Budget Auto service advisor. Tell me what's going on with your vehicle — I'll help you figure out what it might be, walk you through safe fixes when I can, and connect you with our team if you need a deeper look.";
 
 const SESSION_KEY = 'budgetauto-chat-opened';
 
@@ -305,7 +305,7 @@ export default function ChatWidget() {
                   aria-label="Send message"
                   class="grid size-12 shrink-0 touch-manipulation place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50 sm:size-11"
                 >
-                  <ChatIcon name="send" class="size-[18px]" />
+                  <ChatIcon name="send" class="size-4.5" />
                 </button>
               </div>
               <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">

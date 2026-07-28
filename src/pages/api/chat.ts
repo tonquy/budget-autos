@@ -77,7 +77,7 @@ export const POST: APIRoute = async ({ request }) => {
         contents,
         generationConfig: {
           temperature: 0.5,
-          maxOutputTokens: 800,
+          maxOutputTokens: 1200,
           responseMimeType: 'application/json',
           responseSchema: geminiResponseSchema,
         },
