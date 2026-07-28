@@ -1,0 +1,22 @@
+---
+import { homeFaqs } from '../../lib/seo';
+---
+
+<section class="border-t border-black/5 bg-surface py-20 sm:py-28">
+  <div class="container-shop max-w-3xl">
+    <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+      Questions before you come in.
+    </h2>
+    <p class="mt-3 text-steel-700">
+      Straight answers about location, quotes, and what we fix.
+    </p>
+    <dl class="mt-10 divide-y divide-black/5">
+      {homeFaqs.map((faq) => (
+        <div class="py-5 first:pt-0 last:pb-0">
+          <dt class="font-display text-lg font-semibold text-ink">{faq.question}</dt>
+          <dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>

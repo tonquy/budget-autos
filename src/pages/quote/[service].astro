@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import ServiceQuoteForm from '../../components/quote/ServiceQuoteForm';
 import { business, services } from '../../lib/business';
+import { breadcrumbJsonLd } from '../../lib/seo';
 
 // One statically-generated page per advertised service. Visitors land here when
 // they click a specific service (e.g. Brake Services), so we skip the wizard's
@@ -17,11 +18,19 @@ export function getStaticPaths() {
 export const prerender = true;
 
 const { service } = Astro.props;
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 ---
 
 <BaseLayout
   title={`${service.name} Quote`}
   description={`Request a free ${service.name.toLowerCase()} quote from ${business.name} in ${business.address.city}, ${business.address.state}. Just your name, vehicle, and what's wrong.`}
+  jsonLd={[
+    breadcrumbJsonLd(siteUrl, [
+      { name: 'Home', path: '/' },
+      { name: service.name, path: `/services/${service.slug}` },
+      { name: 'Quote', path: `/quote/${service.slug}` },
+    ]),
+  ]}
 >
   <section class="bg-paper py-5 sm:py-12 lg:py-16">
     <div class="mx-auto w-full max-w-xl px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl">
@@ -30,13 +39,21 @@ const { service } = Astro.props;
           <Icon name={service.icon} class="size-5 sm:size-6" />
         </span>
         <div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-accent">{service.name}</p>
+          <p class="text-xs font-semibold uppercase tracking-wider text-accent">
+            <a href={`/services/${service.slug}`} class="hover:text-accent-dark">
+              {service.name}
+            </a>
+          </p>
           <h1 class="mt-1 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
             Get a quote for your {service.name.toLowerCase()}.
           </h1>
           <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
             Tell us your name, your vehicle, and what&rsquo;s going on - we&rsquo;ll get back to you with a real
-            price. No account, no obligation.
+            price. No account, no obligation. Prefer to read more first?{' '}
+            <a href={`/services/${service.slug}`} class="font-semibold text-accent hover:text-accent-dark">
+              See {service.name.toLowerCase()} details
+            </a>
+            .
           </p>
         </div>
       </div>

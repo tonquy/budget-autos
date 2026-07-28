@@ -3,42 +3,46 @@ import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { business, services } from '../lib/business';
-import bayImage from '../assets/images/services-bay.jpg';
-import engineImage from '../assets/images/detail-engine.jpg';
-import brakesImage from '../assets/images/detail-brakes.jpg';
-import diagnosticsImage from '../assets/images/detail-diagnostics.jpg';
-import suspensionImage from '../assets/images/detail-suspension.jpg';
-import electricalImage from '../assets/images/detail-electrical.jpg';
-import presaleImage from '../assets/images/detail-presale-inspection.jpg';
-
-const serviceImages: Record<string, ImageMetadata> = {
-  diagnostics: diagnosticsImage,
-  'engine-maintenance': engineImage,
-  'brake-services': brakesImage,
-  'suspension-alignment': suspensionImage,
-  'electrical-systems': electricalImage,
-  'presale-inspection': presaleImage,
-  'general-repairs': bayImage,
-};
+import { serviceImages } from '../lib/serviceImages';
+import { breadcrumbJsonLd } from '../lib/seo';
 
 export const prerender = true;
+
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 ---
 
 <BaseLayout
-  title="Services"
-  description={`Repair and maintenance services at ${business.name} in ${business.address.city}, ${business.address.state}. Request a free quote for your vehicle.`}
+  title={`Auto Repair Services in ${business.address.city}, ${business.address.state}`}
+  description={`Brakes, diagnostics, alignments, electrical, and more at ${business.name} in ${business.address.city}, ${business.address.state}. Browse services and request a free quote.`}
+  jsonLd={[
+    breadcrumbJsonLd(siteUrl, [
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services' },
+    ]),
+  ]}
 >
-  <section class="bg-paper py-16 sm:py-20">
+  <section class="bg-paper py-12 sm:py-16">
+    <div class="container-shop max-w-2xl">
+      <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl">
+        Auto repair services in {business.address.city}
+      </h1>
+      <p class="mt-4 text-base leading-relaxed text-steel-700 sm:text-lg">
+        Family-owned shop on {business.address.line1}. Pick a service to learn what we cover, then send a photo for a free quote.
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-paper pb-16 sm:pb-20">
     <div class="container-shop grid gap-4 sm:grid-cols-2">
       {services.map((service) => (
         <a
-          href={`/quote/${service.slug}`}
+          href={`/services/${service.slug}`}
           id={service.slug}
           class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted transition-transform hover:-translate-y-0.5 sm:min-h-72 sm:p-7"
         >
           <Image
             src={serviceImages[service.slug]}
-            alt={service.name}
+            alt={`${service.name} in ${business.address.city}, ${business.address.state}`}
             widths={[480, 768, 1024]}
             sizes="(min-width: 640px) 50vw, 100vw"
             class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
@@ -66,8 +70,14 @@ export const prerender = true;
         Don't see what's wrong with your car listed?
       </h2>
       <p class="mt-2 text-steel-300">
-        Send a photo from the Free Quote button in the header — we'll figure out what it is and get back to you.
+        Send a photo from the Free Quote form — we'll figure out what it is and get back to you.
       </p>
+      <a
+        href="/quote"
+        class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+      >
+        Get a free quote
+      </a>
       <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
     </div>
   </section>

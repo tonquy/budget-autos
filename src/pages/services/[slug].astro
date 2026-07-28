@@ -1,0 +1,175 @@
+---
+import { Image } from 'astro:assets';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { business, services, type Service } from '../../lib/business';
+import { serviceImages } from '../../lib/serviceImages';
+import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+export const prerender = true;
+
+interface Props {
+  service: Service;
+}
+
+const { service } = Astro.props;
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+const image = serviceImages[service.slug];
+const otherServices = services.filter((s) => s.slug !== service.slug).slice(0, 4);
+
+const jsonLd = [
+  breadcrumbJsonLd(siteUrl, [
+    { name: 'Home', path: '/' },
+    { name: 'Services', path: '/services' },
+    { name: service.name, path: `/services/${service.slug}` },
+  ]),
+  serviceJsonLd(siteUrl, service),
+  faqJsonLd(service.faqs),
+];
+---
+
+<BaseLayout
+  title={`${service.name} in ${business.address.city}, ${business.address.state}`}
+  description={service.seoDescription}
+  jsonLd={jsonLd}
+>
+  <section class="border-b border-black/5 bg-paper">
+    <div class="container-shop py-4 text-sm text-steel-600">
+      <nav aria-label="Breadcrumb">
+        <ol class="flex flex-wrap items-center gap-1.5">
+          <li>
+            <a href="/" class="hover:text-accent">Home</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li>
+            <a href="/services" class="hover:text-accent">Services</a>
+          </li>
+          <li aria-hidden="true">/</li>
+          <li class="font-medium text-ink" aria-current="page">{service.name}</li>
+        </ol>
+      </nav>
+    </div>
+  </section>
+
+  <section class="bg-paper pb-16 pt-6 sm:pb-20 sm:pt-10">
+    <div class="container-shop grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-wider text-accent">
+          {business.address.city}, {business.address.state}
+        </p>
+        <h1 class="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl">
+          {service.name}
+        </h1>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-steel-700 sm:text-lg">
+          {service.longDescription}
+        </p>
+
+        <ul class="mt-8 space-y-3">
+          {service.highlights.map((item) => (
+            <li class="flex items-start gap-3 text-ink">
+              <Icon name="circle-check-big" class="mt-0.5 size-5 shrink-0 text-accent" />
+              <span class="leading-relaxed">{item}</span>
+            </li>
+          ))}
+        </ul>
+
+        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
+          <a
+            href={`/quote/${service.slug}`}
+            class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark"
+          >
+            Get a free {service.name.toLowerCase()} quote
+          </a>
+          <a
+            href={business.phoneHref}
+            class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control border border-ink/15 px-6 py-3 text-sm font-semibold text-ink hover:bg-steel-100"
+          >
+            Call {business.phoneDisplay}
+          </a>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-card border border-black/5 shadow-card">
+        <Image
+          src={image}
+          alt={`${service.name} at ${business.name} in ${business.address.city}, ${business.address.state}`}
+          widths={[480, 768, 1024]}
+          sizes="(min-width: 1024px) 40vw, 100vw"
+          class="aspect-4/3 size-full object-cover sm:aspect-square lg:aspect-4/5"
+        />
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t border-black/5 bg-surface py-16 sm:py-20">
+    <div class="container-shop max-w-3xl">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        Common questions
+      </h2>
+      <dl class="mt-8 divide-y divide-black/5">
+        {service.faqs.map((faq) => (
+          <div class="py-5 first:pt-0 last:pb-0">
+            <dt class="font-display text-lg font-semibold text-ink">{faq.question}</dt>
+            <dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <section class="border-t border-black/5 bg-paper py-16 sm:py-20">
+    <div class="container-shop">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        Other services
+      </h2>
+      <div class="mt-8 grid gap-3 sm:grid-cols-2">
+        {otherServices.map((s) => (
+          <a
+            href={`/services/${s.slug}`}
+            class="group flex items-start gap-4 rounded-card border border-black/5 bg-surface p-5 transition-colors hover:border-accent/40"
+          >
+            <span class="grid size-10 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
+              <Icon name={s.icon} class="size-5" />
+            </span>
+            <span>
+              <span class="font-display font-semibold text-ink group-hover:text-accent-dark">
+                {s.name}
+              </span>
+              <span class="mt-1 block text-sm leading-relaxed text-steel-700">{s.description}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+      <p class="mt-8">
+        <a href="/services" class="text-sm font-semibold text-accent hover:text-accent-dark">
+          View all services
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <section class="border-t border-black/5 bg-ink py-14 text-white sm:py-16">
+    <div class="container-shop max-w-2xl">
+      <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+        Ready for a real number?
+      </h2>
+      <p class="mt-2 text-steel-300">
+        Send a photo or a few details — we reply with a quote, usually within the hour during shop hours.
+      </p>
+      <a
+        href={`/quote/${service.slug}`}
+        class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+      >
+        Start your free quote
+      </a>
+      <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
+    </div>
+  </section>
+</BaseLayout>

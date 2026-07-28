@@ -4,21 +4,31 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import MobileActionBar from '../components/MobileActionBar.astro';
 import ChatWidget from '../components/chat/ChatWidget';
-import { pageTitle, localBusinessJsonLd } from '../lib/seo';
+import { pageTitle, localBusinessJsonLd, OG_IMAGE } from '../lib/seo';
 import { business } from '../lib/business';
 
 interface Props {
   title: string;
   description: string;
   image?: string;
+  /** e.g. "noindex, nofollow" for thank-you and other non-indexable pages */
+  robots?: string;
+  /** Extra JSON-LD graphs (FAQ, Service, BreadcrumbList) merged after AutoRepair */
+  jsonLd?: Record<string, unknown>[];
 }
 
-const { title, description, image = '/og-default.jpg' } = Astro.props;
+const {
+  title,
+  description,
+  image = OG_IMAGE.path,
+  robots,
+  jsonLd: extraJsonLd = [],
+} = Astro.props;
 
 const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const ogImageUrl = new URL(image, Astro.site ?? Astro.url).toString();
-const jsonLd = localBusinessJsonLd(siteUrl);
+const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
 ---
 
 <!doctype html>
@@ -43,13 +53,17 @@ const jsonLd = localBusinessJsonLd(siteUrl);
 
     <title>{pageTitle(title)}</title>
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <link rel="canonical" href={canonicalUrl} />
 
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:title" content={pageTitle(title)} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content={String(OG_IMAGE.width)} />
+    <meta property="og:image:height" content={String(OG_IMAGE.height)} />
     <meta property="og:site_name" content={business.name} />
 
     <meta name="twitter:card" content="summary_large_image" />
@@ -59,7 +73,9 @@ const jsonLd = localBusinessJsonLd(siteUrl);
 
     <meta name="theme-color" content="#17181c" />
 
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
+    {jsonLdBlocks.map((block) => (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(block)} />
+    ))}
 
     <!-- Meta Pixel Code -->
     <script is:inline>

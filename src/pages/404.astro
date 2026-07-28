@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import { business } from '../lib/business';
+
+export const prerender = true;
+---
+
+<BaseLayout
+  title="Page not found"
+  description={`That page doesn’t exist. Browse services or request a free quote from ${business.name} in ${business.address.city}, ${business.address.state}.`}
+  robots="noindex, follow"
+>
+  <section class="bg-paper py-16 sm:py-24">
+    <div class="mx-auto w-full max-w-lg px-5 text-center sm:px-8">
+      <div class="mx-auto grid size-16 place-items-center rounded-full bg-accent-soft text-accent">
+        <Icon name="map-pin" class="size-8" />
+      </div>
+      <p class="mt-6 text-xs font-semibold uppercase tracking-wider text-accent">404</p>
+      <h1 class="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+        Page not found.
+      </h1>
+      <p class="mt-3 text-base leading-relaxed text-steel-700 sm:text-lg">
+        That link doesn’t go anywhere. Head home, browse services, or send a photo for a free quote.
+      </p>
+
+      <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        <a
+          href="/"
+          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark sm:w-auto"
+        >
+          Back to home
+        </a>
+        <a
+          href="/services"
+          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center rounded-control border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 sm:w-auto"
+        >
+          Browse services
+        </a>
+        <a
+          href="/quote"
+          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center rounded-control border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 sm:w-auto"
+        >
+          Free quote
+        </a>
+      </div>
+
+      <p class="mt-10 text-sm text-steel-600">
+        Prefer to talk?{' '}
+        <a href={business.phoneHref} class="font-semibold text-accent hover:text-accent-dark">
+          {business.phoneDisplay}
+        </a>
+      </p>
+    </div>
+  </section>
+</BaseLayout>

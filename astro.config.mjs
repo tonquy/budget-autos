@@ -15,5 +15,10 @@ export default defineConfig({
   },
 
   adapter: cloudflare(),
-  integrations: [preact(), sitemap()]
+  integrations: [
+    preact(),
+    sitemap({
+      filter: (page) => !page.includes('/thank-you') && !page.includes('/404'),
+    }),
+  ],
 });
