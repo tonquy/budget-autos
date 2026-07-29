@@ -155,7 +155,11 @@ const chatContactLabels: Record<string, string> = {
 
 // Lead + full transcript emailed to the shop when the chat assistant has
 // gathered enough to follow up.
-export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage[]) {
+export function chatIntakeOwnerEmail(
+  intake: ChatIntake,
+  transcript: ChatMessage[],
+  media?: { photoCount?: number },
+) {
   const vehicle = [intake.vehicleYear, intake.vehicleMake, intake.vehicleModel]
     .map((p) => (p ?? '').trim())
     .filter(Boolean)
@@ -163,6 +167,7 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
 
   const name = intake.name?.trim() || 'Website visitor';
   const subject = `New chat intake from ${name}${vehicle ? ` (${vehicle})` : ''}`;
+  const photoCount = media?.photoCount ?? 0;
 
   const detailRows = [
     row('Name', intake.name ?? ''),
@@ -172,6 +177,7 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
     row('Vehicle', vehicle),
     row('Mileage', intake.mileage ?? ''),
     row('Category', intake.category ?? ''),
+    photoCount > 0 ? row('Photos attached', String(photoCount)) : '',
   ]
     .filter(Boolean)
     .join('');
@@ -179,6 +185,7 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
   const blocks = [
     textBlock('Problem (in their words)', intake.problemDescription ?? ''),
     textBlock('Symptoms', intake.symptoms ?? ''),
+    textBlock('What the advisor saw in photos', intake.visualFindings ?? ''),
     textBlock('Advisor summary', intake.summaryForShop ?? ''),
   ]
     .filter(Boolean)
@@ -188,8 +195,12 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
     .map((m) => {
       const who = m.role === 'user' ? 'Customer' : 'Assistant';
       const color = m.role === 'user' ? '#17181c' : '#8b8a83';
-      return `<p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:${color};"><strong>${who}:</strong> ${escapeHtml(
-        m.content,
+      const photoNote =
+        m.role === 'user' && (m.images?.length ?? 0) > 0
+          ? ` <em style="color:#8b8a83;">[${m.images!.length} photo${m.images!.length === 1 ? '' : 's'}]</em>`
+          : '';
+      return `<p style="margin:0 0 10px;font-size:13px;line-height:1.5;color:${color};"><strong>${who}:</strong>${photoNote} ${escapeHtml(
+        m.content || '(photo only)',
       )}</p>`;
     })
     .join('');
@@ -209,6 +220,11 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
       <div style="padding:14px 16px;background:#f8f6f2;border-radius:8px;">
         ${transcriptHtml}
       </div>
+      ${
+        photoCount > 0
+          ? `<p style="margin:16px 0 0;font-size:13px;color:#8b8a83;">Customer photos are attached to this email when size allows.</p>`
+          : ''
+      }
       <p style="margin:22px 0 0;font-size:13px;color:#8b8a83;">${escapeHtml(business.laborGuide)}</p>
     </div>
   </div>`;
@@ -222,11 +238,17 @@ export function chatIntakeOwnerEmail(intake: ChatIntake, transcript: ChatMessage
     vehicle ? `Vehicle: ${vehicle}` : '',
     intake.mileage ? `Mileage: ${intake.mileage}` : '',
     intake.category ? `Category: ${intake.category}` : '',
+    photoCount > 0 ? `Photos attached: ${photoCount}` : '',
     intake.problemDescription ? `\nProblem:\n${intake.problemDescription}` : '',
     intake.symptoms ? `\nSymptoms:\n${intake.symptoms}` : '',
+    intake.visualFindings ? `\nPhoto findings:\n${intake.visualFindings}` : '',
     intake.summaryForShop ? `\nAdvisor summary:\n${intake.summaryForShop}` : '',
     '\nConversation:',
-    ...transcript.map((m) => `${m.role === 'user' ? 'Customer' : 'Assistant'}: ${m.content}`),
+    ...transcript.map((m) => {
+      const photos =
+        m.role === 'user' && (m.images?.length ?? 0) > 0 ? ` [${m.images!.length} photo(s)]` : '';
+      return `${m.role === 'user' ? 'Customer' : 'Assistant'}${photos}: ${m.content || '(photo only)'}`;
+    }),
   ]
     .filter(Boolean)
     .join('\n');

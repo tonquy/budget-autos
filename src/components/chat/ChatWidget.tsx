@@ -1,10 +1,18 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import type { ChatIntake, ChatMessage } from '../../lib/chatIntake';
+import type { ChatImage, ChatIntake, ChatMessage } from '../../lib/chatIntake';
+import {
+  CHAT_MAX_IMAGES,
+  CHAT_MAX_IMAGES_PER_MESSAGE,
+  CHAT_MAX_IMAGE_BYTES,
+  compressChatPhoto,
+  fileToBase64,
+  isAllowedChatImage,
+} from '../../lib/chatMedia';
 
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "Hi! I'm the Budget Auto service advisor. Tell me what's going on with your vehicle — I'll help you figure out what it might be, walk you through safe fixes when I can, and connect you with our team if you need a deeper look.";
+  "Hi! I'm the Budget Auto service advisor. Tell me what's going on — or attach a photo of the problem or another shop's estimate. I'll look at it, give you a straight read, and help you figure out next steps.";
 
 const SESSION_KEY = 'budgetauto-chat-opened';
 
@@ -17,7 +25,29 @@ type ApiResponse = {
   error?: string;
 };
 
-function ChatIcon({ name, class: className = '' }: { name: 'chat' | 'close' | 'send' | 'minimize' | 'check'; class?: string }) {
+type PendingImage = {
+  id: string;
+  file: File;
+  previewUrl: string;
+  status: 'compressing' | 'ready' | 'error';
+};
+
+type UiMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+  /** Object URLs for bubble thumbnails (display only). */
+  previewUrls?: string[];
+  /** Base64 payloads kept for Gemini + shop email. */
+  images?: ChatImage[];
+};
+
+function ChatIcon({
+  name,
+  class: className = '',
+}: {
+  name: 'chat' | 'close' | 'send' | 'minimize' | 'check' | 'image' | 'camera';
+  class?: string;
+}) {
   const paths: Record<string, string> = {
     chat: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',
     close:
@@ -27,6 +57,10 @@ function ChatIcon({ name, class: className = '' }: { name: 'chat' | 'close' | 's
     send: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zm7.318-19.539l-10.94 10.939"/>',
     check:
       '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/>',
+    image:
+      '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15l-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></g>',
+    camera:
+      '<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></g>',
   };
   return (
     <svg
@@ -57,19 +91,40 @@ function isMobileViewport() {
   }
 }
 
+function countImages(messages: UiMessage[]) {
+  return messages.reduce((n, m) => n + (m.images?.length ?? 0), 0);
+}
+
+/** Build API transcript: keep text history; include images (capped from the end). */
+function toApiMessages(messages: UiMessage[]): ChatMessage[] {
+  let remaining = CHAT_MAX_IMAGES;
+  const reversed = [...messages].reverse().map((m) => {
+    if (m.role !== 'user' || !m.images?.length) {
+      return { role: m.role, content: m.content } satisfies ChatMessage;
+    }
+    const take = Math.min(m.images.length, remaining);
+    remaining -= take;
+    const images = take > 0 ? m.images.slice(-take) : undefined;
+    return { role: m.role, content: m.content, images } satisfies ChatMessage;
+  });
+  return reversed.reverse();
+}
+
 export default function ChatWidget() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [messages, setMessages] = useState<UiMessage[]>([]);
   const [input, setInput] = useState('');
+  const [pending, setPending] = useState<PendingImage[]>([]);
+  const [mediaNotice, setMediaNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [intake, setIntake] = useState<ChatIntake | undefined>(undefined);
   const [submitted, setSubmitted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const cameraRef = useRef<HTMLInputElement>(null);
 
-  // Auto-open once per session on desktop only. Skipping mobile keeps the first
-  // paint lighter for PageSpeed (no full-screen sheet / layout shift on load).
   useEffect(() => {
     try {
       if (isMobileViewport()) return;
@@ -82,19 +137,15 @@ export default function ChatWidget() {
     }
   }, []);
 
-  // Keep the latest message in view.
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' });
-  }, [messages, loading, open]);
+  }, [messages, loading, open, pending]);
 
-  // Desktop: focus the composer when opened. Mobile: skip — autofocus pops the
-  // keyboard and immediately shrinks the sheet, which feels janky.
   useEffect(() => {
     if (!open) return;
     if (!isCoarsePointer()) inputRef.current?.focus();
   }, [open]);
 
-  // Lock background scroll while the mobile sheet is open.
   useEffect(() => {
     if (!open || !isMobileViewport()) return;
     const prev = document.body.style.overflow;
@@ -104,8 +155,6 @@ export default function ChatWidget() {
     };
   }, [open]);
 
-  // When the mobile keyboard opens, keep the focused composer visible by
-  // scrolling it into view inside the sheet (visualViewport shrinks with the keyboard).
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
@@ -113,7 +162,6 @@ export default function ChatWidget() {
 
     function onResize() {
       if (!isMobileViewport()) return;
-      // Nudge the active input into the visible area above the keyboard.
       if (document.activeElement === inputRef.current) {
         inputRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
@@ -127,20 +175,116 @@ export default function ChatWidget() {
     };
   }, [open]);
 
+  // Revoke pending object URLs on unmount.
+  useEffect(() => {
+    return () => {
+      pending.forEach((p) => URL.revokeObjectURL(p.previewUrl));
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function addFiles(fileList: FileList | null) {
+    if (!fileList?.length) return;
+    setMediaNotice(null);
+
+    const already = countImages(messages) + pending.length;
+    const room = CHAT_MAX_IMAGES - already;
+    if (room <= 0) {
+      setMediaNotice(`You can attach up to ${CHAT_MAX_IMAGES} photos in chat.`);
+      return;
+    }
+
+    const perMessageRoom = CHAT_MAX_IMAGES_PER_MESSAGE - pending.length;
+    const slots = Math.min(room, perMessageRoom, fileList.length);
+    if (slots <= 0) {
+      setMediaNotice(`You can attach up to ${CHAT_MAX_IMAGES_PER_MESSAGE} photos per message.`);
+      return;
+    }
+
+    const picked = Array.from(fileList).slice(0, slots);
+    const starters: PendingImage[] = [];
+
+    for (const file of picked) {
+      if (!isAllowedChatImage(file)) {
+        setMediaNotice('Please attach JPG, PNG, or WebP photos.');
+        continue;
+      }
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      starters.push({
+        id,
+        file,
+        previewUrl: URL.createObjectURL(file),
+        status: 'compressing',
+      });
+    }
+
+    if (starters.length === 0) return;
+    setPending((prev) => [...prev, ...starters]);
+
+    for (const item of starters) {
+      try {
+        const compressed = await compressChatPhoto(item.file);
+        if (compressed.size > CHAT_MAX_IMAGE_BYTES) {
+          setPending((prev) => prev.map((p) => (p.id === item.id ? { ...p, status: 'error' } : p)));
+          setMediaNotice('One photo was still too large after compression. Try a clearer, closer shot.');
+          continue;
+        }
+        setPending((prev) =>
+          prev.map((p) => (p.id === item.id ? { ...p, file: compressed, status: 'ready' } : p)),
+        );
+      } catch {
+        setPending((prev) => prev.map((p) => (p.id === item.id ? { ...p, status: 'error' } : p)));
+      }
+    }
+  }
+
+  function removePending(id: string) {
+    setPending((prev) => {
+      const target = prev.find((p) => p.id === id);
+      if (target) URL.revokeObjectURL(target.previewUrl);
+      return prev.filter((p) => p.id !== id);
+    });
+  }
+
   async function send() {
     const text = input.trim();
-    if (!text || loading) return;
+    const readyPending = pending.filter((p) => p.status === 'ready');
+    if ((!text && readyPending.length === 0) || loading) return;
+    if (pending.some((p) => p.status === 'compressing')) return;
 
-    const next: ChatMessage[] = [...messages, { role: 'user', content: text }];
+    setLoading(true);
+    setMediaNotice(null);
+
+    let images: ChatImage[] = [];
+    try {
+      images = await Promise.all(readyPending.map((p) => fileToBase64(p.file)));
+    } catch {
+      setMediaNotice('Could not read one of the photos. Please try again.');
+      setLoading(false);
+      return;
+    }
+
+    const previewUrls = readyPending.map((p) => p.previewUrl);
+    const userMessage: UiMessage = {
+      role: 'user',
+      content: text,
+      previewUrls,
+      images: images.length ? images : undefined,
+    };
+    const next = [...messages, userMessage];
     setMessages(next);
     setInput('');
-    setLoading(true);
+    setPending([]);
 
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: next, intake, alreadySubmitted: submitted }),
+        body: JSON.stringify({
+          messages: toApiMessages(next),
+          intake,
+          alreadySubmitted: submitted,
+        }),
       });
       const data = (await res.json()) as ApiResponse;
 
@@ -181,11 +325,13 @@ export default function ChatWidget() {
     }
   }
 
-  const bubbles = [{ role: 'assistant' as const, content: OPENER }, ...messages];
+  const bubbles: UiMessage[] = [{ role: 'assistant', content: OPENER }, ...messages];
+  const compressing = pending.some((p) => p.status === 'compressing');
+  const canSend =
+    !loading && !compressing && (Boolean(input.trim()) || pending.some((p) => p.status === 'ready'));
 
   return (
     <>
-      {/* Mobile dimmer behind the sheet — tap to dismiss. */}
       {open && (
         <button
           type="button"
@@ -198,11 +344,8 @@ export default function ChatWidget() {
       <div
         class={
           open
-            ? // Open: pin to the bottom edge on mobile (sheet fills most of the screen),
-              // floating card on desktop.
-              'fixed inset-x-0 bottom-0 z-50 flex flex-col md:inset-auto md:bottom-5 md:left-4 md:items-start'
-            : // Closed: launcher sits above the mobile Free Quote bar + home indicator.
-              'fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-start md:bottom-5'
+            ? 'fixed inset-x-0 bottom-0 z-50 flex flex-col md:inset-auto md:bottom-5 md:left-4 md:items-start'
+            : 'fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-start md:bottom-5'
         }
       >
         {open && (
@@ -213,13 +356,10 @@ export default function ChatWidget() {
             aria-modal="true"
             class={
               'flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
-              // Mobile sheet: explicit dvh height (not % of an auto parent — that collapses).
               'max-md:h-[92dvh] max-md:max-h-[92dvh] max-md:rounded-t-2xl max-md:border-b-0 ' +
-              // Desktop card: unchanged floating panel above the launcher.
-              'md:mb-3 md:h-[min(30rem,70vh)] md:w-[min(23rem,calc(100vw-2rem))] md:rounded-card'
+              'md:mb-3 md:h-[min(32rem,72vh)] md:w-[min(23rem,calc(100vw-2rem))] md:rounded-card'
             }
           >
-            {/* Header */}
             <div class="flex shrink-0 items-center justify-between gap-2 bg-ink px-4 py-3.5 text-white max-md:pt-[max(0.875rem,env(safe-area-inset-top))]">
               <div class="flex min-w-0 items-center gap-2.5">
                 <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-8">
@@ -227,7 +367,9 @@ export default function ChatWidget() {
                 </span>
                 <div class="min-w-0 leading-tight">
                   <p class="font-display text-sm font-semibold sm:text-sm">Budget Auto</p>
-                  <p class="truncate text-[11px] text-steel-300">Service advisor · usually replies in minutes</p>
+                  <p class="truncate text-[11px] text-steel-300">
+                    Service advisor · sends photos for a second look
+                  </p>
                 </div>
               </div>
               <button
@@ -240,7 +382,6 @@ export default function ChatWidget() {
               </button>
             </div>
 
-            {/* Messages */}
             <div
               ref={scrollRef}
               class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain bg-paper px-4 py-4 [-webkit-overflow-scrolling:touch]"
@@ -254,6 +395,18 @@ export default function ChatWidget() {
                         : 'max-w-[85%] rounded-card rounded-bl-sm border border-black/5 bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed text-ink sm:text-sm'
                     }
                   >
+                    {m.previewUrls && m.previewUrls.length > 0 && (
+                      <div class={`mb-2 flex flex-wrap gap-1.5 ${m.content ? '' : ''}`}>
+                        {m.previewUrls.map((url) => (
+                          <img
+                            key={url}
+                            src={url}
+                            alt="Attached photo"
+                            class="h-16 w-16 rounded-md object-cover ring-1 ring-black/10"
+                          />
+                        ))}
+                      </div>
+                    )}
                     {m.content}
                   </div>
                 </div>
@@ -261,10 +414,13 @@ export default function ChatWidget() {
 
               {loading && (
                 <div class="flex justify-start">
-                  <div class="flex gap-1 rounded-card rounded-bl-sm border border-black/5 bg-surface px-4 py-3">
-                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.2s]" />
-                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.1s]" />
-                    <span class="size-1.5 animate-bounce rounded-full bg-steel-300" />
+                  <div class="flex flex-col gap-1.5 rounded-card rounded-bl-sm border border-black/5 bg-surface px-4 py-3">
+                    <div class="flex gap-1">
+                      <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.2s]" />
+                      <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.1s]" />
+                      <span class="size-1.5 animate-bounce rounded-full bg-steel-300" />
+                    </div>
+                    <p class="text-[11px] text-steel-500">Looking at your message…</p>
                   </div>
                 </div>
               )}
@@ -280,28 +436,94 @@ export default function ChatWidget() {
               )}
             </div>
 
-            {/* Composer — padded for the iPhone home indicator on mobile */}
             <div
               class="shrink-0 border-t border-black/10 bg-surface p-3"
               style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
             >
-              <div class="flex items-end gap-2">
+              {pending.length > 0 && (
+                <div class="mb-2 flex flex-wrap gap-2">
+                  {pending.map((p) => (
+                    <div key={p.id} class="relative">
+                      <img
+                        src={p.previewUrl}
+                        alt="Pending upload"
+                        class={`h-14 w-14 rounded-md object-cover ring-1 ring-black/10 ${
+                          p.status === 'compressing' ? 'opacity-60' : ''
+                        } ${p.status === 'error' ? 'opacity-40' : ''}`}
+                      />
+                      <button
+                        type="button"
+                        aria-label="Remove photo"
+                        onClick={() => removePending(p.id)}
+                        class="absolute -right-1.5 -top-1.5 grid size-5 place-items-center rounded-full bg-ink text-white"
+                      >
+                        <ChatIcon name="close" class="size-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {mediaNotice && <p class="mb-2 px-1 text-[11px] text-accent-dark">{mediaNotice}</p>}
+
+              <div class="flex items-end gap-1.5">
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  class="hidden"
+                  onChange={(e) => {
+                    void addFiles((e.currentTarget as HTMLInputElement).files);
+                    (e.currentTarget as HTMLInputElement).value = '';
+                  }}
+                />
+                <input
+                  ref={cameraRef}
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  class="hidden"
+                  onChange={(e) => {
+                    void addFiles((e.currentTarget as HTMLInputElement).files);
+                    (e.currentTarget as HTMLInputElement).value = '';
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
+                  aria-label="Attach photo"
+                  class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10"
+                >
+                  <ChatIcon name="image" class="size-4.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => cameraRef.current?.click()}
+                  disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
+                  aria-label="Take photo"
+                  class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10 md:hidden"
+                >
+                  <ChatIcon name="camera" class="size-4.5" />
+                </button>
                 <textarea
                   ref={inputRef}
                   value={input}
                   rows={1}
+                  // @ts-expect-error Preact DOM typings use lowercase enterkeyhint
                   enterKeyHint="send"
                   autoComplete="off"
                   autoCorrect="on"
                   onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
                   onKeyDown={onKeyDown}
-                  placeholder="Type your message..."
+                  placeholder="Message or attach a photo…"
                   class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-[box-shadow,border-color] focus:ring-2 focus:ring-accent/45 sm:min-h-11 sm:py-2.5 sm:text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => void send()}
-                  disabled={loading || !input.trim()}
+                  disabled={!canSend}
                   aria-label="Send message"
                   class="grid size-12 shrink-0 touch-manipulation place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50 sm:size-11"
                 >
@@ -309,7 +531,8 @@ export default function ChatWidget() {
                 </button>
               </div>
               <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">
-                Have photos of the problem or an estimate?{' '}
+                Attach a photo of the issue or another shop&rsquo;s estimate for a second opinion. Need lots of
+                files?{' '}
                 <a href="/quote" class="font-medium text-accent hover:underline">
                   Use the Free Quote form
                 </a>
@@ -319,7 +542,6 @@ export default function ChatWidget() {
           </div>
         )}
 
-        {/* Launcher — hidden on mobile while the sheet is open (close lives in the header). */}
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}

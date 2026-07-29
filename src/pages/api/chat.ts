@@ -9,18 +9,19 @@ import {
   chatSystemPrompt,
   geminiResponseSchema,
   intakeIsComplete,
+  type ChatImage,
   type ChatIntake,
+  type ChatMessage,
   type ChatModelResult,
 } from '../../lib/chatIntake';
 
 export const prerender = false;
 
-// Cheap, GA "flash-lite" tier - great for this FAQ/intake use.
-// (gemini-2.0-flash was shut down June 2026; 2.5-flash-lite is blocked to new
-// users, so 3.1-flash-lite is the current cheapest model this project can use:
-// ~$0.25/$1.50 per 1M tokens in/out. Verified available on this key.)
+// Cheap multimodal flash-lite — supports image input for estimate/part photos.
 const GEMINI_MODEL = 'gemini-3.1-flash-lite';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+const MAX_TOTAL_ATTACHMENT_BYTES = 12 * 1024 * 1024;
 
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -29,7 +30,37 @@ function jsonResponse(body: unknown, status = 200) {
   });
 }
 
-type GeminiContent = { role: 'user' | 'model'; parts: { text: string }[] };
+type GeminiPart =
+  | { text: string }
+  | { inlineData: { mimeType: string; data: string } };
+
+type GeminiContent = { role: 'user' | 'model'; parts: GeminiPart[] };
+
+function collectImages(messages: ChatMessage[]): ChatImage[] {
+  const out: ChatImage[] = [];
+  for (const m of messages) {
+    if (m.role !== 'user' || !m.images?.length) continue;
+    for (const img of m.images) out.push(img);
+  }
+  return out;
+}
+
+function messageToGeminiParts(m: ChatMessage): GeminiPart[] {
+  const parts: GeminiPart[] = [];
+  const text = m.content?.trim();
+  if (text) parts.push({ text });
+  if (m.role === 'user' && m.images?.length) {
+    if (!text) {
+      parts.push({
+        text: 'Please look at the attached photo(s) and tell me what you see, what it likely means, and what I should do next.',
+      });
+    }
+    for (const img of m.images) {
+      parts.push({ inlineData: { mimeType: img.mimeType, data: img.data } });
+    }
+  }
+  return parts.length > 0 ? parts : [{ text: '(empty message)' }];
+}
 
 export const POST: APIRoute = async ({ request }) => {
   let payload: unknown;
@@ -53,11 +84,9 @@ export const POST: APIRoute = async ({ request }) => {
     );
   }
 
-  // Map our transcript to Gemini's content format (assistant -> model). Seed
-  // the model with whatever intake we have so far so it carries values forward.
   const contents: GeminiContent[] = messages.map((m) => ({
     role: m.role === 'assistant' ? 'model' : 'user',
-    parts: [{ text: m.content }],
+    parts: messageToGeminiParts(m),
   }));
 
   if (priorIntake) {
@@ -76,8 +105,8 @@ export const POST: APIRoute = async ({ request }) => {
         systemInstruction: { parts: [{ text: chatSystemPrompt }] },
         contents,
         generationConfig: {
-          temperature: 0.5,
-          maxOutputTokens: 1200,
+          temperature: 0.45,
+          maxOutputTokens: 2048,
           responseMimeType: 'application/json',
           responseSchema: geminiResponseSchema,
         },
@@ -87,8 +116,6 @@ export const POST: APIRoute = async ({ request }) => {
     if (!res.ok) {
       const detail = await res.text().catch(() => '');
       console.error('Gemini request failed', res.status, detail);
-      // 429 = rate limited / over quota. Tell the widget so it can steer the
-      // visitor to the Free Quote form instead of showing a generic error.
       if (res.status === 429) {
         return jsonResponse(
           {
@@ -116,10 +143,6 @@ export const POST: APIRoute = async ({ request }) => {
     return jsonResponse({ ok: false, error: 'The assistant is having trouble right now.' }, 502);
   }
 
-  // Merge the intake carried forward from the client with what the model
-  // returned this turn: the model wins on any field it fills, but we never
-  // lose a value it forgot to echo (e.g. name/phone captured earlier). This
-  // keeps the completeness check - and therefore the email send - reliable.
   const modelIntake = chatIntakeSchema.parse(modelResult.intake ?? {});
   const carried = chatIntakeSchema.parse(priorIntake ?? {});
   const intake: ChatIntake = { ...carried };
@@ -132,10 +155,31 @@ export const POST: APIRoute = async ({ request }) => {
 
   let submitted = false;
   if (wantsSubmit) {
-    // Full transcript = the conversation plus this final assistant reply.
-    const transcript = [...messages, { role: 'assistant' as const, content: reply }];
-    const owner = chatIntakeOwnerEmail(intake, transcript);
+    const transcript: ChatMessage[] = [
+      ...messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+        // Keep image counts in the email transcript without shipping megabytes of base64 into HTML.
+        images: m.images?.map((img) => ({ mimeType: img.mimeType, data: '[attached]' })),
+      })),
+      { role: 'assistant' as const, content: reply },
+    ];
+    const photoCount = collectImages(messages).length;
+    const owner = chatIntakeOwnerEmail(intake, transcript, { photoCount });
     const resendApiKey = env.RESEND_API_KEY;
+
+    const attachments: { filename: string; content: string }[] = [];
+    let totalAttachmentBytes = 0;
+    collectImages(messages).forEach((img, index) => {
+      const approxBytes = Math.floor((img.data.length * 3) / 4);
+      if (totalAttachmentBytes + approxBytes > MAX_TOTAL_ATTACHMENT_BYTES) return;
+      const ext = img.mimeType === 'image/png' ? 'png' : img.mimeType === 'image/webp' ? 'webp' : 'jpg';
+      attachments.push({
+        filename: `chat-photo-${index + 1}.${ext}`,
+        content: img.data,
+      });
+      totalAttachmentBytes += approxBytes;
+    });
 
     if (resendApiKey) {
       try {
@@ -147,19 +191,21 @@ export const POST: APIRoute = async ({ request }) => {
           subject: owner.subject,
           html: owner.html,
           text: owner.text,
+          attachments: attachments.length > 0 ? attachments : undefined,
         });
         submitted = true;
       } catch (err) {
         console.error('Failed to send chat intake email via Resend', err);
-        // Don't hard-fail the chat - the visitor still gets a reply. They can
-        // fall back to the Free Quote form.
       }
     } else {
-      // No Resend configured (fresh local checkout) - log so the flow still
-      // completes end to end during development.
       console.info(`[chat] RESEND_API_KEY not set - would email ${business.email}`, {
         intake,
-        transcript,
+        photoCount,
+        transcript: transcript.map((m) => ({
+          role: m.role,
+          content: m.content,
+          imageCount: m.images?.length ?? 0,
+        })),
       });
       submitted = true;
     }
