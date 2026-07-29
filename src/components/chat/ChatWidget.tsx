@@ -12,9 +12,15 @@ import {
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "Hi! I'm the Budget Auto service advisor. Tell me what's going on — or drop in a photo of the problem or another shop's estimate. I'll look at it, give you a straight read, and help you figure out next steps.";
+  "Hi — I'm the Budget Auto service advisor. Tell me what's going on, or drop a photo of the problem or another shop's estimate. I'll look at it and ask what you need.";
 
 const SESSION_KEY = 'budgetauto-chat-opened';
+
+const QUICK_PROMPTS = [
+  { label: 'Second opinion', text: 'I have an estimate photo — can you give me a second opinion?' },
+  { label: 'Is this fair?', text: 'I uploaded an estimate — does the price look fair?' },
+  { label: 'What can wait?', text: 'Help me figure out what is urgent vs what can wait to save money.' },
+] as const;
 
 type ApiResponse = {
   ok: boolean;
@@ -35,9 +41,7 @@ type PendingImage = {
 type UiMessage = {
   role: 'user' | 'assistant';
   content: string;
-  /** Object URLs for bubble thumbnails (display only). */
   previewUrls?: string[];
-  /** Base64 payloads kept for Gemini + shop email. */
   images?: ChatImage[];
 };
 
@@ -45,15 +49,13 @@ function ChatIcon({
   name,
   class: className = '',
 }: {
-  name: 'chat' | 'close' | 'send' | 'minimize' | 'check' | 'image' | 'camera';
+  name: 'chat' | 'close' | 'send' | 'check' | 'image' | 'camera';
   class?: string;
 }) {
   const paths: Record<string, string> = {
     chat: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7.9 20A9 9 0 1 0 4 16.1L2 22z"/>',
     close:
       '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 6L6 18M6 6l12 12"/>',
-    minimize:
-      '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/>',
     send: '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11zm7.318-19.539l-10.94 10.939"/>',
     check:
       '<path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 6L9 17l-5-5"/>',
@@ -95,7 +97,6 @@ function countImages(messages: UiMessage[]) {
   return messages.reduce((n, m) => n + (m.images?.length ?? 0), 0);
 }
 
-/** Build API transcript: keep text history; include images (capped from the end). */
 function toApiMessages(messages: UiMessage[]): ChatMessage[] {
   let remaining = CHAT_MAX_IMAGES;
   const reversed = [...messages].reverse().map((m) => {
@@ -120,6 +121,7 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [intake, setIntake] = useState<ChatIntake | undefined>(undefined);
   const [submitted, setSubmitted] = useState(false);
+  const [sheetHeight, setSheetHeight] = useState<string>('min(92dvh, 100%)');
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -135,7 +137,7 @@ export default function ChatWidget() {
       sessionStorage.setItem(SESSION_KEY, '1');
       return () => clearTimeout(t);
     } catch {
-      // sessionStorage can throw in private mode - just skip auto-open.
+      // private mode
     }
   }, []);
 
@@ -157,33 +159,54 @@ export default function ChatWidget() {
     };
   }, [open]);
 
+  // Keep the mobile sheet inside the visible viewport when the keyboard opens
+  // (iOS Safari visualViewport shrink). Prefer dvh on desktop.
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
-    if (!vv) return;
 
-    function onResize() {
-      if (!isMobileViewport()) return;
+    function syncHeight() {
+      if (!isMobileViewport()) {
+        setSheetHeight('min(32rem, 72vh)');
+        return;
+      }
+      const h = vv?.height ?? window.innerHeight;
+      // Leave a little air under the status bar; bottom sheet already sits at 0.
+      const px = Math.max(320, Math.floor(h * 0.96));
+      setSheetHeight(`${px}px`);
       if (document.activeElement === inputRef.current) {
         inputRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
     }
 
-    vv.addEventListener('resize', onResize);
-    vv.addEventListener('scroll', onResize);
+    syncHeight();
+    vv?.addEventListener('resize', syncHeight);
+    vv?.addEventListener('scroll', syncHeight);
+    window.addEventListener('resize', syncHeight);
     return () => {
-      vv.removeEventListener('resize', onResize);
-      vv.removeEventListener('scroll', onResize);
+      vv?.removeEventListener('resize', syncHeight);
+      vv?.removeEventListener('scroll', syncHeight);
+      window.removeEventListener('resize', syncHeight);
     };
   }, [open]);
 
-  // Revoke pending object URLs on unmount.
   useEffect(() => {
     return () => {
       pending.forEach((p) => URL.revokeObjectURL(p.previewUrl));
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function resizeComposer() {
+    const el = inputRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 120)}px`;
+  }
+
+  useEffect(() => {
+    resizeComposer();
+  }, [input]);
 
   async function addFiles(fileList: FileList | File[] | null) {
     if (!fileList || fileList.length === 0) return;
@@ -282,8 +305,7 @@ export default function ChatWidget() {
     dragDepth.current = 0;
     setDragActive(false);
     if (loading) return;
-    const files = e.dataTransfer?.files ?? null;
-    void addFiles(files);
+    void addFiles(e.dataTransfer?.files ?? null);
   }
 
   function onPaste(e: ClipboardEvent) {
@@ -301,8 +323,8 @@ export default function ChatWidget() {
     void addFiles(files);
   }
 
-  async function send() {
-    const text = input.trim();
+  async function send(presetText?: string) {
+    const text = (presetText ?? input).trim();
     const readyPending = pending.filter((p) => p.status === 'ready');
     if ((!text && readyPending.length === 0) || loading) return;
     if (pending.some((p) => p.status === 'compressing')) return;
@@ -330,6 +352,7 @@ export default function ChatWidget() {
     setMessages(next);
     setInput('');
     setPending([]);
+    if (inputRef.current) inputRef.current.style.height = 'auto';
 
     try {
       const res = await fetch('/api/chat', {
@@ -384,6 +407,8 @@ export default function ChatWidget() {
   const compressing = pending.some((p) => p.status === 'compressing');
   const canSend =
     !loading && !compressing && (Boolean(input.trim()) || pending.some((p) => p.status === 'ready'));
+  const showQuickPrompts = messages.length === 0 && !loading && pending.length === 0;
+  const atPhotoLimit = countImages(messages) + pending.length >= CHAT_MAX_IMAGES;
 
   return (
     <>
@@ -391,7 +416,7 @@ export default function ChatWidget() {
         <button
           type="button"
           aria-label="Close chat"
-          class="fixed inset-0 z-50 bg-ink/45 md:hidden"
+          class="fixed inset-0 z-50 bg-ink/50 backdrop-blur-[2px] md:hidden"
           onClick={() => setOpen(false)}
         />
       )}
@@ -414,41 +439,47 @@ export default function ChatWidget() {
             onDragLeave={onDragLeave}
             onDrop={onDrop}
             onPaste={onPaste}
+            style={{ height: sheetHeight, maxHeight: sheetHeight }}
             class={
               'relative flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
-              'max-md:h-[92dvh] max-md:max-h-[92dvh] max-md:rounded-t-2xl max-md:border-b-0 ' +
-              'md:mb-3 md:h-[min(32rem,72vh)] md:w-[min(23rem,calc(100vw-2rem))] md:rounded-card'
+              'max-md:rounded-t-[1.25rem] max-md:border-b-0 ' +
+              'md:mb-3 md:w-[min(24rem,calc(100vw-2rem))] md:rounded-card'
             }
           >
             {dragActive && (
               <div
-                class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-ink/70 p-6"
+                class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-ink/75 p-6"
                 aria-hidden="true"
               >
-                <div class="w-full max-w-[16rem] rounded-card border-2 border-dashed border-accent bg-surface px-5 py-8 text-center shadow-lifted">
+                <div class="w-full max-w-[16rem] rounded-card border-2 border-dashed border-accent bg-surface px-5 py-8 text-center">
                   <ChatIcon name="image" class="mx-auto size-8 text-accent" />
-                  <p class="mt-3 font-display text-sm font-semibold text-ink">Drop estimate photo here</p>
-                  <p class="mt-1 text-xs text-steel-600">JPG, PNG, or WebP</p>
+                  <p class="mt-3 font-display text-sm font-semibold text-ink">Drop photo here</p>
+                  <p class="mt-1 text-xs text-steel-600">Estimate or problem · JPG, PNG, WebP</p>
                 </div>
               </div>
             )}
-            <div class="flex shrink-0 items-center justify-between gap-2 bg-ink px-4 py-3.5 text-white max-md:pt-[max(0.875rem,env(safe-area-inset-top))]">
-              <div class="flex min-w-0 items-center gap-2.5">
-                <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-8">
-                  <ChatIcon name="chat" class="size-4" />
+
+            {/* Mobile sheet handle */}
+            <div class="flex shrink-0 justify-center pt-2 md:hidden" aria-hidden="true">
+              <span class="h-1 w-10 rounded-full bg-steel-300/80" />
+            </div>
+
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-black/5 bg-ink px-4 py-3 text-white max-md:pt-2">
+              <div class="flex min-w-0 items-center gap-3">
+                <span class="relative grid size-10 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-9">
+                  <ChatIcon name="chat" class="size-4.5" />
+                  <span class="absolute bottom-0 right-0 size-2.5 rounded-full border-2 border-ink bg-success" />
                 </span>
                 <div class="min-w-0 leading-tight">
-                  <p class="font-display text-sm font-semibold sm:text-sm">Budget Auto</p>
-                  <p class="truncate text-[11px] text-steel-300">
-                    Service advisor · sends photos for a second look
-                  </p>
+                  <p class="font-display text-[15px] font-semibold tracking-tight">Budget Auto</p>
+                  <p class="truncate text-[11px] text-steel-300">Service advisor · usually replies fast</p>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="Close chat"
-                class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full text-steel-300 transition-colors hover:bg-white/10 hover:text-white sm:size-8"
+                class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full text-steel-300 transition-colors hover:bg-white/10 hover:text-white active:scale-95 sm:size-9"
               >
                 <ChatIcon name="close" class="size-5" />
               </button>
@@ -456,70 +487,100 @@ export default function ChatWidget() {
 
             <div
               ref={scrollRef}
-              class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain bg-paper px-4 py-4 [-webkit-overflow-scrolling:touch]"
+              class="min-h-0 flex-1 space-y-3 overflow-y-auto overscroll-contain bg-paper px-3.5 py-4 sm:px-4 [-webkit-overflow-scrolling:touch]"
             >
               {bubbles.map((m, i) => (
-                <div key={i} class={m.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
+                <div key={i} class={m.role === 'user' ? 'flex justify-end' : 'flex justify-start gap-2'}>
+                  {m.role === 'assistant' && (
+                    <span
+                      class="mt-1 hidden size-7 shrink-0 place-items-center rounded-full bg-ink text-white sm:grid"
+                      aria-hidden="true"
+                    >
+                      <ChatIcon name="chat" class="size-3.5" />
+                    </span>
+                  )}
                   <div
                     class={
                       m.role === 'user'
-                        ? 'max-w-[85%] rounded-card rounded-br-sm bg-accent px-3.5 py-2.5 text-[15px] leading-relaxed text-white sm:text-sm'
-                        : 'max-w-[85%] rounded-card rounded-bl-sm border border-black/5 bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed text-ink sm:text-sm'
+                        ? 'max-w-[88%] rounded-2xl rounded-br-md bg-accent px-3.5 py-2.5 text-[15px] leading-relaxed text-white shadow-card sm:max-w-[85%] sm:text-sm'
+                        : 'max-w-[92%] rounded-2xl rounded-bl-md border border-black/5 bg-surface px-3.5 py-2.5 text-[15px] leading-relaxed text-ink shadow-card sm:max-w-[85%] sm:text-sm'
                     }
                   >
                     {m.previewUrls && m.previewUrls.length > 0 && (
-                      <div class={`mb-2 flex flex-wrap gap-1.5 ${m.content ? '' : ''}`}>
+                      <div class={`flex flex-wrap gap-1.5 ${m.content ? 'mb-2.5' : ''}`}>
                         {m.previewUrls.map((url) => (
                           <img
                             key={url}
                             src={url}
                             alt="Attached photo"
-                            class="h-16 w-16 rounded-md object-cover ring-1 ring-black/10"
+                            class="h-20 w-20 rounded-lg object-cover ring-1 ring-black/10 sm:h-16 sm:w-16"
                           />
                         ))}
                       </div>
                     )}
-                    {m.content}
+                    {m.content && <p class="whitespace-pre-wrap text-pretty">{m.content}</p>}
                   </div>
                 </div>
               ))}
 
+              {showQuickPrompts && (
+                <div class="flex flex-wrap gap-2 pt-1 sm:pl-9">
+                  {QUICK_PROMPTS.map((q) => (
+                    <button
+                      key={q.label}
+                      type="button"
+                      disabled={loading}
+                      onClick={() => void send(q.text)}
+                      class="min-h-10 touch-manipulation rounded-full border border-ink/10 bg-surface px-3.5 py-2 text-left text-[13px] font-medium text-ink-soft shadow-card transition-colors hover:border-accent/40 hover:text-accent-dark active:scale-[0.98]"
+                    >
+                      {q.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               {loading && (
-                <div class="flex justify-start">
-                  <div class="flex flex-col gap-1.5 rounded-card rounded-bl-sm border border-black/5 bg-surface px-4 py-3">
-                    <div class="flex gap-1">
+                <div class="flex justify-start gap-2">
+                  <span
+                    class="mt-1 hidden size-7 shrink-0 place-items-center rounded-full bg-ink text-white sm:grid"
+                    aria-hidden="true"
+                  >
+                    <ChatIcon name="chat" class="size-3.5" />
+                  </span>
+                  <div class="rounded-2xl rounded-bl-md border border-black/5 bg-surface px-4 py-3 shadow-card">
+                    <div class="flex gap-1.5">
                       <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.2s]" />
                       <span class="size-1.5 animate-bounce rounded-full bg-steel-300 [animation-delay:-0.1s]" />
                       <span class="size-1.5 animate-bounce rounded-full bg-steel-300" />
                     </div>
-                    <p class="text-[11px] text-steel-500">Looking at your message…</p>
+                    <p class="mt-1.5 text-[11px] text-steel-500">Looking at your message…</p>
                   </div>
                 </div>
               )}
 
               {submitted && (
-                <div class="flex items-start gap-2 rounded-card border border-success/30 bg-success/10 px-3.5 py-2.5 text-[15px] text-ink sm:text-sm">
+                <div class="flex items-start gap-2.5 rounded-2xl border border-success/25 bg-success/10 px-3.5 py-3 text-[14px] leading-relaxed text-ink sm:text-sm">
                   <ChatIcon name="check" class="mt-0.5 size-4 shrink-0 text-success" />
                   <span>
-                    Your details are on the way to the shop. They&rsquo;ll reach out soon - usually within the hour
-                    during shop hours.
+                    Details sent to the shop. They&rsquo;ll reach out soon — usually within the hour during shop
+                    hours.
                   </span>
                 </div>
               )}
             </div>
 
             <div
-              class="shrink-0 border-t border-black/10 bg-surface p-3"
+              class="shrink-0 border-t border-black/8 bg-surface px-3 pt-2.5 sm:px-3.5"
               style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
             >
               {pending.length > 0 && (
-                <div class="mb-2 flex flex-wrap gap-2">
+                <div class="mb-2.5 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                   {pending.map((p) => (
-                    <div key={p.id} class="relative">
+                    <div key={p.id} class="relative shrink-0">
                       <img
                         src={p.previewUrl}
                         alt="Pending upload"
-                        class={`h-14 w-14 rounded-md object-cover ring-1 ring-black/10 ${
+                        class={`h-16 w-16 rounded-xl object-cover ring-1 ring-black/10 sm:h-14 sm:w-14 ${
                           p.status === 'compressing' ? 'opacity-60' : ''
                         } ${p.status === 'error' ? 'opacity-40' : ''}`}
                       />
@@ -527,7 +588,7 @@ export default function ChatWidget() {
                         type="button"
                         aria-label="Remove photo"
                         onClick={() => removePending(p.id)}
-                        class="absolute -right-1.5 -top-1.5 grid size-5 place-items-center rounded-full bg-ink text-white"
+                        class="absolute -right-1.5 -top-1.5 grid size-6 place-items-center rounded-full bg-ink text-white active:scale-95"
                       >
                         <ChatIcon name="close" class="size-3" />
                       </button>
@@ -536,9 +597,33 @@ export default function ChatWidget() {
                 </div>
               )}
 
-              {mediaNotice && <p class="mb-2 px-1 text-[11px] text-accent-dark">{mediaNotice}</p>}
+              {mediaNotice && (
+                <p class="mb-2 px-0.5 text-[12px] leading-snug text-accent-dark">{mediaNotice}</p>
+              )}
 
-              <div class="flex items-end gap-1.5">
+              {/* Mobile: labeled attach row so photo actions are obvious */}
+              <div class="mb-2 flex gap-2 md:hidden">
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={loading || atPhotoLimit}
+                  class="inline-flex min-h-10 flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-control border border-black/10 bg-paper px-3 text-[13px] font-semibold text-ink-soft transition-colors hover:bg-steel-100 active:scale-[0.98] disabled:opacity-40"
+                >
+                  <ChatIcon name="image" class="size-4" />
+                  Photos
+                </button>
+                <button
+                  type="button"
+                  onClick={() => cameraRef.current?.click()}
+                  disabled={loading || atPhotoLimit}
+                  class="inline-flex min-h-10 flex-1 touch-manipulation items-center justify-center gap-1.5 rounded-control border border-black/10 bg-paper px-3 text-[13px] font-semibold text-ink-soft transition-colors hover:bg-steel-100 active:scale-[0.98] disabled:opacity-40"
+                >
+                  <ChatIcon name="camera" class="size-4" />
+                  Camera
+                </button>
+              </div>
+
+              <div class="flex items-end gap-2">
                 <input
                   ref={fileRef}
                   type="file"
@@ -564,22 +649,12 @@ export default function ChatWidget() {
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
-                  disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
+                  disabled={loading || atPhotoLimit}
                   aria-label="Browse photos and files"
                   title="Browse photos and files"
-                  class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10"
+                  class="hidden size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 active:scale-95 disabled:opacity-40 md:grid"
                 >
                   <ChatIcon name="image" class="size-4.5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => cameraRef.current?.click()}
-                  disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
-                  aria-label="Take photo"
-                  title="Take photo"
-                  class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10 md:hidden"
-                >
-                  <ChatIcon name="camera" class="size-4.5" />
                 </button>
                 <textarea
                   ref={inputRef}
@@ -589,26 +664,32 @@ export default function ChatWidget() {
                   enterKeyHint="send"
                   autoComplete="off"
                   autoCorrect="on"
-                  onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
+                  onInput={(e) => {
+                    setInput((e.currentTarget as HTMLTextAreaElement).value);
+                    resizeComposer();
+                  }}
                   onKeyDown={onKeyDown}
-                  placeholder="Message, drop a photo, or browse files…"
-                  class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-[box-shadow,border-color] focus:ring-2 focus:ring-accent/45 sm:min-h-11 sm:py-2.5 sm:text-sm"
+                  placeholder="Type a message…"
+                  class="max-h-[7.5rem] min-h-12 flex-1 resize-none rounded-2xl border border-black/10 bg-paper px-3.5 py-3 text-base leading-snug text-ink outline-none transition-[box-shadow,border-color] focus:border-accent/40 focus:ring-2 focus:ring-accent/30 sm:min-h-11 sm:py-2.5 sm:text-sm"
                 />
                 <button
                   type="button"
                   onClick={() => void send()}
                   disabled={!canSend}
                   aria-label="Send message"
-                  class="grid size-12 shrink-0 touch-manipulation place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-50 sm:size-11"
+                  class="grid size-12 shrink-0 touch-manipulation place-items-center rounded-full bg-accent text-white transition-colors hover:bg-accent-dark active:scale-95 disabled:cursor-not-allowed disabled:opacity-45 sm:size-11"
                 >
                   <ChatIcon name="send" class="size-4.5" />
                 </button>
               </div>
-              <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">
-                Drag &amp; drop an estimate photo here, or tap the image button to browse your files. Need lots of
-                files?{' '}
-                <a href="/quote" class="font-medium text-accent hover:underline">
-                  Use the Free Quote form
+
+              <p class="mt-2 px-0.5 text-[11px] leading-snug text-steel-500">
+                <span class="md:hidden">Add a photo of the estimate or issue, then send.</span>
+                <span class="hidden md:inline">Drag &amp; drop a photo, or browse files.</span>
+                {' '}
+                Lots of files?{' '}
+                <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
+                  Free Quote form
                 </a>
                 .
               </p>
@@ -622,7 +703,7 @@ export default function ChatWidget() {
           aria-label={open ? 'Close chat' : 'Open chat'}
           aria-expanded={open}
           class={
-            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-colors hover:bg-accent-dark ' +
+            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:bg-accent-dark active:scale-[0.98] ' +
             (open ? 'hidden md:inline-flex' : 'chat-launcher-nudge')
           }
         >
