@@ -574,7 +574,7 @@ export default function ChatWidget() {
               style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
             >
               {pending.length > 0 && (
-                <div class="mb-2.5 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div class="mb-2.5 flex gap-2 overflow-x-auto pb-0.5 [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden">
                   {pending.map((p) => (
                     <div key={p.id} class="relative shrink-0">
                       <img
@@ -670,7 +670,7 @@ export default function ChatWidget() {
                   }}
                   onKeyDown={onKeyDown}
                   placeholder="Type a message…"
-                  class="max-h-[7.5rem] min-h-12 flex-1 resize-none rounded-2xl border border-black/10 bg-paper px-3.5 py-3 text-base leading-snug text-ink outline-none transition-[box-shadow,border-color] focus:border-accent/40 focus:ring-2 focus:ring-accent/30 sm:min-h-11 sm:py-2.5 sm:text-sm"
+                  class="max-h-30 min-h-12 flex-1 resize-none rounded-2xl border border-black/10 bg-paper px-3.5 py-3 text-base leading-snug text-ink outline-none transition-[box-shadow,border-color] focus:border-accent/40 focus:ring-2 focus:ring-accent/30 sm:min-h-11 sm:py-2.5 sm:text-sm"
                 />
                 <button
                   type="button"
