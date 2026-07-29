@@ -12,7 +12,7 @@ import {
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "Hi! I'm the Budget Auto service advisor. Tell me what's going on — or attach a photo of the problem or another shop's estimate. I'll look at it, give you a straight read, and help you figure out next steps.";
+  "Hi! I'm the Budget Auto service advisor. Tell me what's going on — or drop in a photo of the problem or another shop's estimate. I'll look at it, give you a straight read, and help you figure out next steps.";
 
 const SESSION_KEY = 'budgetauto-chat-opened';
 
@@ -116,6 +116,7 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [pending, setPending] = useState<PendingImage[]>([]);
   const [mediaNotice, setMediaNotice] = useState<string | null>(null);
+  const [dragActive, setDragActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [intake, setIntake] = useState<ChatIntake | undefined>(undefined);
   const [submitted, setSubmitted] = useState(false);
@@ -124,6 +125,7 @@ export default function ChatWidget() {
   const panelRef = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const cameraRef = useRef<HTMLInputElement>(null);
+  const dragDepth = useRef(0);
 
   useEffect(() => {
     try {
@@ -183,8 +185,8 @@ export default function ChatWidget() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  async function addFiles(fileList: FileList | null) {
-    if (!fileList?.length) return;
+  async function addFiles(fileList: FileList | File[] | null) {
+    if (!fileList || fileList.length === 0) return;
     setMediaNotice(null);
 
     const already = countImages(messages) + pending.length;
@@ -244,6 +246,59 @@ export default function ChatWidget() {
       if (target) URL.revokeObjectURL(target.previewUrl);
       return prev.filter((p) => p.id !== id);
     });
+  }
+
+  function dataTransferHasFiles(dt: DataTransfer | null) {
+    if (!dt) return false;
+    return Array.from(dt.types).includes('Files');
+  }
+
+  function onDragEnter(e: DragEvent) {
+    if (!dataTransferHasFiles(e.dataTransfer)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current += 1;
+    setDragActive(true);
+  }
+
+  function onDragOver(e: DragEvent) {
+    if (!dataTransferHasFiles(e.dataTransfer)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy';
+  }
+
+  function onDragLeave(e: DragEvent) {
+    if (!dataTransferHasFiles(e.dataTransfer)) return;
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current = Math.max(0, dragDepth.current - 1);
+    if (dragDepth.current === 0) setDragActive(false);
+  }
+
+  function onDrop(e: DragEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    dragDepth.current = 0;
+    setDragActive(false);
+    if (loading) return;
+    const files = e.dataTransfer?.files ?? null;
+    void addFiles(files);
+  }
+
+  function onPaste(e: ClipboardEvent) {
+    const items = e.clipboardData?.items;
+    if (!items?.length) return;
+    const files: File[] = [];
+    for (const item of Array.from(items)) {
+      if (item.kind === 'file' && item.type.startsWith('image/')) {
+        const file = item.getAsFile();
+        if (file) files.push(file);
+      }
+    }
+    if (files.length === 0) return;
+    e.preventDefault();
+    void addFiles(files);
   }
 
   async function send() {
@@ -354,12 +409,29 @@ export default function ChatWidget() {
             role="dialog"
             aria-label="Chat with Budget Auto"
             aria-modal="true"
+            onDragEnter={onDragEnter}
+            onDragOver={onDragOver}
+            onDragLeave={onDragLeave}
+            onDrop={onDrop}
+            onPaste={onPaste}
             class={
-              'flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
+              'relative flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
               'max-md:h-[92dvh] max-md:max-h-[92dvh] max-md:rounded-t-2xl max-md:border-b-0 ' +
               'md:mb-3 md:h-[min(32rem,72vh)] md:w-[min(23rem,calc(100vw-2rem))] md:rounded-card'
             }
           >
+            {dragActive && (
+              <div
+                class="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-ink/70 p-6"
+                aria-hidden="true"
+              >
+                <div class="w-full max-w-[16rem] rounded-card border-2 border-dashed border-accent bg-surface px-5 py-8 text-center shadow-lifted">
+                  <ChatIcon name="image" class="mx-auto size-8 text-accent" />
+                  <p class="mt-3 font-display text-sm font-semibold text-ink">Drop estimate photo here</p>
+                  <p class="mt-1 text-xs text-steel-600">JPG, PNG, or WebP</p>
+                </div>
+              </div>
+            )}
             <div class="flex shrink-0 items-center justify-between gap-2 bg-ink px-4 py-3.5 text-white max-md:pt-[max(0.875rem,env(safe-area-inset-top))]">
               <div class="flex min-w-0 items-center gap-2.5">
                 <span class="grid size-9 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-8">
@@ -493,7 +565,8 @@ export default function ChatWidget() {
                   type="button"
                   onClick={() => fileRef.current?.click()}
                   disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
-                  aria-label="Attach photo"
+                  aria-label="Browse photos and files"
+                  title="Browse photos and files"
                   class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10"
                 >
                   <ChatIcon name="image" class="size-4.5" />
@@ -503,6 +576,7 @@ export default function ChatWidget() {
                   onClick={() => cameraRef.current?.click()}
                   disabled={loading || countImages(messages) + pending.length >= CHAT_MAX_IMAGES}
                   aria-label="Take photo"
+                  title="Take photo"
                   class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full border border-black/10 text-ink-soft transition-colors hover:bg-steel-100 disabled:opacity-40 sm:size-10 md:hidden"
                 >
                   <ChatIcon name="camera" class="size-4.5" />
@@ -517,7 +591,7 @@ export default function ChatWidget() {
                   autoCorrect="on"
                   onInput={(e) => setInput((e.currentTarget as HTMLTextAreaElement).value)}
                   onKeyDown={onKeyDown}
-                  placeholder="Message or attach a photo…"
+                  placeholder="Message, drop a photo, or browse files…"
                   class="max-h-28 min-h-12 flex-1 resize-none rounded-card border border-black/10 bg-paper px-3.5 py-3 text-base text-ink outline-none transition-[box-shadow,border-color] focus:ring-2 focus:ring-accent/45 sm:min-h-11 sm:py-2.5 sm:text-sm"
                 />
                 <button
@@ -531,7 +605,7 @@ export default function ChatWidget() {
                 </button>
               </div>
               <p class="mt-2 px-1 text-[11px] leading-snug text-steel-500">
-                Attach a photo of the issue or another shop&rsquo;s estimate for a second opinion. Need lots of
+                Drag &amp; drop an estimate photo here, or tap the image button to browse your files. Need lots of
                 files?{' '}
                 <a href="/quote" class="font-medium text-accent hover:underline">
                   Use the Free Quote form
