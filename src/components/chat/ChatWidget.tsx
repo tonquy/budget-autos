@@ -14,6 +14,9 @@ import {
 const OPENER =
   "What's wrong with your car? I'm here to help you fix it. I am the Budget Auto Repair chatbot and I'm here to help you — tell me anything, or drop a photo of the problem or another shop's estimate.";
 
+/** Once set, the centered auto-open never runs again on this browser. */
+const AUTO_OPEN_KEY = 'budgetauto-chat-auto-opened';
+
 const QUICK_PROMPTS = [
   { label: 'Second opinion', text: 'I have an estimate photo — can you give me a second opinion?' },
   { label: 'Is this fair?', text: 'I uploaded an estimate — does the price look fair?' },
@@ -131,9 +134,24 @@ export default function ChatWidget() {
     setOpen(false);
   }
 
-  // Always auto-open centered after 1.5s on mobile and desktop.
+  // Auto-open once on the visitor's first load of the site (any page).
+  // After that, navigating Home / Services / Quote / etc. never re-triggers it —
+  // only the bottom-left launcher (or [data-open-chat]) opens chat again.
   useEffect(() => {
-    const t = setTimeout(() => setOpen(true), 1500);
+    try {
+      if (localStorage.getItem(AUTO_OPEN_KEY)) return;
+    } catch {
+      // private mode — still attempt a one-shot auto-open this load
+    }
+
+    const t = setTimeout(() => {
+      setOpen(true);
+      try {
+        localStorage.setItem(AUTO_OPEN_KEY, '1');
+      } catch {
+        // private mode
+      }
+    }, 1500);
     return () => clearTimeout(t);
   }, []);
 
