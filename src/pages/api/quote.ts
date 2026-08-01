@@ -180,7 +180,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     } catch (err) {
       console.error('Failed to send quote email via Resend', err);
       return jsonResponse(
-        { ok: false, error: 'We saved your request but the confirmation email failed to send. Call us to confirm.' },
+        { ok: false, error: 'We saved your request but the confirmation email failed to send. Chat with us on the site to confirm.' },
         502,
       );
     }

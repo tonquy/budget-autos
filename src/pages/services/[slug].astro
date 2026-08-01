@@ -1,10 +1,12 @@
 ---
-import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
+import ImageBand from '../../components/ImageBand.astro';
 import { business, services, type Service } from '../../lib/business';
 import { serviceImages } from '../../lib/serviceImages';
 import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from '../../lib/seo';
+import bgCta from '../../assets/images/bg-cta-dark.jpg';
 
 export function getStaticPaths() {
   return services.map((service) => ({
@@ -40,71 +42,54 @@ const jsonLd = [
   description={service.seoDescription}
   jsonLd={jsonLd}
 >
-  <section class="border-b border-black/5 bg-paper">
-    <div class="container-shop py-4 text-sm text-steel-600">
-      <nav aria-label="Breadcrumb">
-        <ol class="flex flex-wrap items-center gap-1.5">
-          <li>
-            <a href="/" class="hover:text-accent">Home</a>
+  <PageHero
+    image={image}
+    alt={`${service.name} at ${business.name} in ${business.address.city}, ${business.address.state}`}
+    eyebrow={`${business.address.city}, ${business.address.state}`}
+    title={service.name}
+    description={service.longDescription}
+    priority
+  >
+    <nav slot="breadcrumb" aria-label="Breadcrumb" class="mb-4 text-sm text-steel-300">
+      <ol class="flex flex-wrap items-center gap-1.5">
+        <li>
+          <a href="/" class="hover:text-white">Home</a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li>
+          <a href="/services" class="hover:text-white">Services</a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium text-white" aria-current="page">{service.name}</li>
+      </ol>
+    </nav>
+    <a
+      slot="actions"
+      href={`/quote/${service.slug}`}
+      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Get a free {service.name.toLowerCase()} quote
+    </a>
+    <button
+      slot="actions"
+      type="button"
+      data-open-chat
+      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control border border-white/25 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+    >
+      Chat with us
+    </button>
+  </PageHero>
+
+  <section class="bg-paper py-16 sm:py-20">
+    <div class="container-shop max-w-3xl">
+      <ul class="space-y-3">
+        {service.highlights.map((item) => (
+          <li class="flex items-start gap-3 text-ink">
+            <Icon name="circle-check-big" class="mt-0.5 size-5 shrink-0 text-accent" />
+            <span class="leading-relaxed">{item}</span>
           </li>
-          <li aria-hidden="true">/</li>
-          <li>
-            <a href="/services" class="hover:text-accent">Services</a>
-          </li>
-          <li aria-hidden="true">/</li>
-          <li class="font-medium text-ink" aria-current="page">{service.name}</li>
-        </ol>
-      </nav>
-    </div>
-  </section>
-
-  <section class="bg-paper pb-16 pt-6 sm:pb-20 sm:pt-10">
-    <div class="container-shop grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:gap-14">
-      <div>
-        <p class="text-xs font-semibold uppercase tracking-wider text-accent">
-          {business.address.city}, {business.address.state}
-        </p>
-        <h1 class="mt-2 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl">
-          {service.name}
-        </h1>
-        <p class="mt-4 max-w-2xl text-base leading-relaxed text-steel-700 sm:text-lg">
-          {service.longDescription}
-        </p>
-
-        <ul class="mt-8 space-y-3">
-          {service.highlights.map((item) => (
-            <li class="flex items-start gap-3 text-ink">
-              <Icon name="circle-check-big" class="mt-0.5 size-5 shrink-0 text-accent" />
-              <span class="leading-relaxed">{item}</span>
-            </li>
-          ))}
-        </ul>
-
-        <div class="mt-10 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={`/quote/${service.slug}`}
-            class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark"
-          >
-            Get a free {service.name.toLowerCase()} quote
-          </a>
-          <a
-            href={business.phoneHref}
-            class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control border border-ink/15 px-6 py-3 text-sm font-semibold text-ink hover:bg-steel-100"
-          >
-            Call {business.phoneDisplay}
-          </a>
-        </div>
-      </div>
-
-      <div class="overflow-hidden rounded-card border border-black/5 shadow-card">
-        <Image
-          src={image}
-          alt={`${service.name} at ${business.name} in ${business.address.city}, ${business.address.state}`}
-          widths={[480, 768, 1024]}
-          sizes="(min-width: 1024px) 40vw, 100vw"
-          class="aspect-4/3 size-full object-cover sm:aspect-square lg:aspect-4/5"
-        />
-      </div>
+        ))}
+      </ul>
     </div>
   </section>
 
@@ -155,21 +140,19 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="border-t border-black/5 bg-ink py-14 text-white sm:py-16">
-    <div class="container-shop max-w-2xl">
-      <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-        Ready for a real number?
-      </h2>
-      <p class="mt-2 text-steel-300">
-        Send a photo or a few details — we reply with a quote, usually within the hour during shop hours.
-      </p>
-      <a
-        href={`/quote/${service.slug}`}
-        class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
-      >
-        Start your free quote
-      </a>
-      <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
-    </div>
-  </section>
+  <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+      Ready for a real number?
+    </h2>
+    <p class="mt-2 text-steel-300">
+      Send a photo or a few details — we reply with a quote, usually within the hour during shop hours.
+    </p>
+    <a
+      href={`/quote/${service.slug}`}
+      class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Start your free quote
+    </a>
+    <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
+  </ImageBand>
 </BaseLayout>

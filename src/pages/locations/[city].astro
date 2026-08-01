@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import TrustBar from '../../components/home/TrustBar.astro';
+import ServicesPreview from '../../components/home/ServicesPreview.astro';
+import QuoteCallout from '../../components/home/QuoteCallout.astro';
+import ReviewsCta from '../../components/home/ReviewsCta.astro';
+import LocationBlock from '../../components/home/LocationBlock.astro';
+import HomeFaq from '../../components/home/HomeFaq.astro';
+import { business } from '../../lib/business';
+import { locations, type Location } from '../../lib/locations';
+import { breadcrumbJsonLd, faqJsonLd, homeFaqs } from '../../lib/seo';
+
+export function getStaticPaths() {
+  return locations.map((location) => ({
+    params: { city: location.slug },
+    props: { location },
+  }));
+}
+
+export const prerender = true;
+
+interface Props {
+  location: Location;
+}
+
+const { location } = Astro.props;
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
+---
+
+{/*
+  City landings mirror the homepage layout 1:1 — only the H1 (and SEO) change
+  so each town gets a dedicated page without a different page design.
+*/}
+<BaseLayout
+  title={`Auto Repair in ${location.name}, ${regionLabel}`}
+  description={location.seoDescription}
+  jsonLd={[
+    breadcrumbJsonLd(siteUrl, [
+      { name: 'Home', path: '/' },
+      { name: 'Locations', path: '/locations' },
+      { name: location.name, path: `/locations/${location.slug}` },
+    ]),
+    faqJsonLd(homeFaqs),
+  ]}
+>
+  <Hero
+    titleLine1={`Auto repair in ${location.name}`}
+    titleLine2="No surprises on the bill."
+    description={`Family-owned shop on ${business.address.line1} in ${business.address.city} — serving ${location.name} drivers since ${business.foundedYear}. Send a photo for a free quote, or chat with us anytime.`}
+    eyebrow={business.name}
+    imageAlt={`Auto repair for ${location.name} drivers from ${business.name} in ${business.address.city}`}
+  />
+  <TrustBar />
+  <ServicesPreview />
+  <QuoteCallout />
+  <ReviewsCta />
+  <LocationBlock />
+  <HomeFaq />
+</BaseLayout>

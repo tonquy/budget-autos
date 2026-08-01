@@ -9,6 +9,8 @@ export const business = {
   shortName: 'Budget Auto',
   tagline: 'Affordable repairs for your vehicle, done right the first time.',
   foundedYear: 2004,
+  // Kept for internal/ops use only — do not render shop phone on the public site.
+  // Direct visitors to chat or the quote form instead.
   phoneDisplay: '(607) 323-0236',
   phoneHref: 'tel:+16073230236',
   smsHref: 'sms:+16073230236',
@@ -174,7 +176,7 @@ export const services: Service[] = [
       {
         question: 'Do I need an appointment for alignment?',
         answer:
-          'Yes — alignments need the rack. Call or request a quote online and we’ll get you on the schedule.',
+          'Yes — alignments need the rack. Request a quote or chat with us online and we’ll get you on the schedule.',
       },
     ],
     icon: 'sliders-horizontal',
@@ -231,7 +233,7 @@ export const services: Service[] = [
       {
         question: 'Do you inspect cars for out-of-town buyers?',
         answer:
-          'Often. Call us with the vehicle details and we’ll tell you what we can check and how we report back.',
+          'Often. Send the vehicle details through chat or the quote form and we’ll tell you what we can check and how we report back.',
       },
     ],
     icon: 'clipboard-check',

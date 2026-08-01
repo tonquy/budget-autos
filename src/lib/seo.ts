@@ -1,4 +1,5 @@
 import { business, type Service } from './business';
+import { locations } from './locations';
 
 export type PageSeo = {
   title: string;
@@ -47,7 +48,6 @@ export function localBusinessJsonLd(siteUrl: string) {
     name: business.name,
     image: `${siteUrl}${OG_IMAGE.path}`,
     email: business.email,
-    telephone: business.phoneDisplay,
     url: siteUrl,
     foundingDate: String(business.foundedYear),
     address: {
@@ -60,17 +60,17 @@ export function localBusinessJsonLd(siteUrl: string) {
     },
     areaServed: [
       {
-        '@type': 'City',
-        name: business.address.city,
-        containedInPlace: {
-          '@type': 'State',
-          name: 'New York',
-        },
-      },
-      {
         '@type': 'AdministrativeArea',
         name: 'Broome County',
       },
+      ...locations.map((place) => ({
+        '@type': 'City' as const,
+        name: place.name,
+        containedInPlace: {
+          '@type': 'State' as const,
+          name: place.state === 'PA' ? 'Pennsylvania' : 'New York',
+        },
+      })),
     ],
     openingHoursSpecification: openingHoursFromBusiness(),
     sameAs,
@@ -135,7 +135,7 @@ export const homeFaqs: FaqItem[] = [
   {
     question: 'How do I get a free repair quote?',
     answer:
-      'Use the Free Quote form on this site — send a photo of the issue or another shop’s estimate, plus your name and vehicle. We typically reply within the hour during shop hours with a real number, not a vague range.',
+      'Use the Free Quote form or the chat on this site — send a photo of the issue or another shop’s estimate, plus your name and vehicle. We typically reply within the hour during shop hours with a real number, not a vague range.',
   },
   {
     question: `What auto repairs do you handle in ${business.address.city}?`,

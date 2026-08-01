@@ -2,9 +2,13 @@
 import { Image } from 'astro:assets';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import ImageBand from '../components/ImageBand.astro';
 import { business, services } from '../lib/business';
 import { serviceImages } from '../lib/serviceImages';
 import { breadcrumbJsonLd } from '../lib/seo';
+import heroServices from '../assets/images/hero-services.jpg';
+import bgCta from '../assets/images/bg-cta-dark.jpg';
 
 export const prerender = true;
 
@@ -21,18 +25,24 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     ]),
   ]}
 >
-  <section class="bg-paper py-12 sm:py-16">
-    <div class="container-shop max-w-2xl">
-      <h1 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl lg:text-5xl">
-        Auto repair services in {business.address.city}
-      </h1>
-      <p class="mt-4 text-base leading-relaxed text-steel-700 sm:text-lg">
-        Family-owned shop on {business.address.line1}. Pick a service to learn what we cover, then send a photo for a free quote.
-      </p>
-    </div>
-  </section>
+  <PageHero
+    image={heroServices}
+    alt={`Service bays and alignment work at ${business.name}`}
+    eyebrow={`${business.address.city}, ${business.address.state}`}
+    title={`Auto repair services in ${business.address.city}`}
+    description={`Family-owned shop on ${business.address.line1}. Pick a service to learn what we cover, then send a photo for a free quote.`}
+    priority
+  >
+    <a
+      slot="actions"
+      href="/quote"
+      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Get a free quote
+    </a>
+  </PageHero>
 
-  <section class="bg-paper pb-16 sm:pb-20">
+  <section class="bg-paper py-16 sm:py-20">
     <div class="container-shop grid gap-4 sm:grid-cols-2">
       {services.map((service) => (
         <a
@@ -64,21 +74,19 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     </div>
   </section>
 
-  <section class="border-t border-black/5 bg-ink py-16 text-white sm:py-20">
-    <div class="container-shop max-w-2xl">
-      <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-        Don't see what's wrong with your car listed?
-      </h2>
-      <p class="mt-2 text-steel-300">
-        Send a photo from the Free Quote form — we'll figure out what it is and get back to you.
-      </p>
-      <a
-        href="/quote"
-        class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
-      >
-        Get a free quote
-      </a>
-      <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
-    </div>
-  </section>
+  <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+      Don't see what's wrong with your car listed?
+    </h2>
+    <p class="mt-2 text-steel-300">
+      Send a photo from the Free Quote form — we'll figure out what it is and get back to you.
+    </p>
+    <a
+      href="/quote"
+      class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Get a free quote
+    </a>
+    <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
+  </ImageBand>
 </BaseLayout>

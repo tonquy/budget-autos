@@ -25,9 +25,13 @@ export const prerender = true;
       </p>
       <p class="mt-2 text-sm text-steel-600">
         Prefer to talk now?{' '}
-        <a href={business.phoneHref} class="font-semibold text-accent hover:text-accent-dark">
-          {business.phoneDisplay}
-        </a>
+        <button
+          type="button"
+          data-open-chat
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          Chat with us
+        </button>
       </p>
 
       <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">

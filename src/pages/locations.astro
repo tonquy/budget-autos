@@ -1,0 +1,96 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/PageHero.astro';
+import ImageBand from '../components/ImageBand.astro';
+import { business } from '../lib/business';
+import { locationsByTier } from '../lib/locations';
+import { breadcrumbJsonLd } from '../lib/seo';
+import heroLocations from '../assets/images/hero-locations.jpg';
+import bgCta from '../assets/images/bg-cta-dark.jpg';
+
+export const prerender = true;
+
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+const tiers = locationsByTier();
+const groups = [
+  { key: 'core', title: 'Tri-Cities', places: tiers.core },
+  { key: 'broome', title: 'Broome County', places: tiers.broome },
+  { key: 'nearby', title: 'Nearby towns', places: tiers.nearby },
+] as const;
+---
+
+<BaseLayout
+  title={`Auto Repair Near Binghamton & Johnson City, NY`}
+  description={`Budget Auto Repair serves Johnson City, Binghamton, Endicott, Vestal, Endwell, and 30+ nearby towns from Airport Rd. Get a free photo quote.`}
+  jsonLd={[
+    breadcrumbJsonLd(siteUrl, [
+      { name: 'Home', path: '/' },
+      { name: 'Locations', path: '/locations' },
+    ]),
+  ]}
+>
+  <PageHero
+    image={heroLocations}
+    alt={`Independent auto repair shop exterior near ${business.address.city}, NY`}
+    eyebrow="Areas we serve"
+    title="Auto repair for the Tri-Cities and beyond"
+    description={`Our shop is on ${business.address.line1} in ${business.address.city}. We regularly help drivers from Binghamton, Endicott, Vestal, Endwell, and towns across Broome County and nearby.`}
+    objectPosition="center 55%"
+    priority
+  >
+    <a
+      slot="actions"
+      href="/quote"
+      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Get a free quote
+    </a>
+  </PageHero>
+
+  {groups.map((group, index) => (
+    <section class:list={['bg-paper pb-14 sm:pb-16', index === 0 ? 'pt-14 sm:pt-16' : 'border-t border-black/5']}>
+      <div class="container-shop">
+        <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">{group.title}</h2>
+        <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {group.places.map((place) => (
+            <li>
+              <a
+                href={`/locations/${place.slug}`}
+                class="group flex items-center justify-between gap-3 rounded-card border border-black/5 bg-surface px-4 py-4 transition-colors hover:border-accent/40"
+              >
+                <span>
+                  <span class="block font-display font-semibold text-ink group-hover:text-accent-dark">
+                    {place.name}
+                  </span>
+                  <span class="mt-0.5 block text-sm text-steel-600">
+                    {place.county}, {place.state}
+                  </span>
+                </span>
+                <Icon
+                  name="chevron-right"
+                  class="size-5 shrink-0 text-steel-500 transition-transform group-hover:translate-x-0.5 group-hover:text-accent"
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  ))}
+
+  <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+      Don&rsquo;t see your town?
+    </h2>
+    <p class="mt-2 text-steel-300">
+      If you can get to Airport Rd in Johnson City, we can usually help. Send a photo and we&rsquo;ll take a look.
+    </p>
+    <a
+      href="/quote"
+      class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+    >
+      Start your free quote
+    </a>
+  </ImageBand>
+</BaseLayout>

@@ -12,9 +12,7 @@ import {
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "Hi — I'm the Budget Auto service advisor. Tell me what's going on, or drop a photo of the problem or another shop's estimate. I'll look at it and ask what you need.";
-
-const SESSION_KEY = 'budgetauto-chat-opened';
+  "What's wrong with your car? I'm here to help you fix it. I am the Budget Auto Repair chatbot and I'm here to help you — tell me anything, or drop a photo of the problem or another shop's estimate.";
 
 const QUICK_PROMPTS = [
   { label: 'Second opinion', text: 'I have an estimate photo — can you give me a second opinion?' },
@@ -121,7 +119,7 @@ export default function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const [intake, setIntake] = useState<ChatIntake | undefined>(undefined);
   const [submitted, setSubmitted] = useState(false);
-  const [sheetHeight, setSheetHeight] = useState<string>('min(92dvh, 100%)');
+  const [panelHeight, setPanelHeight] = useState<string>('min(36rem, 85dvh)');
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -129,16 +127,35 @@ export default function ChatWidget() {
   const cameraRef = useRef<HTMLInputElement>(null);
   const dragDepth = useRef(0);
 
+  function closeChat() {
+    setOpen(false);
+  }
+
+  // Always auto-open centered after 1.5s on mobile and desktop.
   useEffect(() => {
-    try {
-      if (isMobileViewport()) return;
-      if (sessionStorage.getItem(SESSION_KEY)) return;
-      const t = setTimeout(() => setOpen(true), 900);
-      sessionStorage.setItem(SESSION_KEY, '1');
-      return () => clearTimeout(t);
-    } catch {
-      // private mode
+    const t = setTimeout(() => setOpen(true), 1500);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Allow any [data-open-chat] control (or custom event) to open the widget
+  // instead of linking to a phone number.
+  useEffect(() => {
+    function openChat() {
+      setOpen(true);
     }
+    function onClick(event: MouseEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+      if (!target.closest('[data-open-chat]')) return;
+      event.preventDefault();
+      setOpen(true);
+    }
+    window.addEventListener('budgetauto:open-chat', openChat);
+    document.addEventListener('click', onClick);
+    return () => {
+      window.removeEventListener('budgetauto:open-chat', openChat);
+      document.removeEventListener('click', onClick);
+    };
   }, []);
 
   useEffect(() => {
@@ -151,7 +168,7 @@ export default function ChatWidget() {
   }, [open]);
 
   useEffect(() => {
-    if (!open || !isMobileViewport()) return;
+    if (!open) return;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => {
@@ -159,21 +176,28 @@ export default function ChatWidget() {
     };
   }, [open]);
 
-  // Keep the mobile sheet inside the visible viewport when the keyboard opens
-  // (iOS Safari visualViewport shrink). Prefer dvh on desktop.
+  useEffect(() => {
+    if (!open) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key === 'Escape') closeChat();
+    }
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [open]);
+
+  // Keep the centered panel inside the visible viewport when the keyboard opens.
   useEffect(() => {
     if (!open) return;
     const vv = window.visualViewport;
 
     function syncHeight() {
-      if (!isMobileViewport()) {
-        setSheetHeight('min(32rem, 72vh)');
-        return;
-      }
       const h = vv?.height ?? window.innerHeight;
-      // Leave a little air under the status bar; bottom sheet already sits at 0.
-      const px = Math.max(320, Math.floor(h * 0.96));
-      setSheetHeight(`${px}px`);
+      if (isMobileViewport()) {
+        const px = Math.max(280, Math.min(Math.floor(h * 0.86), 640));
+        setPanelHeight(`${px}px`);
+      } else {
+        setPanelHeight('min(36rem, 85dvh)');
+      }
       if (document.activeElement === inputRef.current) {
         inputRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
       }
@@ -413,22 +437,14 @@ export default function ChatWidget() {
   return (
     <>
       {open && (
-        <button
-          type="button"
-          aria-label="Close chat"
-          class="fixed inset-0 z-50 bg-ink/50 backdrop-blur-[2px] md:hidden"
-          onClick={() => setOpen(false)}
-        />
-      )}
+        <div class="chat-modal-root fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
+          <button
+            type="button"
+            aria-label="Close chat"
+            class="chat-modal-backdrop absolute inset-0 bg-ink/25 backdrop-blur-[2px]"
+            onClick={closeChat}
+          />
 
-      <div
-        class={
-          open
-            ? 'fixed inset-x-0 bottom-0 z-50 flex flex-col md:inset-auto md:bottom-5 md:left-4 md:items-start'
-            : 'fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 flex flex-col items-start md:bottom-5'
-        }
-      >
-        {open && (
           <div
             ref={panelRef}
             role="dialog"
@@ -439,11 +455,10 @@ export default function ChatWidget() {
             onDragLeave={onDragLeave}
             onDrop={onDrop}
             onPaste={onPaste}
-            style={{ height: sheetHeight, maxHeight: sheetHeight }}
+            style={{ height: panelHeight, maxHeight: panelHeight }}
             class={
-              'relative flex w-full flex-col overflow-hidden border border-black/10 bg-surface shadow-lifted ' +
-              'max-md:rounded-t-[1.25rem] max-md:border-b-0 ' +
-              'md:mb-3 md:w-[min(24rem,calc(100vw-2rem))] md:rounded-card'
+              'chat-modal-panel relative z-10 flex w-full max-w-104 flex-col overflow-hidden ' +
+              'rounded-card border border-black/10 bg-surface shadow-lifted'
             }
           >
             {dragActive && (
@@ -459,12 +474,7 @@ export default function ChatWidget() {
               </div>
             )}
 
-            {/* Mobile sheet handle */}
-            <div class="flex shrink-0 justify-center pt-2 md:hidden" aria-hidden="true">
-              <span class="h-1 w-10 rounded-full bg-steel-300/80" />
-            </div>
-
-            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-black/5 bg-ink px-4 py-3 text-white max-md:pt-2">
+            <div class="flex shrink-0 items-center justify-between gap-3 border-b border-black/5 bg-ink px-4 py-3 text-white">
               <div class="flex min-w-0 items-center gap-3">
                 <span class="relative grid size-10 shrink-0 place-items-center rounded-full bg-accent text-white sm:size-9">
                   <ChatIcon name="chat" class="size-4.5" />
@@ -477,7 +487,7 @@ export default function ChatWidget() {
               </div>
               <button
                 type="button"
-                onClick={() => setOpen(false)}
+                onClick={closeChat}
                 aria-label="Close chat"
                 class="grid size-11 shrink-0 touch-manipulation place-items-center rounded-full text-steel-300 transition-colors hover:bg-white/10 hover:text-white active:scale-95 sm:size-9"
               >
@@ -695,22 +705,23 @@ export default function ChatWidget() {
               </p>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          aria-label={open ? 'Close chat' : 'Open chat'}
-          aria-expanded={open}
-          class={
-            'inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:bg-accent-dark active:scale-[0.98] ' +
-            (open ? 'hidden md:inline-flex' : 'chat-launcher-nudge')
-          }
-        >
-          <ChatIcon name={open ? 'close' : 'chat'} class="size-5" />
-          {!open && <span>Chat with us</span>}
-        </button>
-      </div>
+      {!open && (
+        <div class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 md:bottom-5">
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            aria-label="Open chat"
+            aria-expanded="false"
+            class="chat-launcher-nudge inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:bg-accent-dark active:scale-[0.98]"
+          >
+            <ChatIcon name="chat" class="size-5" />
+            <span>Chat with us</span>
+          </button>
+        </div>
+      )}
     </>
   );
 }

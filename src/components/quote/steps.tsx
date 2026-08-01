@@ -117,22 +117,16 @@ export const assistantQuestions: AssistantQuestion[] = [
 export function StartStep({ onPick }: { onPick: (v: 'known' | 'unknown') => void }) {
   return (
     <div>
-      <StepHeader
-        eyebrow="Free quote"
-        title="What brings you in?"
-        subtitle="Answer a few quick questions and we'll get you a real price. No account, no obligation."
-      />
+      <StepHeader title="Where should we start?" />
       <div class="space-y-3">
         <ChoiceCard
           icon="clipboard-check"
           title="I know what needs to be fixed"
-          description="You have an estimate, codes, or a good idea of the repair."
           onClick={() => onPick('known')}
         />
         <ChoiceCard
           icon="help-circle"
           title="I'm not sure what's wrong"
-          description="Something's off. Answer a few questions and we'll help figure it out."
           onClick={() => onPick('unknown')}
         />
       </div>
@@ -143,22 +137,16 @@ export function StartStep({ onPick }: { onPick: (v: 'known' | 'unknown') => void
 export function EstimateQStep({ onPick }: { onPick: (v: 'yes' | 'no') => void }) {
   return (
     <div>
-      <StepHeader
-        eyebrow="What needs fixing"
-        title="Do you already have a written estimate?"
-        subtitle="From another shop or dealer - anything on paper or on your phone counts."
-      />
+      <StepHeader title="Do you already have a written estimate?" />
       <div class="space-y-3">
         <ChoiceCard
           icon="clipboard-check"
           title="Yes - I have an estimate"
-          description="We'll review it and tell you if it's fair or overpriced."
           onClick={() => onPick('yes')}
         />
         <ChoiceCard
           icon="wrench"
           title="No - I don't have one"
-          description="You know the repair you need, just not the price yet."
           onClick={() => onPick('no')}
         />
       </div>

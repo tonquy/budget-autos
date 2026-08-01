@@ -1,7 +1,26 @@
 ---
 import { Image } from 'astro:assets';
-import heroImage from '../../assets/images/hero-garage.jpg';
+import heroImage from '../../assets/images/hero-home.jpg';
 import { business } from '../../lib/business';
+
+interface Props {
+  /** Optional H1 first line — defaults to homepage copy */
+  titleLine1?: string;
+  /** Optional H1 second line */
+  titleLine2?: string;
+  /** Optional support sentence under the H1 */
+  description?: string;
+  eyebrow?: string;
+  imageAlt?: string;
+}
+
+const {
+  titleLine1 = 'Your car, fixed right',
+  titleLine2 = 'No surprises on the bill.',
+  description = `Family-owned auto repair in ${business.address.city}, ${business.address.state} since ${business.foundedYear}. Send a photo — we reply with a real quote.`,
+  eyebrow = business.name,
+  imageAlt = `Open bay and vehicle on a lift at ${business.name} in ${business.address.city}`,
+} = Astro.props;
 ---
 
 {/*
@@ -12,12 +31,12 @@ import { business } from '../../lib/business';
   <div class="absolute inset-0">
     <Image
       src={heroImage}
-      alt={`Mechanic servicing a customer's vehicle on a lift at ${business.name}`}
+      alt={imageAlt}
       widths={[640, 960, 1440, 1920]}
       sizes="100vw"
       loading="eager"
       fetchpriority="high"
-      class="hero-image size-full object-cover object-[center_40%]"
+      class="hero-image size-full object-cover object-[center_45%]"
     />
     <div
       class="absolute inset-0 bg-linear-to-t from-ink/95 via-ink/55 to-ink/25 sm:bg-linear-to-r sm:from-ink/88 sm:via-ink/45 sm:to-ink/20"
@@ -28,15 +47,14 @@ import { business } from '../../lib/business';
   <div class="relative container-shop flex h-full flex-col justify-end pb-10 pt-24 sm:justify-center sm:pb-14 sm:pt-20 lg:pb-16">
     <div class="hero-copy max-w-xl lg:max-w-2xl">
       <p class="font-display text-xs font-semibold tracking-[0.18em] text-accent uppercase sm:text-sm">
-        {business.name}
+        {eyebrow}
       </p>
       <h1 class="mt-2.5 font-display text-[2rem] font-bold leading-[1.08] tracking-tight text-white sm:text-4xl lg:text-5xl">
-        Your car, fixed right<span class="text-accent">.</span>
-        <span class="mt-1 block text-white/90">No surprises on the bill.</span>
+        {titleLine1}<span class="text-accent">.</span>
+        <span class="mt-1 block text-white/90">{titleLine2}</span>
       </h1>
       <p class="mt-4 max-w-md text-sm leading-relaxed text-steel-200 sm:mt-5 sm:text-base">
-        Family-owned auto repair in {business.address.city}, {business.address.state} since{' '}
-        {business.foundedYear}. Send a photo — we reply with a real quote.
+        {description}
       </p>
     </div>
   </div>

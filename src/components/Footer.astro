@@ -1,12 +1,14 @@
 ---
 import Icon from './Icon.astro';
 import { business } from '../lib/business';
+import { featuredLocations } from '../lib/locations';
 
 const year = new Date().getFullYear();
+const areaLinks = featuredLocations(5);
 ---
 
 <footer class="border-t border-black/10 bg-ink text-steel-100">
-  <div class="container-shop grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr]">
+  <div class="container-shop grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
     <div>
       <a href="/" class="inline-flex items-center rounded-lg bg-white px-3 py-2">
         <img src="/logo.png" alt={business.name} class="h-8 w-auto" width="1080" height="361" />
@@ -30,6 +32,24 @@ const year = new Date().getFullYear();
           <Icon name="star" class="size-4" />
         </a>
       </div>
+    </div>
+
+    <div>
+      <h3 class="font-display text-sm font-semibold uppercase tracking-wide text-steel-300">Areas we serve</h3>
+      <ul class="mt-4 space-y-2 text-sm">
+        {areaLinks.map((place) => (
+          <li>
+            <a href={`/locations/${place.slug}`} class="transition-colors hover:text-accent">
+              {place.name}
+            </a>
+          </li>
+        ))}
+        <li>
+          <a href="/locations" class="font-semibold text-accent transition-colors hover:text-white">
+            All locations
+          </a>
+        </li>
+      </ul>
     </div>
 
     <div>

@@ -1,9 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/PageHero.astro';
 import ServiceQuoteForm from '../../components/quote/ServiceQuoteForm';
 import { business, services } from '../../lib/business';
 import { breadcrumbJsonLd } from '../../lib/seo';
+import heroQuote from '../../assets/images/hero-quote.jpg';
 
 // One statically-generated page per advertised service. Visitors land here when
 // they click a specific service (e.g. Brake Services), so we skip the wizard's
@@ -32,36 +33,31 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     ]),
   ]}
 >
-  <section class="bg-paper py-5 sm:py-12 lg:py-16">
-    <div class="mx-auto w-full max-w-xl px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl">
-      <div class="mb-6 flex items-start gap-3 sm:mb-8 sm:gap-4">
-        <span class="grid size-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent sm:size-12">
-          <Icon name={service.icon} class="size-5 sm:size-6" />
-        </span>
-        <div>
-          <p class="text-xs font-semibold uppercase tracking-wider text-accent">
-            <a href={`/services/${service.slug}`} class="hover:text-accent-dark">
-              {service.name}
-            </a>
-          </p>
-          <h1 class="mt-1 font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
-            Get a quote for your {service.name.toLowerCase()}.
-          </h1>
-          <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
-            Tell us your name, your vehicle, and what&rsquo;s going on - we&rsquo;ll get back to you with a real
-            price. No account, no obligation. Prefer to read more first?{' '}
-            <a href={`/services/${service.slug}`} class="font-semibold text-accent hover:text-accent-dark">
-              See {service.name.toLowerCase()} details
-            </a>
-            .
-          </p>
-        </div>
-      </div>
+  <PageHero
+    image={heroQuote}
+    alt={`Photographing a vehicle issue for a ${service.name.toLowerCase()} quote`}
+    eyebrow={service.name}
+    title={`Get a quote for your ${service.name.toLowerCase()}.`}
+    description={`Tell us your name, your vehicle, and what's going on — we'll get back to you with a real price. No account, no obligation.`}
+    size="compact"
+    objectPosition="center 40%"
+    priority
+  >
+    <a
+      slot="actions"
+      href={`/services/${service.slug}`}
+      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control border border-white/25 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+    >
+      See {service.name.toLowerCase()} details
+    </a>
+  </PageHero>
 
-      <div
-        id="intake-wizard"
-        class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10"
-      >
+  <section class="bg-paper py-8 sm:py-12 lg:py-16">
+    <div
+      id="intake-wizard"
+      class="mx-auto w-full max-w-xl scroll-mt-24 px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl"
+    >
+      <div class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10">
         <ServiceQuoteForm serviceName={service.name} client:load />
       </div>
 

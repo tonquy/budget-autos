@@ -119,9 +119,40 @@
     }
   }
 
+  /* Centered chat modal entrance */
+  .chat-modal-backdrop {
+    animation: chat-modal-backdrop-in 0.35s ease-out both;
+  }
+
+  .chat-modal-panel {
+    animation: chat-modal-panel-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
+  }
+
+  @keyframes chat-modal-backdrop-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes chat-modal-panel-in {
+    from {
+      opacity: 0;
+      transform: translateY(16px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .wizard-step-enter,
-    .chat-launcher-nudge {
+    .chat-launcher-nudge,
+    .chat-modal-backdrop,
+    .chat-modal-panel {
       animation: none;
     }
   }

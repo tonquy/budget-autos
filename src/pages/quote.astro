@@ -1,7 +1,9 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
 import IntakeWizard from '../components/quote/IntakeWizard';
 import { business } from '../lib/business';
+import heroQuote from '../assets/images/hero-quote.jpg';
 
 export const prerender = true;
 ---
@@ -10,12 +12,23 @@ export const prerender = true;
   title="Get a Free Quote"
   description={`Request a free repair quote from ${business.name}. Upload a photo of the issue and we'll get back to you with a real price.`}
 >
-  <section class="bg-paper py-5 sm:py-12 lg:py-16">
-    <div class="mx-auto w-full max-w-xl px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl">
-      <div
-        id="intake-wizard"
-        class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10"
-      >
+  <PageHero
+    image={heroQuote}
+    alt="Photographing a brake assembly for a repair quote"
+    eyebrow="Free quote"
+    title="Get a real price for your repair"
+    description="Send a photo of the issue or another shop's estimate — we'll reply with a clear number, usually within the hour."
+    size="compact"
+    objectPosition="center 40%"
+    priority
+  />
+
+  <section class="bg-paper py-8 sm:py-12 lg:py-16">
+    <div
+      id="intake-wizard"
+      class="mx-auto w-full max-w-xl scroll-mt-24 px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl"
+    >
+      <div class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10">
         <IntakeWizard client:load />
       </div>
     </div>
