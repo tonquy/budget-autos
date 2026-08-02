@@ -122,6 +122,7 @@ const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
     </main>
     <Footer />
     <MobileActionBar />
-    <ChatWidget client:idle />
+    {/* client:load so the first-visit auto-open works on mobile (idle can delay forever while scrolling). */}
+    <ChatWidget client:load />
   </body>
 </html>

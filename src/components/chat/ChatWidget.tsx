@@ -134,17 +134,19 @@ export default function ChatWidget() {
     setOpen(false);
   }
 
-  // Auto-open once on the visitor's first load of the site (any page).
-  // After that, navigating Home / Services / Quote / etc. never re-triggers it —
-  // only the bottom-left launcher (or [data-open-chat]) opens chat again.
+  // Auto-open once on the visitor's first load of the site (mobile + desktop).
+  // After that, navigating around never re-triggers it — only the launcher does.
   useEffect(() => {
+    let cancelled = false;
+
     try {
       if (localStorage.getItem(AUTO_OPEN_KEY)) return;
     } catch {
       // private mode — still attempt a one-shot auto-open this load
     }
 
-    const t = setTimeout(() => {
+    const t = window.setTimeout(() => {
+      if (cancelled) return;
       setOpen(true);
       try {
         localStorage.setItem(AUTO_OPEN_KEY, '1');
@@ -152,7 +154,11 @@ export default function ChatWidget() {
         // private mode
       }
     }, 1500);
-    return () => clearTimeout(t);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t);
+    };
   }, []);
 
   // Allow any [data-open-chat] control (or custom event) to open the widget
@@ -455,7 +461,9 @@ export default function ChatWidget() {
   return (
     <>
       {open && (
-        <div class="chat-modal-root fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6">
+        <div
+          class="chat-modal-root fixed inset-0 z-100 flex items-center justify-center p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-6"
+        >
           <button
             type="button"
             aria-label="Close chat"
@@ -727,7 +735,7 @@ export default function ChatWidget() {
       )}
 
       {!open && (
-        <div class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-50 md:bottom-5">
+        <div class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-100 md:bottom-5">
           <button
             type="button"
             onClick={() => setOpen(true)}
