@@ -121,10 +121,14 @@
 
   /* Centered chat modal entrance */
   .chat-modal-backdrop {
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
     animation: chat-modal-backdrop-in 0.35s ease-out both;
   }
 
   .chat-modal-panel {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
     animation: chat-modal-panel-in 0.4s cubic-bezier(0.32, 0.72, 0, 1) both;
   }
 

@@ -16,6 +16,8 @@ const OPENER =
 
 /** Once set, the centered auto-open never runs again on this browser. */
 const AUTO_OPEN_KEY = 'budgetauto-chat-auto-opened';
+/** Survives Safari/Astro remounts during the same page load so the modal comes back. */
+const AUTO_OPEN_PENDING_KEY = 'budgetauto-chat-auto-pending';
 
 const QUICK_PROMPTS = [
   { label: 'Second opinion', text: 'I have an estimate photo — can you give me a second opinion?' },
@@ -136,6 +138,8 @@ export default function ChatWidget() {
 
   // Auto-open once on the visitor's first load of the site (mobile + desktop).
   // After that, navigating around never re-triggers it — only the launcher does.
+  // Safari can remount the island after the timer fires; session pending reopens
+  // immediately so the modal does not disappear forever behind localStorage.
   useEffect(() => {
     let cancelled = false;
 
@@ -145,10 +149,20 @@ export default function ChatWidget() {
       // private mode — still attempt a one-shot auto-open this load
     }
 
+    try {
+      if (sessionStorage.getItem(AUTO_OPEN_PENDING_KEY) === '1') {
+        setOpen(true);
+        return;
+      }
+    } catch {
+      // private mode
+    }
+
     const t = window.setTimeout(() => {
       if (cancelled) return;
       setOpen(true);
       try {
+        sessionStorage.setItem(AUTO_OPEN_PENDING_KEY, '1');
         localStorage.setItem(AUTO_OPEN_KEY, '1');
       } catch {
         // private mode
@@ -462,12 +476,17 @@ export default function ChatWidget() {
     <>
       {open && (
         <div
-          class="chat-modal-root fixed inset-0 z-100 flex items-center justify-center p-3 pt-[max(0.75rem,env(safe-area-inset-top))] pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:p-6"
+          class="chat-modal-root fixed inset-0 flex items-center justify-center p-3 sm:p-6"
+          style={{
+            zIndex: 1000,
+            paddingTop: 'max(0.75rem, env(safe-area-inset-top))',
+            paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))',
+          }}
         >
           <button
             type="button"
             aria-label="Close chat"
-            class="chat-modal-backdrop absolute inset-0 bg-ink/25 backdrop-blur-[2px]"
+            class="chat-modal-backdrop absolute inset-0 bg-ink/25"
             onClick={closeChat}
           />
 
@@ -735,7 +754,10 @@ export default function ChatWidget() {
       )}
 
       {!open && (
-        <div class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 z-100 md:bottom-5">
+        <div
+          class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 md:bottom-5"
+          style={{ zIndex: 1000 }}
+        >
           <button
             type="button"
             onClick={() => setOpen(true)}
