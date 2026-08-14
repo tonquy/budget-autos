@@ -1,13 +1,16 @@
 ---
 import Icon from './Icon.astro';
+import { business } from '../lib/business';
 
-// On any quote page (the wizard at /quote or a per-service form at /quote/*) the
-// form itself is the primary action, so the bar is hidden entirely there -
+// Thumb-reachable version of the shop's three contact choices. On any quote page
+// the form itself is the primary action, so the bar is hidden entirely there -
 // otherwise the fixed CTA overlaps the form's submit button on mobile.
-// Everywhere else it surfaces a single thumb-reachable CTA.
 const path = Astro.url.pathname.replace(/\/$/, '');
 const isQuotePage = path === '/quote' || path.startsWith('/quote/');
 const hideActionBar = isQuotePage || path === '/thank-you';
+
+const item =
+  'inline-flex min-h-12 flex-1 touch-manipulation flex-col items-center justify-center gap-0.5 rounded-control py-1.5 text-[11px] font-semibold leading-tight';
 ---
 
 {
@@ -16,17 +19,78 @@ const hideActionBar = isQuotePage || path === '/thank-you';
       {/* Spacer so the fixed bar never covers the footer's last row. */}
       <div class="h-20 md:hidden" aria-hidden="true" />
       <div
-        class="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-paper/95 px-4 pt-2.5 backdrop-blur-md md:hidden"
-        style="padding-bottom: calc(0.625rem + env(safe-area-inset-bottom));"
+        id="mobile-action-bar"
+        class="mobile-bar fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-paper/95 px-3 pt-2 backdrop-blur-md md:hidden"
+        style="padding-bottom: calc(0.5rem + env(safe-area-inset-bottom));"
       >
-        <a
-          href="/quote"
-          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 rounded-control bg-accent py-3 text-sm font-semibold text-white"
-        >
-          <Icon name="camera" class="size-4" />
-          Get a Free Quote
-        </a>
+        <div class="flex items-stretch gap-2">
+          <a
+            href={`sms:${business.smsNumber}`}
+            data-sms-link
+            data-sms-number={business.smsNumber}
+            data-sms-body={business.smsBody}
+            data-contact-action="text"
+            data-contact-location="mobile-bar"
+            class={`${item} bg-accent text-white`}
+          >
+            <Icon name="message-square" class="size-4" />
+            Text Us
+          </a>
+          <a
+            href={business.phoneHref}
+            data-contact-action="call"
+            data-contact-location="mobile-bar"
+            class={`${item} border border-ink/15 text-ink`}
+          >
+            <Icon name="phone" class="size-4" />
+            Call Us
+          </a>
+          <a
+            href="/quote"
+            data-contact-action="request"
+            data-contact-location="mobile-bar"
+            class={`${item} border border-ink/15 text-ink`}
+          >
+            <Icon name="clipboard-list" class="size-4" />
+            Request
+          </a>
+        </div>
       </div>
     </>
   )
 }
+
+{/*
+  is:inline and placed directly after the bar so it runs synchronously at this
+  point in the parse - a deferred module would let the bar paint once before
+  being hidden, which reads as a flicker on every page load.
+*/}
+<script is:inline>
+  (function () {
+    var bar = document.getElementById('mobile-action-bar');
+    if (!bar) return;
+
+    // Only heroes that carry their own contact buttons should suppress the bar.
+    var hero = document.querySelector('[data-hero-actions]');
+    if (!hero) return;
+
+    function sync(visible) {
+      bar.classList.toggle('is-tucked', visible);
+    }
+
+    // Set the correct state before the first paint. Covers reloads where the
+    // browser restores a scroll position partway down the page.
+    sync(hero.getBoundingClientRect().bottom > 0);
+
+    if (!('IntersectionObserver' in window)) return;
+
+    new IntersectionObserver(
+      function (entries) {
+        entries.forEach(function (entry) {
+          sync(entry.isIntersecting);
+        });
+      },
+      { threshold: 0 },
+    ).observe(hero);
+  })();
+</script>

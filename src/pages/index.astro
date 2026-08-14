@@ -4,6 +4,7 @@ import Hero from '../components/home/Hero.astro';
 import TrustBar from '../components/home/TrustBar.astro';
 import ServicesPreview from '../components/home/ServicesPreview.astro';
 import QuoteCallout from '../components/home/QuoteCallout.astro';
+import DropOffBand from '../components/home/DropOffBand.astro';
 import ReviewsCta from '../components/home/ReviewsCta.astro';
 import LocationBlock from '../components/home/LocationBlock.astro';
 import HomeFaq from '../components/home/HomeFaq.astro';
@@ -15,13 +16,14 @@ export const prerender = true;
 
 <BaseLayout
   title={`Auto Repair in ${business.address.city}, ${business.address.state}`}
-  description={`Family-owned auto repair on ${business.address.line1} in ${business.address.city} since ${business.foundedYear}. Brakes, diagnostics, alignments & more — send a photo for a free quote.`}
+  description={`Family-owned auto repair on ${business.address.line1} in ${business.address.city} since ${business.foundedYear}. Brakes, diagnostics, alignments & more - send a photo for a free quote.`}
   jsonLd={[faqJsonLd(homeFaqs)]}
 >
   <Hero />
   <TrustBar />
   <ServicesPreview />
   <QuoteCallout />
+  <DropOffBand />
   <ReviewsCta />
   <LocationBlock />
   <HomeFaq />

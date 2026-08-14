@@ -403,10 +403,10 @@ export function PrimaryButton({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 rounded-control bg-accent px-6 py-3.5 text-base font-semibold text-white shadow-lifted transition-transform hover:-translate-y-0.5 hover:bg-accent-dark disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+      class="btn btn-lg btn-primary w-full disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
     >
       {children}
-      {icon && <Icon name={icon} class="size-5" />}
+      {icon && <Icon name={icon} class="size-[18px]" />}
     </button>
   );
 }
@@ -662,7 +662,8 @@ export function MediaUploader({
   mediaNotice,
   addFiles,
   removeMedia,
-  label = 'Add photos or videos',
+  // Short by default: the button sits at half width on mobile and .btn is nowrap.
+  label = 'Upload files',
   hint,
 }: {
   media: MediaItem[];
@@ -678,23 +679,25 @@ export function MediaUploader({
 
   return (
     <div class="space-y-3">
-      <div class="flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:gap-3">
+      {/* Side by side on every width. Stacking two full-width buttons on mobile
+          added a row of height to a step that already scrolls. */}
+      <div class="flex flex-row gap-2.5 sm:flex-wrap sm:gap-3">
         <button
           type="button"
           onClick={() => cameraInputRef.current?.click()}
           disabled={atLimit}
-          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:py-2.5"
+          class="btn btn-secondary flex-1 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
         >
-          <Icon name="camera" class="size-[18px]" />
+          <Icon name="camera" class="size-4" />
           Take a photo
         </button>
         <button
           type="button"
           onClick={() => libraryInputRef.current?.click()}
           disabled={atLimit}
-          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center gap-2 rounded-control border border-ink/15 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto sm:py-2.5"
+          class="btn btn-secondary flex-1 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
         >
-          <Icon name="image-plus" class="size-[18px]" />
+          <Icon name="image-plus" class="size-4" />
           {label}
         </button>
       </div>

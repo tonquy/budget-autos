@@ -17,7 +17,7 @@ import {
 
 export const prerender = false;
 
-// Cheap multimodal flash-lite — supports image input for estimate/part photos.
+// Cheap multimodal flash-lite - supports image input for estimate/part photos.
 const GEMINI_MODEL = 'gemini-3.1-flash-lite';
 const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
@@ -79,7 +79,7 @@ export const POST: APIRoute = async ({ request }) => {
   const geminiKey = env.GEMINI_API_KEY;
   if (!geminiKey) {
     return jsonResponse(
-      { ok: false, error: 'Chat is not configured yet. Please use the Free Quote button instead.' },
+      { ok: false, error: 'Chat is not configured yet. Please text or call the shop instead.' },
       503,
     );
   }
@@ -122,7 +122,7 @@ export const POST: APIRoute = async ({ request }) => {
             ok: false,
             overloaded: true,
             error:
-              "We're getting a lot of messages right now. Please use the Free Quote button and we'll get right back to you.",
+              "We're getting a lot of messages right now. Please text or call us and we'll get right back to you.",
           },
           429,
         );

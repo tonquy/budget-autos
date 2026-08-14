@@ -133,7 +133,7 @@ export const intakeSchema = z
       }),
     contactPreference: z.enum(contactPreferences),
 
-    // Vehicle — year is free text like make/model (no 4-digit gate; that was
+    // Vehicle - year is free text like make/model (no 4-digit gate; that was
     // rejecting real submissions over invisible/autofill characters).
     vehicleYear: optionalText(10),
     vehicleMake: optionalText(50),

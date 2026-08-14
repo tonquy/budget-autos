@@ -1,0 +1,55 @@
+---
+import Icon from '../Icon.astro';
+import ContactActions from '../ContactActions.astro';
+
+// The shop's biggest differentiator, per the owner: you can leave the car and
+// still get where you're going. It has to be visible on the page - not something
+// the customer has to dig out of a chatbot conversation.
+const points = [
+  {
+    icon: 'key-round',
+    title: 'Rental vehicles may be available',
+    description:
+      'For qualifying service customers, we can often put you in a rental while your vehicle is with us. Ask when you drop off.',
+  },
+  {
+    icon: 'clock',
+    title: 'Drop off on your schedule',
+    description:
+      'Leave the vehicle with us and get on with your day. There is room to leave it overnight if that is easier.',
+  },
+];
+---
+
+<section class="border-t border-black/5 bg-surface py-16 sm:py-20">
+  <div data-reveal class="container-shop grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-14">
+    <div class="max-w-xl">
+      <span class="inline-flex items-center gap-1.5 rounded-control bg-accent-soft px-3 py-1 text-xs font-semibold uppercase tracking-wide text-accent">
+        <Icon name="key-round" class="size-3.5" />
+        Keep moving
+      </span>
+      <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+        Drop off your vehicle. Keep moving.
+      </h2>
+      <p class="mt-3 text-steel-700">
+        Being without a car is the part most people dread about a repair. We work to make that the
+        smallest problem of your week.
+      </p>
+      <ContactActions location="dropoff-band" class="mt-7 max-w-lg" />
+    </div>
+
+    <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+      {points.map((point) => (
+        <li class="flex gap-4 rounded-card border border-black/5 bg-paper p-5 shadow-card">
+          <span class="grid size-10 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
+            <Icon name={point.icon} class="size-5" />
+          </span>
+          <div>
+            <p class="font-display font-semibold text-ink">{point.title}</p>
+            <p class="mt-1 text-sm leading-relaxed text-steel-700">{point.description}</p>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

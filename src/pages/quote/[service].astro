@@ -7,8 +7,8 @@ import { breadcrumbJsonLd } from '../../lib/seo';
 import heroQuote from '../../assets/images/hero-quote.jpg';
 
 // One statically-generated page per advertised service. Visitors land here when
-// they click a specific service (e.g. Brake Services), so we skip the wizard's
-// diagnostic questions and show a slim form with the service prefilled.
+// they click a specific service (e.g. Brake Services), so we show a slim form
+// with the service already prefilled instead of the general request form.
 export function getStaticPaths() {
   return services.map((service) => ({
     params: { service: service.slug },
@@ -38,7 +38,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     alt={`Photographing a vehicle issue for a ${service.name.toLowerCase()} quote`}
     eyebrow={service.name}
     title={`Get a quote for your ${service.name.toLowerCase()}.`}
-    description={`Tell us your name, your vehicle, and what's going on — we'll get back to you with a real price. No account, no obligation.`}
+    description={`Tell us your name, your vehicle, and what's going on - we'll get back to you with a real price. No account, no obligation.`}
     size="compact"
     objectPosition="center 40%"
     priority
@@ -46,7 +46,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     <a
       slot="actions"
       href={`/services/${service.slug}`}
-      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control border border-white/25 px-6 py-3 text-sm font-semibold text-white hover:bg-white/10"
+      class="btn btn-on-dark"
     >
       See {service.name.toLowerCase()} details
     </a>
@@ -64,7 +64,19 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
       <p class="mt-5 text-center text-sm text-steel-600">
         Not sure what&rsquo;s wrong?{' '}
         <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
-          Answer a few questions instead
+          Use the general service request
+        </a>
+        , or text us at{' '}
+        <a
+          href={`sms:${business.smsNumber}`}
+          data-sms-link
+          data-sms-number={business.smsNumber}
+          data-sms-body={business.smsBody}
+          data-contact-action="text"
+          data-contact-location="service-quote-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          {business.phoneDisplay}
         </a>
         .
       </p>

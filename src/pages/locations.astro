@@ -22,27 +22,27 @@ const groups = [
 
 <BaseLayout
   title={`Auto Repair Near Binghamton & Johnson City, NY`}
-  description={`Budget Auto Repair serves Johnson City, Binghamton, Endicott, Vestal, Endwell, and 30+ nearby towns from Airport Rd. Get a free photo quote.`}
+  description={`Budget Auto Repair serves Johnson City, Binghamton, Endicott, Vestal, Endwell, and 30+ nearby service areas from our shop on Airport Rd. Get a free photo quote.`}
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Locations', path: '/locations' },
+      { name: 'Service Areas', path: '/locations' },
     ]),
   ]}
 >
   <PageHero
     image={heroLocations}
     alt={`Independent auto repair shop exterior near ${business.address.city}, NY`}
-    eyebrow="Areas we serve"
-    title="Auto repair for the Tri-Cities and beyond"
-    description={`Our shop is on ${business.address.line1} in ${business.address.city}. We regularly help drivers from Binghamton, Endicott, Vestal, Endwell, and towns across Broome County and nearby.`}
+    eyebrow="Service areas"
+    title="One shop. Drivers from all over the Tri-Cities."
+    description={`Our only shop is on ${business.address.line1} in ${business.address.city}, and drivers come to us from Binghamton, Endicott, Vestal, Endwell, and towns across Broome County and nearby.`}
     objectPosition="center 55%"
     priority
   >
     <a
       slot="actions"
       href="/quote"
-      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+      class="btn btn-primary"
     >
       Get a free quote
     </a>
@@ -88,7 +88,7 @@ const groups = [
     </p>
     <a
       href="/quote"
-      class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+      class="mt-6 btn btn-primary"
     >
       Start your free quote
     </a>

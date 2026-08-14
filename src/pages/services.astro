@@ -4,6 +4,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
 import ImageBand from '../components/ImageBand.astro';
+import ContactActions from '../components/ContactActions.astro';
 import { business, services } from '../lib/business';
 import { serviceImages } from '../lib/serviceImages';
 import { breadcrumbJsonLd } from '../lib/seo';
@@ -36,7 +37,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     <a
       slot="actions"
       href="/quote"
-      class="inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
+      class="btn btn-primary"
     >
       Get a free quote
     </a>
@@ -79,14 +80,10 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
       Don't see what's wrong with your car listed?
     </h2>
     <p class="mt-2 text-steel-300">
-      Send a photo from the Free Quote form — we'll figure out what it is and get back to you.
+      Text us a photo, call the shop, or send it through the online form - we'll figure out what it
+      is and get back to you.
     </p>
-    <a
-      href="/quote"
-      class="mt-6 inline-flex min-h-12 touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white hover:bg-accent-dark"
-    >
-      Get a free quote
-    </a>
+    <ContactActions tone="dark" location="services-cta" class="mt-6 max-w-lg" />
     <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
   </ImageBand>
 </BaseLayout>

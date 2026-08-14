@@ -1,36 +1,56 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHero from '../components/PageHero.astro';
-import IntakeWizard from '../components/quote/IntakeWizard';
+import ServiceRequestForm from '../components/quote/ServiceRequestForm';
 import { business } from '../lib/business';
-import heroQuote from '../assets/images/hero-quote.jpg';
 
 export const prerender = true;
 ---
 
+{/*
+  No photo hero on this page. The page has exactly one job - collect the
+  request - and a 16rem hero image pushed the first question below the fold on
+  a phone. The section fills the viewport under the sticky header so step one
+  is fully visible the moment the page loads, with nothing to scroll past.
+*/}
 <BaseLayout
-  title="Get a Free Quote"
-  description={`Request a free repair quote from ${business.name}. Upload a photo of the issue and we'll get back to you with a real price.`}
+  title="Request Service Online"
+  description={`Request service from ${business.name} in ${business.address.city}. Two quick steps - what you need, then your details. No account, no chatbot.`}
 >
-  <PageHero
-    image={heroQuote}
-    alt="Photographing a brake assembly for a repair quote"
-    eyebrow="Free quote"
-    title="Get a real price for your repair"
-    description="Send a photo of the issue or another shop's estimate — we'll reply with a clear number, usually within the hour."
-    size="compact"
-    objectPosition="center 40%"
-    priority
-  />
-
-  <section class="bg-paper py-8 sm:py-12 lg:py-16">
+  <section class="flex min-h-[calc(100dvh-4.25rem)] flex-col bg-paper py-6 sm:py-12 lg:py-16">
     <div
       id="intake-wizard"
-      class="mx-auto w-full max-w-xl scroll-mt-24 px-5 sm:max-w-xl sm:px-8 lg:max-w-2xl"
+      class="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 scroll-mt-24 sm:px-8 lg:max-w-2xl"
     >
-      <div class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10">
-        <IntakeWizard client:load />
+      <div
+        class="flex flex-1 flex-col rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10"
+      >
+        <ServiceRequestForm client:load />
       </div>
+
+      <p class="mt-4 text-center text-sm text-steel-600">
+        Rather not type it out?{' '}
+        <a
+          href={`sms:${business.smsNumber}`}
+          data-sms-link
+          data-sms-number={business.smsNumber}
+          data-sms-body={business.smsBody}
+          data-contact-action="text"
+          data-contact-location="quote-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          Text us
+        </a>
+        {' or '}
+        <a
+          href={business.phoneHref}
+          data-contact-action="call"
+          data-contact-location="quote-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          call {business.phoneDisplay}
+        </a>
+        .
+      </p>
     </div>
   </section>
 </BaseLayout>

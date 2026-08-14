@@ -12,16 +12,15 @@ import {
 // Opener is display-only. It is NOT sent to the API so the model conversation
 // always starts with a user turn (Gemini requires that).
 const OPENER =
-  "What's wrong with your car? I'm here to help you fix it. I am the Budget Auto Repair chatbot and I'm here to help you — tell me anything, or drop a photo of the problem or another shop's estimate.";
+  "Ask me anything about your vehicle, or send a photo of the problem or another shop's estimate. If you'd rather just talk to the shop, text or call us - that's usually faster.";
 
-/** Once set, the centered auto-open never runs again on this browser. */
-const AUTO_OPEN_KEY = 'budgetauto-chat-auto-opened';
-/** Survives Safari/Astro remounts during the same page load so the modal comes back. */
-const AUTO_OPEN_PENDING_KEY = 'budgetauto-chat-auto-pending';
+// The chat is a secondary channel now: the shop's three contact buttons (Text /
+// Call / Request Service Online) are the front door. Nothing here opens on its
+// own - the visitor has to ask for it.
 
 const QUICK_PROMPTS = [
-  { label: 'Second opinion', text: 'I have an estimate photo — can you give me a second opinion?' },
-  { label: 'Is this fair?', text: 'I uploaded an estimate — does the price look fair?' },
+  { label: 'Second opinion', text: 'I have an estimate photo - can you give me a second opinion?' },
+  { label: 'Is this fair?', text: 'I uploaded an estimate - does the price look fair?' },
   { label: 'What can wait?', text: 'Help me figure out what is urgent vs what can wait to save money.' },
 ] as const;
 
@@ -135,45 +134,6 @@ export default function ChatWidget() {
   function closeChat() {
     setOpen(false);
   }
-
-  // Auto-open once on the visitor's first load of the site (mobile + desktop).
-  // After that, navigating around never re-triggers it — only the launcher does.
-  // Safari can remount the island after the timer fires; session pending reopens
-  // immediately so the modal does not disappear forever behind localStorage.
-  useEffect(() => {
-    let cancelled = false;
-
-    try {
-      if (localStorage.getItem(AUTO_OPEN_KEY)) return;
-    } catch {
-      // private mode — still attempt a one-shot auto-open this load
-    }
-
-    try {
-      if (sessionStorage.getItem(AUTO_OPEN_PENDING_KEY) === '1') {
-        setOpen(true);
-        return;
-      }
-    } catch {
-      // private mode
-    }
-
-    const t = window.setTimeout(() => {
-      if (cancelled) return;
-      setOpen(true);
-      try {
-        sessionStorage.setItem(AUTO_OPEN_PENDING_KEY, '1');
-        localStorage.setItem(AUTO_OPEN_KEY, '1');
-      } catch {
-        // private mode
-      }
-    }, 1500);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t);
-    };
-  }, []);
 
   // Allow any [data-open-chat] control (or custom event) to open the widget
   // instead of linking to a phone number.
@@ -435,7 +395,7 @@ export default function ChatWidget() {
             role: 'assistant',
             content:
               data.error ??
-              "Sorry, I'm having trouble right now. Please use the Free Quote button and we'll get right back to you.",
+              "Sorry, I'm having trouble right now. Please text or call us and we'll get right back to you.",
           },
         ]);
         return;
@@ -450,7 +410,7 @@ export default function ChatWidget() {
         {
           role: 'assistant',
           content:
-            "Sorry, something went wrong on my end. Please use the Free Quote button and we'll follow up quickly.",
+            "Sorry, something went wrong on my end. Please text or call us and we'll follow up quickly.",
         },
       ]);
     } finally {
@@ -617,7 +577,7 @@ export default function ChatWidget() {
                 <div class="flex items-start gap-2.5 rounded-2xl border border-success/25 bg-success/10 px-3.5 py-3 text-[14px] leading-relaxed text-ink sm:text-sm">
                   <ChatIcon name="check" class="mt-0.5 size-4 shrink-0 text-success" />
                   <span>
-                    Details sent to the shop. They&rsquo;ll reach out soon — usually within the hour during shop
+                    Details sent to the shop. They&rsquo;ll reach out soon - usually within the hour during shop
                     hours.
                   </span>
                 </div>
@@ -744,7 +704,7 @@ export default function ChatWidget() {
                 {' '}
                 Lots of files?{' '}
                 <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
-                  Free Quote form
+                  Request service online
                 </a>
                 .
               </p>
@@ -754,19 +714,21 @@ export default function ChatWidget() {
       )}
 
       {!open && (
-        <div
-          class="fixed bottom-[calc(5.5rem+env(safe-area-inset-bottom))] left-4 md:bottom-5"
-          style={{ zIndex: 1000 }}
-        >
+        // Desktop only. On mobile the fixed action bar already carries Text /
+        // Call / Request, and a fourth floating button both adds clutter and
+        // overlaps the content directly above the bar.
+        <div class="fixed bottom-5 left-4 hidden md:block" style={{ zIndex: 1000 }}>
+          {/* Quiet secondary launcher: neutral, no nudge animation, no auto-open.
+              Text / Call / Request Service Online are the primary paths. */}
           <button
             type="button"
             onClick={() => setOpen(true)}
-            aria-label="Open chat"
+            aria-label="Ask a question"
             aria-expanded="false"
-            class="chat-launcher-nudge inline-flex min-h-12 touch-manipulation items-center gap-2 rounded-full bg-accent px-4 py-3 font-display text-sm font-semibold text-white shadow-lifted transition-transform hover:bg-accent-dark active:scale-[0.98]"
+            class="inline-flex min-h-11 touch-manipulation items-center gap-2 rounded-full border border-black/10 bg-surface/95 px-3.5 py-2.5 text-[13px] font-semibold text-ink-soft shadow-card backdrop-blur-sm transition-colors hover:bg-steel-100 active:scale-[0.98]"
           >
-            <ChatIcon name="chat" class="size-5" />
-            <span>Chat with us</span>
+            <ChatIcon name="chat" class="size-4" />
+            <span>Ask a question</span>
           </button>
         </div>
       )}

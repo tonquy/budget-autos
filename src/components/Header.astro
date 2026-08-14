@@ -5,8 +5,8 @@ import { business } from '../lib/business';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
-  { href: '/locations', label: 'Locations' },
-  { href: '/quote', label: 'Get a Quote' },
+  { href: '/locations', label: 'Service Areas' },
+  { href: '/quote', label: 'Request Service' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -40,12 +40,27 @@ const isNavActive = (href: string) =>
       })}
     </nav>
 
-    <div class="hidden items-center gap-3 md:flex">
+    <div class="hidden items-center gap-2 md:flex">
       <a
-        href="/quote"
-        class="rounded-control bg-accent px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-white shadow-card transition-transform hover:-translate-y-0.5 hover:bg-accent-dark"
+        href={business.phoneHref}
+        data-contact-action="call"
+        data-contact-location="header"
+        class="btn btn-secondary"
       >
-        Free Quote
+        <Icon name="phone" class="size-4" />
+        {business.phoneDisplay}
+      </a>
+      <a
+        href={`sms:${business.smsNumber}`}
+        data-sms-link
+        data-sms-number={business.smsNumber}
+        data-sms-body={business.smsBody}
+        data-contact-action="text"
+        data-contact-location="header"
+        class="btn btn-primary"
+      >
+        <Icon name="message-square" class="size-4" />
+        Text Us
       </a>
     </div>
 
@@ -111,12 +126,27 @@ const isNavActive = (href: string) =>
 
         <div class="mt-auto flex flex-col gap-3 pt-10">
           <a
-            href="/quote"
-            class="menu-item flex items-center justify-center gap-2 rounded-control bg-accent px-5 py-3.5 text-base font-semibold text-white shadow-lifted transition-colors hover:bg-accent-dark"
+            href={`sms:${business.smsNumber}`}
+            data-sms-link
+            data-sms-number={business.smsNumber}
+            data-sms-body={business.smsBody}
+            data-contact-action="text"
+            data-contact-location="mobile-menu"
+            class="menu-item btn btn-lg btn-primary"
             style={`--i:${navLinks.length + 1}`}
           >
-            <Icon name="camera" class="size-5" />
-            Get a Free Quote
+            <Icon name="message-square" class="size-5" />
+            Text Us
+          </a>
+          <a
+            href={business.phoneHref}
+            data-contact-action="call"
+            data-contact-location="mobile-menu"
+            class="menu-item btn btn-lg btn-on-dark"
+            style={`--i:${navLinks.length + 2}`}
+          >
+            <Icon name="phone" class="size-5" />
+            Call {business.phoneDisplay}
           </a>
         </div>
       </nav>

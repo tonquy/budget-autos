@@ -30,7 +30,7 @@ const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
 ---
 
 {/*
-  City landings mirror the homepage layout 1:1 — only the H1 (and SEO) change
+  City landings mirror the homepage layout 1:1 - only the H1 (and SEO) change
   so each town gets a dedicated page without a different page design.
 */}
 <BaseLayout
@@ -39,7 +39,7 @@ const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Locations', path: '/locations' },
+      { name: 'Service Areas', path: '/locations' },
       { name: location.name, path: `/locations/${location.slug}` },
     ]),
     faqJsonLd(homeFaqs),
@@ -48,7 +48,7 @@ const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
   <Hero
     titleLine1={`Auto repair in ${location.name}`}
     titleLine2="No surprises on the bill."
-    description={`Family-owned shop on ${business.address.line1} in ${business.address.city} — serving ${location.name} drivers since ${business.foundedYear}. Send a photo for a free quote, or chat with us anytime.`}
+    description={`Family-owned shop on ${business.address.line1} in ${business.address.city} - serving ${location.name} drivers since ${business.foundedYear}. Send a photo for a free quote, or chat with us anytime.`}
     eyebrow={business.name}
     imageAlt={`Auto repair for ${location.name} drivers from ${business.name} in ${business.address.city}`}
   />

@@ -20,6 +20,10 @@
   --color-surface: #ffffff;
 
   --color-steel-100: #eceae4;
+  /* steel-200 was referenced in four places but never defined. Those usages sat
+     inside text-white parents so they silently inherited white; anywhere else
+     the text fell back to dark ink and disappeared on a dark background. */
+  --color-steel-200: #dbd8d1;
   --color-steel-300: #c9c6bd;
   --color-steel-500: #8b8a83;
   --color-steel-700: #55544d;
@@ -32,11 +36,22 @@
 
   --color-success: #2f7a4f;
 
+  /* Documented two-tier shape system (shape-consistency lock):
+     interactive controls are full-pill, containers are 1rem. Nothing else. */
   --radius-control: 999px;
   --radius-card: 1rem;
 
-  --shadow-card: 0 1px 2px rgba(23, 24, 28, 0.04), 0 8px 24px -8px rgba(23, 24, 28, 0.10);
-  --shadow-lifted: 0 4px 8px rgba(23, 24, 28, 0.06), 0 20px 40px -12px rgba(23, 24, 28, 0.18);
+  /* Shadows are tinted with the ink hue rather than pure black, and layered so
+     surfaces read as lit from a single overhead source. */
+  --shadow-card: 0 1px 2px rgba(23, 24, 28, 0.05), 0 8px 24px -10px rgba(23, 24, 28, 0.14);
+  --shadow-lifted:
+    0 1px 2px rgba(23, 24, 28, 0.06),
+    0 6px 12px -4px rgba(23, 24, 28, 0.10),
+    0 24px 48px -16px rgba(23, 24, 28, 0.22);
+  /* Accent-tinted lift for the primary CTA so it carries its own hue, not grey. */
+  --shadow-accent: 0 1px 2px rgba(122, 52, 10, 0.14), 0 10px 24px -10px rgba(179, 78, 23, 0.42);
+
+  --ease-out-expo: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @layer base {
@@ -56,7 +71,18 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    letter-spacing: -0.01em;
+    /* Tighter tracking gives display type more presence; balance stops
+       headlines from dropping a single orphaned word onto the last line. */
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  h1 {
+    letter-spacing: -0.035em;
+  }
+
+  p {
+    text-wrap: pretty;
   }
 
   :focus-visible {
@@ -66,6 +92,115 @@
 }
 
 @layer components {
+  /* ---------------------------------------------------------------
+     CONTROL SCALE
+     The site previously pinned every button to min-height 48px at all
+     breakpoints. 48px is the correct touch target on a phone, but on a
+     1440px desktop it makes every control read as oversized and shouty.
+     These classes keep the 48px target on coarse pointers and step the
+     control down to 40px once there is a mouse.
+     --------------------------------------------------------------- */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding-inline: 1.25rem;
+    border-radius: var(--radius-control);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1;
+    white-space: nowrap;
+    touch-action: manipulation;
+    transition:
+      background-color 0.2s var(--ease-out-expo),
+      color 0.2s var(--ease-out-expo),
+      border-color 0.2s var(--ease-out-expo),
+      box-shadow 0.25s var(--ease-out-expo),
+      transform 0.15s var(--ease-out-expo);
+  }
+
+  .btn:active {
+    transform: scale(0.98);
+  }
+
+  /* Desktop step-down: only where a fine pointer exists. */
+  @media (min-width: 640px) {
+    .btn {
+      min-height: 2.5rem;
+      padding-inline: 1.125rem;
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Bigger variant for the single most important action on a page. */
+  .btn-lg {
+    min-height: 3rem;
+    padding-inline: 1.5rem;
+    font-size: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .btn-lg {
+      min-height: 2.75rem;
+      padding-inline: 1.375rem;
+      font-size: 0.9375rem;
+    }
+  }
+
+  .btn-primary {
+    background-color: var(--color-accent);
+    color: #fff;
+    box-shadow: var(--shadow-accent);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-accent-dark);
+  }
+
+  .btn-secondary {
+    border: 1px solid color-mix(in srgb, var(--color-ink) 16%, transparent);
+    color: var(--color-ink);
+    background-color: transparent;
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--color-steel-100);
+    border-color: color-mix(in srgb, var(--color-ink) 26%, transparent);
+  }
+
+  /* Solid ink control. Used where the accent would compete with a nearby
+     primary CTA (e.g. Get Directions next to the contact buttons). */
+  .btn-ink {
+    background-color: var(--color-ink);
+    color: #fff;
+    box-shadow: var(--shadow-card);
+  }
+
+  .btn-ink:hover {
+    background-color: var(--color-ink-soft);
+  }
+
+  /* Control sitting on a photograph. A 4%-white fill with a faint hairline
+     disappears against a busy image, so this carries a real translucent fill,
+     a brighter edge, and a top inner highlight to read as a lit surface.
+     Deliberately no backdrop-blur: these scroll, and blurring a scrolling
+     element forces continuous GPU repaints on mobile. */
+  .btn-on-dark {
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    color: #fff;
+    background-color: rgba(255, 255, 255, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      0 2px 6px rgba(0, 0, 0, 0.22);
+  }
+
+  .btn-on-dark:hover {
+    background-color: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+
   .container-shop {
     width: 100%;
     max-width: 72rem;
@@ -76,6 +211,82 @@
   @media (min-width: 640px) {
     .container-shop {
       padding-inline: 2rem;
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     STICKY MOBILE ACTION BAR
+     Tucked out of the way while a hero with its own contact buttons is on
+     screen, so the same three actions never appear twice at once. It slides
+     back up as soon as the hero scrolls away. Driven by IntersectionObserver
+     in MobileActionBar.astro - never a scroll listener.
+     --------------------------------------------------------------- */
+  .mobile-bar {
+    transition:
+      transform 0.35s var(--ease-out-expo),
+      opacity 0.25s var(--ease-out-expo);
+  }
+
+  .mobile-bar.is-tucked {
+    transform: translateY(115%);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mobile-bar {
+      transition: none;
+    }
+  }
+
+  /* ---------------------------------------------------------------
+     GRAIN
+     A flat vector page reads sterile. This is a single fixed,
+     pointer-events-none layer so it never repaints while scrolling.
+     Applied once in BaseLayout, never on a scrolling container.
+     --------------------------------------------------------------- */
+  .page-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------------------------------------------------------------
+     SCROLL REVEAL
+     Driven by IntersectionObserver (see BaseLayout), never a scroll
+     listener. Starts visible so a failed/absent observer never leaves
+     content blank, then the observer adds .reveal-ready to arm it.
+     --------------------------------------------------------------- */
+  .reveal-ready {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  .reveal-ready.is-visible {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.7s var(--ease-out-expo),
+      transform 0.7s var(--ease-out-expo);
+  }
+
+  /* Children cascade in rather than the whole block popping at once. */
+  .reveal-stagger.is-visible > * {
+    animation: reveal-rise 0.6s var(--ease-out-expo) both;
+    animation-delay: calc(var(--reveal-i, 0) * 70ms);
+  }
+
+  @keyframes reveal-rise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
     }
   }
 
@@ -92,30 +303,6 @@
     to {
       opacity: 1;
       transform: none;
-    }
-  }
-
-  /* Attention nudge for the closed chat launcher — strong bounce so it stands out. */
-  .chat-launcher-nudge {
-    animation: chat-launcher-nudge 1.35s ease-in-out infinite;
-  }
-
-  @keyframes chat-launcher-nudge {
-    0%,
-    100% {
-      transform: translateY(0) scale(1);
-    }
-    25% {
-      transform: translateY(-18px) scale(1.04);
-    }
-    40% {
-      transform: translateY(0) scale(1);
-    }
-    55% {
-      transform: translateY(-10px) scale(1.02);
-    }
-    70% {
-      transform: translateY(0) scale(1);
     }
   }
 
@@ -154,10 +341,22 @@
 
   @media (prefers-reduced-motion: reduce) {
     .wizard-step-enter,
-    .chat-launcher-nudge,
     .chat-modal-backdrop,
-    .chat-modal-panel {
+    .chat-modal-panel,
+    .reveal-stagger.is-visible > * {
       animation: none;
+    }
+
+    /* Reveals collapse to their resting state instantly. */
+    .reveal-ready,
+    .reveal-ready.is-visible {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .btn:active {
+      transform: none;
     }
   }
 }

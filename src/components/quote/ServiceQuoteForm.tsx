@@ -163,7 +163,7 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
       try {
         sessionStorage.setItem('budgetauto-quote-submitted', '1');
       } catch {
-        /* private mode — thank-you PageView still fires; Lead may be skipped */
+        /* private mode - thank-you PageView still fires; Lead may be skipped */
       }
       window.location.assign('/thank-you');
       return;

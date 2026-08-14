@@ -111,6 +111,7 @@ const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
     <!-- End Meta Pixel Code -->
   </head>
   <body class="bg-paper text-ink antialiased">
+    <div class="page-grain" aria-hidden="true"></div>
     <a
       href="#main-content"
       class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-control focus:bg-accent focus:px-4 focus:py-2 focus:text-white"
@@ -123,7 +124,77 @@ const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
     </main>
     <Footer />
     <MobileActionBar />
-    {/* client:load so the first-visit auto-open works on mobile (idle can delay forever while scrolling). */}
-    <ChatWidget client:load />
+    {/* Secondary help channel only. The three contact buttons are the front door. */}
+    <ChatWidget client:idle />
+
+    <script>
+      // Scroll reveals. IntersectionObserver only - never a scroll listener,
+      // which would run work on every frame. Elements are authored visible and
+      // only armed here, so if this script never runs the page still reads.
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const revealTargets = document.querySelectorAll<HTMLElement>('[data-reveal]');
+
+      if (revealTargets.length > 0 && !reduceMotion && 'IntersectionObserver' in window) {
+        revealTargets.forEach((el) => {
+          el.classList.add('reveal-ready');
+          if (el.dataset.reveal === 'stagger') {
+            el.classList.add('reveal-stagger');
+            Array.from(el.children).forEach((child, i) => {
+              (child as HTMLElement).style.setProperty('--reveal-i', String(i));
+            });
+          }
+        });
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-visible');
+              observer.unobserve(entry.target);
+            });
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.15 },
+        );
+
+        revealTargets.forEach((el) => observer.observe(el));
+      }
+
+      // Prefill the SMS deep link and report the three contact actions to GA4 +
+      // Meta, so the shop can see whether calls, texts and service requests
+      // actually go up. Runs once per page for every ContactActions instance.
+      const SMS_LINKS = document.querySelectorAll<HTMLAnchorElement>('[data-sms-link]');
+      // iOS uses `&body=` after the number; Android/everything else uses `?body=`.
+      const isIos = /iP(hone|ad|od)|Macintosh.*Version.*Safari/.test(navigator.userAgent) &&
+        'ontouchend' in document;
+      const separator = isIos ? '&' : '?';
+
+      SMS_LINKS.forEach((link) => {
+        const number = link.dataset.smsNumber;
+        const body = link.dataset.smsBody;
+        if (!number || !body) return;
+        link.href = `sms:${number}${separator}body=${encodeURIComponent(body)}`;
+      });
+
+      const EVENT_NAMES: Record<string, string> = {
+        text: 'contact_text',
+        call: 'contact_call',
+        request: 'contact_request_online',
+      };
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        const action = target.closest<HTMLElement>('[data-contact-action]');
+        if (!action) return;
+
+        const kind = action.dataset.contactAction ?? '';
+        const eventName = EVENT_NAMES[kind];
+        if (!eventName) return;
+
+        const params = { placement: action.dataset.contactLocation ?? 'unknown' };
+        (window as any).gtag?.('event', eventName, params);
+        (window as any).fbq?.('trackCustom', eventName, params);
+      });
+    </script>
   </body>
 </html>

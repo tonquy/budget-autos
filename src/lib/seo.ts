@@ -26,7 +26,7 @@ export function pageTitle(title: string) {
   return title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 }
 
-/** Hours shown on the site (business.hours) — Mon–Fri 9–5. Sat is by appointment only (omitted from fixed schema hours). */
+/** Hours shown on the site (business.hours) - Mon-Fri 9-5. Sat is by appointment only (omitted from fixed schema hours). */
 function openingHoursFromBusiness() {
   return [
     {
@@ -130,16 +130,15 @@ export function serviceJsonLd(siteUrl: string, service: Service) {
 export const homeFaqs: FaqItem[] = [
   {
     question: `Where is ${business.name} located?`,
-    answer: `${business.name} is at ${business.address.line1}, ${business.address.city}, ${business.address.state} ${business.address.zip}. We're open Monday–Friday 9:00 AM–5:00 PM, and Saturdays by appointment.`,
+    answer: `${business.name} is at ${business.address.line1}, ${business.address.city}, ${business.address.state} ${business.address.zip}. We're open Monday-Friday 9:00 AM-5:00 PM, and Saturdays by appointment.`,
   },
   {
-    question: 'How do I get a free repair quote?',
-    answer:
-      'Use the Free Quote form or the chat on this site — send a photo of the issue or another shop’s estimate, plus your name and vehicle. We typically reply within the hour during shop hours with a real number, not a vague range.',
+    question: 'How do I reach the shop about a repair?',
+    answer: `Three ways: text us at ${business.phoneDisplay}, call the same number, or fill out the Request Service Online form. Texting is usually fastest - send your name, your vehicle, what it's doing, and a photo if you have one. We reply with the next step, usually within the hour during shop hours.`,
   },
   {
     question: `What auto repairs do you handle in ${business.address.city}?`,
     answer:
-      'Engine diagnostics, maintenance and repair, brakes, suspension and alignment, electrical systems, presale inspections, and general repairs. If it isn’t listed, send a photo anyway — we’ll tell you if we can help.',
+      'Engine diagnostics, maintenance and repair, brakes, suspension and alignment, electrical systems, presale inspections, and general repairs. If it isn’t listed, send a photo anyway - we’ll tell you if we can help.',
   },
 ];

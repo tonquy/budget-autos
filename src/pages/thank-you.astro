@@ -37,13 +37,13 @@ export const prerender = true;
       <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
         <a
           href="/"
-          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center rounded-control bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-dark sm:w-auto"
+          class="btn btn-primary w-full sm:w-auto"
         >
           Back to home
         </a>
         <a
           href="/services"
-          class="inline-flex min-h-12 w-full touch-manipulation items-center justify-center rounded-control border border-ink/15 px-6 py-3 text-sm font-semibold text-ink transition-colors hover:bg-steel-100 sm:w-auto"
+          class="btn btn-secondary w-full sm:w-auto"
         >
           Browse services
         </a>
@@ -68,7 +68,7 @@ export const prerender = true;
           }
         }
       } catch (e) {
-        /* private mode / blocked storage — skip Lead, PageView still counted */
+        /* private mode / blocked storage - skip Lead, PageView still counted */
       }
     })();
   </script>
