@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import RentalRequestForm from '../components/rental/RentalRequestForm';
+import { business } from '../lib/business';
+
+export const prerender = true;
+---
+
+{/* Single-purpose page, no hero - the form is the whole job, same reasoning as /quote. */}
+<BaseLayout
+  title="Request a Rental Vehicle"
+  description={`Request a $35/day rental vehicle while ${business.name} repairs your car. Quick form, no account needed.`}
+>
+  <section class="flex min-h-[calc(100dvh-4.25rem)] flex-col bg-paper py-6 sm:py-12 lg:py-16">
+    <div class="mx-auto flex w-full max-w-xl flex-1 flex-col px-5 sm:px-8 lg:max-w-2xl">
+      <div class="flex flex-1 flex-col rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10">
+        <RentalRequestForm client:load />
+      </div>
+
+      <p class="mt-4 text-center text-sm text-steel-600">
+        Rather not type it out?{' '}
+        <a
+          href={`sms:${business.smsNumber}`}
+          data-sms-link
+          data-sms-number={business.smsNumber}
+          data-sms-body={business.smsBody}
+          data-contact-action="text"
+          data-contact-location="rental-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          Text us
+        </a>
+        {' or '}
+        <a
+          href={business.phoneHref}
+          data-contact-action="call"
+          data-contact-location="rental-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          call {business.phoneDisplay}
+        </a>
+        .
+      </p>
+    </div>
+  </section>
+</BaseLayout>

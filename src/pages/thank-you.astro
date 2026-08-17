@@ -61,11 +61,14 @@ export const prerender = true;
   <script is:inline>
     (function () {
       try {
-        if (sessionStorage.getItem('budgetauto-quote-submitted') === '1') {
-          sessionStorage.removeItem('budgetauto-quote-submitted');
-          if (typeof fbq === 'function') {
-            fbq('track', 'Lead');
-          }
+        var submittedKeys = ['budgetauto-quote-submitted', 'budgetauto-rental-submitted'];
+        var submitted = submittedKeys.some(function (key) {
+          if (sessionStorage.getItem(key) !== '1') return false;
+          sessionStorage.removeItem(key);
+          return true;
+        });
+        if (submitted && typeof fbq === 'function') {
+          fbq('track', 'Lead');
         }
       } catch (e) {
         /* private mode / blocked storage - skip Lead, PageView still counted */

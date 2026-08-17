@@ -1,6 +1,7 @@
 import { business } from './business';
 import { flowLabels, type IntakeFormValues } from './quoteSchema';
 import type { ChatIntake, ChatMessage } from './chatIntake';
+import type { RentalFormValues } from './rentalSchema';
 
 export type MediaSummary = {
   imageCount: number;
@@ -280,6 +281,112 @@ export function customerConfirmationEmail(data: IntakeFormValues) {
   </div>`;
 
   const text = `Thanks, ${firstName}. We got your request at ${business.name} and will be in touch soon. Email ${business.email} if you need to reach us sooner.`;
+
+  return { subject, html, text };
+}
+
+function formatDate(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+const yesNoLabels: Record<'yes' | 'no', string> = { yes: 'Yes', no: 'No' };
+
+export type RentalAttachmentSummary = {
+  licenseAttached: boolean;
+  insuranceCardAttached: boolean;
+};
+
+export function ownerRentalNotificationEmail(data: RentalFormValues, attachments: RentalAttachmentSummary) {
+  const vehicle = [data.vehicleYear, data.vehicleMake, data.vehicleModel]
+    .map((part) => (part ?? '').trim())
+    .filter(Boolean)
+    .join(' ');
+  const subject = `Rental request from ${data.name}${vehicle ? ` (${vehicle})` : ''}`;
+
+  const detailRows = [
+    row('Phone', data.phone),
+    row('Email', data.email ?? ''),
+    row('Vehicle being repaired', vehicle),
+    row('Pickup date', formatDate(data.pickupDate)),
+    row('Return date', formatDate(data.returnDate)),
+    row('Valid driver’s license', yesNoLabels[data.hasLicense]),
+    row('Active NY auto insurance', yesNoLabels[data.hasInsurance]),
+    row('Insurance company', data.insuranceCompany ?? ''),
+    row('Policy number', data.policyNumber ?? ''),
+    row(
+      'Attachments',
+      [attachments.licenseAttached && 'license photo', attachments.insuranceCardAttached && 'insurance card']
+        .filter(Boolean)
+        .join(', '),
+    ),
+  ]
+    .filter(Boolean)
+    .join('');
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px;margin:0 auto;">
+    <div style="background:#17181c;padding:24px 28px;border-radius:12px 12px 0 0;">
+      <p style="margin:0;color:#d9611f;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">Rental request</p>
+      <h1 style="margin:6px 0 0;color:#fff;font-size:22px;">${escapeHtml(data.name)}</h1>
+    </div>
+    <div style="border:1px solid #eceae4;border-top:none;border-radius:0 0 12px 12px;padding:24px 28px;">
+      <table style="width:100%;border-collapse:collapse;">
+        ${detailRows}
+      </table>
+      <p style="margin:22px 0 0;font-size:13px;color:#8b8a83;">Reply directly to this email or call them back at ${escapeHtml(
+        data.phone,
+      )}. Confirm insurance and license before handing over a vehicle.</p>
+    </div>
+  </div>`;
+
+  const text = [
+    'Rental request',
+    `From: ${data.name}`,
+    `Phone: ${data.phone}`,
+    data.email ? `Email: ${data.email}` : '',
+    vehicle ? `Vehicle being repaired: ${vehicle}` : '',
+    `Pickup date: ${formatDate(data.pickupDate)}`,
+    `Return date: ${formatDate(data.returnDate)}`,
+    `Valid driver's license: ${yesNoLabels[data.hasLicense]}`,
+    `Active NY auto insurance: ${yesNoLabels[data.hasInsurance]}`,
+    data.insuranceCompany ? `Insurance company: ${data.insuranceCompany}` : '',
+    data.policyNumber ? `Policy number: ${data.policyNumber}` : '',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return { subject, html, text };
+}
+
+export function customerRentalConfirmationEmail(data: RentalFormValues) {
+  const subject = `We got your rental request - ${business.name}`;
+  const firstName = data.name.split(' ')[0] ?? data.name;
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:0 auto;">
+    <div style="padding:28px 28px 0;">
+      <h1 style="margin:0 0 4px;color:#17181c;font-size:20px;">Thanks, ${escapeHtml(firstName)}.</h1>
+      <p style="margin:0 0 18px;color:#55544d;font-size:15px;line-height:1.6;">
+        We got your rental request for ${formatDate(data.pickupDate)} through ${formatDate(
+          data.returnDate,
+        )} at ${business.name}. We'll confirm availability and reach out before your drop-off.
+      </p>
+      <div style="padding:14px 16px;background:#f8f6f2;border-radius:8px;font-size:13px;color:#55544d;line-height:1.5;">
+        Submitting this request does not guarantee a rental vehicle. Rental is subject to insurance verification,
+        customer eligibility, and vehicle availability. We will contact you to confirm.
+      </div>
+      <p style="margin:22px 0 28px;color:#55544d;font-size:14px;">
+        Need to reach us sooner? Email <a href="mailto:${business.email}" style="color:#d9611f;text-decoration:none;">${business.email}</a>
+        or call ${business.phoneDisplay}.
+      </p>
+    </div>
+  </div>`;
+
+  const text = `Thanks, ${firstName}. We got your rental request for ${formatDate(data.pickupDate)} through ${formatDate(
+    data.returnDate,
+  )} at ${business.name}. Submitting this request does not guarantee a rental vehicle - it is subject to insurance verification, customer eligibility, and vehicle availability. We will contact you to confirm. Email ${business.email} or call ${business.phoneDisplay} if you need to reach us sooner.`;
 
   return { subject, html, text };
 }

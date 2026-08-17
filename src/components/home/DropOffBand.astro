@@ -1,6 +1,6 @@
 ---
 import Icon from '../Icon.astro';
-import ContactActions from '../ContactActions.astro';
+import { business } from '../../lib/business';
 
 // The shop's biggest differentiator, per the owner: you can leave the car and
 // still get where you're going. It has to be visible on the page - not something
@@ -8,9 +8,9 @@ import ContactActions from '../ContactActions.astro';
 const points = [
   {
     icon: 'key-round',
-    title: 'Rental vehicles may be available',
+    title: 'Rental vehicles available - $35/day',
     description:
-      'For qualifying service customers, we can often put you in a rental while your vehicle is with us. Ask when you drop off.',
+      'For customers leaving their vehicle with us for repairs. $35/day includes up to 100 miles per day.',
   },
   {
     icon: 'clock',
@@ -29,13 +29,44 @@ const points = [
         Keep moving
       </span>
       <h2 class="mt-4 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-        Drop off your vehicle. Keep moving.
+        Drop off your car. Keep moving.
       </h2>
       <p class="mt-3 text-steel-700">
-        Being without a car is the part most people dread about a repair. We work to make that the
-        smallest problem of your week.
+        Rental vehicles available for repair customers - $35/day, up to 100 miles included per day.
       </p>
-      <ContactActions location="dropoff-band" class="mt-7 max-w-lg" />
+      <a
+        href="/rental"
+        data-contact-action="request-rental"
+        data-contact-location="dropoff-band"
+        class="btn btn-lg btn-primary mt-7 w-full sm:w-auto"
+      >
+        <Icon name="key-round" class="size-4 shrink-0" />
+        Request Rental
+      </a>
+      <p class="mt-3 text-sm text-steel-600">
+        Or{' '}
+        <a
+          href={`sms:${business.smsNumber}`}
+          data-sms-link
+          data-sms-number={business.smsNumber}
+          data-sms-body={business.smsBody}
+          data-contact-action="text"
+          data-contact-location="dropoff-band"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          text us
+        </a>
+        {' or '}
+        <a
+          href={business.phoneHref}
+          data-contact-action="call"
+          data-contact-location="dropoff-band"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          call {business.phoneDisplay}
+        </a>
+        .
+      </p>
     </div>
 
     <ul class="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">

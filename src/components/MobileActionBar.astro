@@ -7,7 +7,7 @@ import { business } from '../lib/business';
 // otherwise the fixed CTA overlaps the form's submit button on mobile.
 const path = Astro.url.pathname.replace(/\/$/, '');
 const isQuotePage = path === '/quote' || path.startsWith('/quote/');
-const hideActionBar = isQuotePage || path === '/thank-you';
+const hideActionBar = isQuotePage || path === '/rental' || path === '/thank-you';
 
 const item =
   'inline-flex min-h-12 flex-1 touch-manipulation flex-col items-center justify-center gap-0.5 rounded-control py-1.5 text-[11px] font-semibold leading-tight';
