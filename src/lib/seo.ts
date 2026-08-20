@@ -48,6 +48,7 @@ export function localBusinessJsonLd(siteUrl: string) {
     name: business.name,
     image: `${siteUrl}${OG_IMAGE.path}`,
     email: business.email,
+    telephone: business.smsNumber,
     url: siteUrl,
     foundingDate: String(business.foundedYear),
     address: {
@@ -89,6 +90,64 @@ export function breadcrumbJsonLd(
       position: index + 1,
       name: item.name,
       item: new URL(item.path, siteUrl).toString(),
+    })),
+  };
+}
+
+export function articleJsonLd(
+  siteUrl: string,
+  opts: {
+    title: string;
+    description: string;
+    path: string;
+    datePublished: Date;
+    dateModified?: Date;
+  },
+) {
+  const pageUrl = new URL(opts.path, siteUrl).toString();
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: opts.title,
+    description: opts.description,
+    datePublished: opts.datePublished.toISOString(),
+    dateModified: (opts.dateModified ?? opts.datePublished).toISOString(),
+    author: {
+      '@type': 'Organization',
+      name: business.name,
+      url: siteUrl,
+    },
+    publisher: {
+      '@type': 'AutoRepair',
+      '@id': `${siteUrl}/#business`,
+      name: business.name,
+    },
+    mainEntityOfPage: pageUrl,
+    url: pageUrl,
+    image: `${siteUrl}${OG_IMAGE.path}`,
+  };
+}
+
+export function howToJsonLd(
+  siteUrl: string,
+  opts: {
+    name: string;
+    description: string;
+    path: string;
+    steps: { name: string; text: string }[];
+  },
+) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: opts.name,
+    description: opts.description,
+    url: new URL(opts.path, siteUrl).toString(),
+    step: opts.steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.name,
+      text: step.text,
     })),
   };
 }

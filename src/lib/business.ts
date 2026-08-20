@@ -11,9 +11,9 @@ export const business = {
   foundedYear: 2004,
   // Repair-side phone. Rendered publicly on purpose: the shop wants Call Us and
   // Text Us to be two of the three obvious contact choices on every page.
-  phoneDisplay: '(607) 323-7319',
-  phoneHref: 'tel:+16073237319',
-  smsNumber: '+16073237319',
+  phoneDisplay: '(607) 323-0236',
+  phoneHref: 'tel:+16073230236',
+  smsNumber: '+16073230236',
   // Prefilled first text so the customer never has to figure out what to type.
   smsBody: 'Hi, I need help with my vehicle.',
   email: 'info@budgetautosrepair.com',

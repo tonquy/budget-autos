@@ -11,7 +11,24 @@ export default defineConfig({
   site: 'https://budgetautosrepair.com',
   output: 'server',
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [
+      tailwindcss(),
+      {
+        name: 'optimize-cloudflare-ssr-deps',
+        configEnvironment(environment) {
+          if (environment === 'client') return;
+          return {
+            optimizeDeps: {
+              include: [
+                '@astrojs/cloudflare/entrypoints/server',
+                'astro/zod',
+                'preact/devtools',
+              ],
+            },
+          };
+        },
+      },
+    ],
   },
 
   adapter: cloudflare(),

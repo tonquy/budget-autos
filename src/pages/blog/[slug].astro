@@ -1,0 +1,196 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import ImageBand from '../../components/ImageBand.astro';
+import Icon from '../../components/Icon.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { business } from '../../lib/business';
+import { blogHeroImages, formatBlogDate } from '../../lib/blog';
+import { articleJsonLd, breadcrumbJsonLd, faqJsonLd, howToJsonLd } from '../../lib/seo';
+import bgCta from '../../assets/images/bg-cta-dark.jpg';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+export const prerender = true;
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+const path = `/blog/${post.id}`;
+const heroImage = blogHeroImages[post.data.hero];
+const published = post.data.updatedDate ?? post.data.pubDate;
+
+const howToSteps = [
+  {
+    name: 'Show us the problem',
+    text: 'Text a photo to the shop, call, or open the Request Service form. A cracked hose, a warning light, a leak, or another shop estimate is enough. You do not need the part name.',
+  },
+  {
+    name: 'Tell us what the car is doing',
+    text: 'A couple of sentences is plenty. Pick the path that matches you: you know the repair, you are not sure what is wrong, or you already have an estimate.',
+  },
+  {
+    name: 'Get a real number back',
+    text: `We call or text you back, usually within the hour during shop hours, with a real number rather than a range. Labor is quoted against the Mitchell 1 Labor Structure. The estimate can change after an in-person inspection, and no work starts without your approval.`,
+  },
+];
+
+const jsonLd = [
+  breadcrumbJsonLd(siteUrl, [
+    { name: 'Home', path: '/' },
+    { name: 'Questions', path: '/blog' },
+    { name: post.data.title, path },
+  ]),
+  articleJsonLd(siteUrl, {
+    title: post.data.title,
+    description: post.data.description,
+    path,
+    datePublished: post.data.pubDate,
+    dateModified: published,
+  }),
+  howToJsonLd(siteUrl, {
+    name: post.data.title,
+    description: post.data.description,
+    path,
+    steps: howToSteps,
+  }),
+  faqJsonLd(post.data.faqs),
+];
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  ogType="article"
+  publishedTime={post.data.pubDate}
+  jsonLd={jsonLd}
+>
+  <PageHero
+    image={heroImage}
+    alt={post.data.heroAlt}
+    title={post.data.title}
+    description="Send a photo from your driveway. We text back a real number, usually within the hour."
+    size="default"
+    priority
+  >
+    <nav slot="breadcrumb" aria-label="Breadcrumb" class="mb-4 text-sm text-steel-300">
+      <ol class="flex flex-wrap items-center gap-1.5">
+        <li>
+          <a href="/" class="hover:text-white">Home</a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li>
+          <a href="/blog" class="hover:text-white">Questions</a>
+        </li>
+        <li aria-hidden="true">/</li>
+        <li class="font-medium text-white" aria-current="page">Article</li>
+      </ol>
+    </nav>
+    <a slot="actions" href="/quote" class="btn btn-primary">Get a free quote</a>
+    <a
+      slot="actions"
+      href={`sms:${business.smsNumber}`}
+      data-sms-link
+      data-sms-number={business.smsNumber}
+      data-sms-body={business.smsBody}
+      data-contact-action="text"
+      data-contact-location="blog-hero"
+      class="btn btn-on-dark"
+    >
+      Text {business.phoneDisplay}
+    </a>
+  </PageHero>
+
+  <div class="bg-paper py-14 sm:py-20">
+    <div class="container-shop grid gap-12 lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-16">
+      <article>
+        <p class="text-sm text-steel-500">
+          {formatBlogDate(post.data.pubDate)}
+          <span class="text-steel-300"> / </span>
+          {business.name}, {business.address.city}
+        </p>
+        <div class="blog-prose mt-8">
+          <Content />
+        </div>
+      </article>
+
+      <aside
+        class="rounded-card border border-black/5 bg-surface p-5 shadow-card lg:sticky lg:top-24"
+        aria-label="Shop contact"
+      >
+        <p class="font-display text-lg font-semibold tracking-tight text-ink">Talk to the shop</p>
+        <p class="mt-2 text-sm leading-relaxed text-steel-700">
+          {business.address.line1}, {business.address.city}. We usually reply within the hour during shop hours.
+        </p>
+        <ul class="mt-4 space-y-2 text-sm text-steel-700">
+          {business.hours.map((row) => (
+            <li class="flex justify-between gap-3">
+              <span>{row.day}</span>
+              <span class="text-steel-500">{row.time}</span>
+            </li>
+          ))}
+        </ul>
+        <a
+          href={business.phoneHref}
+          data-contact-action="call"
+          data-contact-location="blog-aside"
+          class="mt-5 flex items-center gap-2 text-sm font-semibold text-accent-dark hover:text-accent"
+        >
+          <Icon name="phone" class="size-4" />
+          Call {business.phoneDisplay}
+        </a>
+        <a
+          href={`sms:${business.smsNumber}`}
+          data-sms-link
+          data-sms-number={business.smsNumber}
+          data-sms-body={business.smsBody}
+          data-contact-action="text"
+          data-contact-location="blog-aside"
+          class="mt-2 flex items-center gap-2 text-sm font-semibold text-accent-dark hover:text-accent"
+        >
+          <Icon name="message-square" class="size-4" />
+          Text us
+        </a>
+      </aside>
+    </div>
+  </div>
+
+  <section class="border-t border-black/5 bg-surface py-16 sm:py-20">
+    <div class="container-shop max-w-3xl">
+      <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">
+        Common questions
+      </h2>
+      <dl class="mt-8 divide-y divide-black/5">
+        {post.data.faqs.map((faq) => (
+          <div class="py-5 first:pt-0 last:pb-0">
+            <dt class="font-display text-lg font-semibold text-ink">{faq.question}</dt>
+            <dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
+    <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
+      Ready for a real number?
+    </h2>
+    <p class="mt-2 text-steel-300">
+      Send a photo. We reply with a quote, usually within the hour during shop hours.
+    </p>
+    <a href="/quote" class="mt-6 btn btn-primary">
+      Start your free quote
+    </a>
+    <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
+  </ImageBand>
+</BaseLayout>

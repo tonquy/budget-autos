@@ -6,6 +6,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/services', label: 'Services' },
   { href: '/locations', label: 'Service Areas' },
+  { href: '/blog', label: 'Questions' },
   { href: '/quote', label: 'Request Service' },
 ];
 
@@ -20,7 +21,7 @@ const isNavActive = (href: string) =>
       <img src="/logo.png" alt={business.name} class="h-9 w-auto sm:h-10" width="1080" height="361" />
     </a>
 
-    <nav class="hidden items-center gap-1 md:flex" aria-label="Primary">
+    <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
       {navLinks.map((link) => {
         const isActive = isNavActive(link.href);
         return (
@@ -40,7 +41,7 @@ const isNavActive = (href: string) =>
       })}
     </nav>
 
-    <div class="hidden items-center gap-2 md:flex">
+    <div class="hidden items-center gap-2 lg:flex">
       <a
         href={business.phoneHref}
         data-contact-action="call"
@@ -64,7 +65,7 @@ const isNavActive = (href: string) =>
       </a>
     </div>
 
-    <div class="size-11 md:hidden" aria-hidden="true"></div>
+    <div class="size-11 lg:hidden" aria-hidden="true"></div>
   </div>
 </header>
 
@@ -73,7 +74,7 @@ const isNavActive = (href: string) =>
 <button
     type="button"
     id="mobile-menu-toggle"
-    class="fixed right-5 z-60 grid size-11 place-items-center rounded-control border border-black/10 bg-surface/80 text-ink backdrop-blur-sm transition-colors touch-manipulation sm:right-8 md:hidden"
+    class="fixed right-5 z-60 grid size-11 place-items-center rounded-control border border-black/10 bg-surface/80 text-ink backdrop-blur-sm transition-colors touch-manipulation sm:right-8 lg:hidden"
     style="top: max(0.75rem, env(safe-area-inset-top));"
     aria-expanded="false"
     aria-controls="mobile-menu"
@@ -91,7 +92,7 @@ const isNavActive = (href: string) =>
     role="dialog"
     aria-modal="true"
     aria-label="Site menu"
-    class="fixed inset-0 z-50 bg-ink/95 text-white backdrop-blur-xl md:hidden"
+    class="fixed inset-0 z-50 bg-ink/95 text-white backdrop-blur-xl lg:hidden"
   >
     <div class="container-shop flex h-full flex-col pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-3">
       <a href="/" class="menu-item inline-flex w-max items-center rounded-lg bg-white/95 px-2 py-1" style="--i:0">
@@ -112,12 +113,12 @@ const isNavActive = (href: string) =>
                 style={`--i:${i + 1}`}
                 aria-current={isActive ? 'page' : undefined}
               >
-                <span class="font-display text-3xl font-semibold tracking-tight transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1">
+                <span class="font-display text-3xl font-semibold tracking-tight transition-transform duration-300 ease-out-expo group-hover:translate-x-1">
                   {link.label}
                 </span>
                 <Icon
                   name="arrow-up-right"
-                  class="size-6 text-accent transition-transform duration-300 ease-[cubic-bezier(0.32,0.72,0,1)] group-hover:translate-x-1 group-hover:-translate-y-1"
+                  class="size-6 text-accent transition-transform duration-300 ease-out-expo group-hover:translate-x-1 group-hover:-translate-y-1"
                 />
               </a>
             );
