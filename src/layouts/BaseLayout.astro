@@ -52,8 +52,9 @@ const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
       gtag('config', 'G-C68F0QVFXR');
     </script>
 
-    <link rel="icon" type="image/png" href="/budgetautos-favicon.png" />
-    <link rel="apple-touch-icon" href="/budgetautos-favicon.png" />
+    <link rel="icon" href={`${siteUrl}/favicon.ico`} sizes="48x48" />
+    <link rel="icon" type="image/png" sizes="192x192" href={`${siteUrl}/favicon-192.png`} />
+    <link rel="apple-touch-icon" sizes="180x180" href={`${siteUrl}/budgetautos-favicon.png`} />
     <meta name="generator" content={Astro.generator} />
 
     <title>{pageTitle(title)}</title>
