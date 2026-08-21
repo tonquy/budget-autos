@@ -1,15 +1,20 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
+import { business } from '../../lib/business';
 import quoteImage from '../../assets/images/quote-photo-upload.jpg';
 
+// Text is the mechanism here rather than an upload form: it needs no account and
+// no app, every phone already has it, and it puts the shop in a thread with the
+// customer instead of an inbox. The section used to describe a form and carried
+// no button of its own, which left the three steps with nowhere to go.
 const steps = [
   {
     title: 'Snap a photo',
     description: "A cracked hose, a dashboard light, an estimate from another shop - whatever you've got.",
   },
   {
-    title: 'Tell us what\u2019s going on',
+    title: 'Text it to us',
     description: 'A couple sentences is plenty. No account, no app to download.',
   },
   {
@@ -45,7 +50,7 @@ const steps = [
         Not sure what it's called? Just show us.
       </h2>
       <p class="mt-3 text-steel-300">
-        Half the battle with car trouble is explaining it over the phone. Our quote form lets you upload photos straight from your phone, so we're looking at the same thing you are.
+        Half the battle with car trouble is explaining it over the phone. Text us a photo straight from your phone instead, so we're looking at the same thing you are.
       </p>
 
       <ol class="mt-8 space-y-6">
@@ -61,6 +66,19 @@ const steps = [
           </li>
         ))}
       </ol>
+
+      <a
+        href={`sms:${business.smsNumber}`}
+        data-sms-link
+        data-sms-number={business.smsNumber}
+        data-sms-body={business.smsBody}
+        data-contact-action="text"
+        data-contact-location="quote-callout"
+        class="btn btn-primary mt-8 w-full sm:w-auto"
+      >
+        <Icon name="message-square" class="size-4 shrink-0" />
+        Text us a photo
+      </a>
     </div>
   </div>
 </section>

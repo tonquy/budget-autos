@@ -22,15 +22,20 @@
 			"bucket_name": "budget-auto-repair-quote-photos"
 		}
 	],
-	// Non-secret configuration. Secrets (RESEND_API_KEY, TURNSTILE_SECRET, GEMINI_API_KEY) live in
-	// .dev.vars locally and are set with `wrangler secret put <NAME>` in production - never here.
+	// Non-secret configuration. Secrets (RESEND_API_KEY, TURNSTILE_SECRET, GEMINI_API_KEY,
+	// CAL_API_KEY) live in .dev.vars locally and are set with `wrangler secret put <NAME>`
+	// in production - never here.
 	//
 	// LIVE: leads land in the shop inbox, sent from the verified budgetautosrepair.com
 	// domain in Resend. OWNER_NOTIFICATION_EMAIL is where quote + chat leads go;
 	// QUOTE_FROM_EMAIL is the verified sender address (must be on a Resend-verified domain).
 	// The RESEND_API_KEY secret is set separately via `wrangler secret put RESEND_API_KEY`.
+	//
+	// CAL_USERNAME is the Cal.com account that owns the per-service event types the
+	// /book flow reserves against. See docs/BOOKING_SETUP.md.
 	"vars": {
 		"OWNER_NOTIFICATION_EMAIL": "info@budgetautosrepair.com",
-		"QUOTE_FROM_EMAIL": "info@budgetautosrepair.com"
+		"QUOTE_FROM_EMAIL": "info@budgetautosrepair.com",
+		"CAL_USERNAME": "budget-auto-repair"
 	}
 }

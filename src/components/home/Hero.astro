@@ -93,26 +93,46 @@ const {
       }
 
       {/*
-        Mobile gets all three contact choices here, because the header collapses
-        to a hamburger on small screens so nothing else on the first view offers
-        a way to reach the shop. The sticky bottom bar stays tucked away while
-        this hero is on screen so the same three actions never appear twice.
+        Mobile carries the contact choices here, because the header collapses to
+        a hamburger on small screens so nothing else on the first view offers a
+        way to reach the shop. The sticky bottom bar stays tucked away while this
+        hero is on screen so the same actions never appear twice.
       */}
       <div data-hero-actions class="mt-8 md:hidden">
-        <ContactActions variant="trio" tone="dark" location="home-hero" />
+        <ContactActions tone="dark" location="home-hero" />
+
+        {/* Booking gets its own full-width row beneath the instant-contact pair
+            rather than becoming a third cell in their grid: it is the action
+            this page is built around and it needs the width to read that way.
+            Most of this shop's traffic is phones, so it cannot be desktop-only. */}
+        <a
+          href="/book"
+          data-contact-action="schedule"
+          data-contact-location="home-hero"
+          class="btn btn-on-dark mt-2.5 w-full"
+        >
+          <Icon name="calendar-check" class="size-4 shrink-0" />
+          Schedule Appointment
+        </a>
       </div>
 
-      {/* Desktop keeps a single offer CTA - the header already carries Call and
-          Text Us, so repeating them here would be noise. */}
-      <a
-        href="/quote"
-        data-contact-action="request"
-        data-contact-location="home-hero"
-        class="btn btn-lg btn-primary mt-9 hidden md:inline-flex"
-      >
-        Get a Free Estimate
-        <Icon name="arrow-up-right" class="size-4" />
-      </a>
+      {/*
+        Desktop keeps Call/Text in the header, so they are not repeated here,
+        which leaves booking as the single action on the first screen. It links
+        straight to /book - the flow opens on service selection, so routing
+        through /services first would only add a step to the same choice.
+      */}
+      <div class="mt-9 hidden flex-wrap items-center gap-3 md:flex">
+        <a
+          href="/book"
+          data-contact-action="schedule"
+          data-contact-location="home-hero"
+          class="btn btn-lg btn-primary"
+        >
+          Schedule Appointment
+          <Icon name="calendar-check" class="size-4" />
+        </a>
+      </div>
     </div>
   </div>
 </section>

@@ -3,3 +3,8 @@
 RESEND_API_KEY=
 TURNSTILE_SECRET=1x0000000000000000000000000000000AA
 GEMINI_API_KEY=
+
+# Cal.com API key for the /book appointment calendar (Settings > Security > API keys).
+# Leave blank to run the booking flow off the shop's published hours instead - see
+# docs/BOOKING_SETUP.md. CAL_USERNAME lives in wrangler.jsonc under "vars".
+CAL_API_KEY=

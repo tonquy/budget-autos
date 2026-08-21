@@ -2,30 +2,23 @@
 import Icon from './Icon.astro';
 import { business } from '../lib/business';
 
-// The shop's three obvious contact choices. Per the owner's plan these replace
-// "figure out what to type into the chatbot" as the front door on every page:
+// The shop's two instant-contact choices:
 //   Text Us  -> opens the phone's own SMS app with the first message prefilled
 //   Call Us  -> plain tel: link
-//   Request Service Online -> the one short intake form at /quote
 //
 // Text is listed first on purpose - the owner wants it to be the easiest option.
+// Scheduling is deliberately not in here: it is the page's primary action and
+// each caller gives it its own row rather than a third cell in this grid.
 
 interface Props {
   /** 'light' sits on paper/surface, 'dark' sits on the ink background. */
   tone?: 'light' | 'dark';
-  /**
-   * 'trio'  - all three as equal buttons. For dedicated contact sections.
-   * 'pair'  - one primary + one secondary button, third path as a text link.
-   *           Used in the hero, where a row of three equal buttons reads heavy
-   *           and breaks the one-primary-one-secondary rule.
-   */
-  variant?: 'trio' | 'pair';
   /** Where these buttons live - sent to GA4 so the shop can see what gets used. */
   location: string;
   class?: string;
 }
 
-const { tone = 'light', variant = 'trio', location, class: className = '' } = Astro.props;
+const { tone = 'light', location, class: className = '' } = Astro.props;
 
 // The href is a placeholder: sms: needs `?body=` on Android and `&body=` on iOS,
 // so ContactActions.client.ts rewrites it per-device on load. Without JS the
@@ -37,74 +30,28 @@ const primary = 'btn-primary';
 const secondary = tone === 'dark' ? 'btn-on-dark' : 'btn-secondary';
 ---
 
-{/* Column flow so the trailing text link always sits below the button row,
-    never inline beside it. */}
-<div class:list={['contact-actions flex flex-col items-stretch sm:items-start', className]}>
-  {/*
-    Trio on mobile is two rows, not three: the two instant-contact actions sit
-    side by side, and the form request spans the row beneath them. Three
-    identical full-width pills stacked read as a list with no hierarchy.
-    At sm and up it becomes three equal columns.
-  */}
-  <div
-    class:list={[
-      'grid w-full gap-2.5 sm:gap-3',
-      variant === 'trio' ? 'grid-cols-2 sm:grid-cols-3' : 'sm:flex sm:w-auto sm:flex-row',
-    ]}
+{/* Side by side at every width. Two full-width pills stacked read as a list
+    with no hierarchy, and both actions are equally instant. */}
+<div class:list={['contact-actions grid grid-cols-2 gap-2.5 sm:gap-3', className]}>
+  <a
+    href={smsFallback}
+    data-sms-link
+    data-sms-number={business.smsNumber}
+    data-sms-body={business.smsBody}
+    data-contact-action="text"
+    data-contact-location={location}
+    class:list={[base, primary]}
   >
-    <a
-      href={smsFallback}
-      data-sms-link
-      data-sms-number={business.smsNumber}
-      data-sms-body={business.smsBody}
-      data-contact-action="text"
-      data-contact-location={location}
-      class:list={[base, primary]}
-    >
-      <Icon name="message-square" class="size-4 shrink-0" />
-      Text Us
-    </a>
-    <a
-      href={business.phoneHref}
-      data-contact-action="call"
-      data-contact-location={location}
-      class:list={[base, secondary]}
-    >
-      <Icon name="phone" class="size-4 shrink-0" />
-      Call Us
-    </a>
-    {
-      variant === 'trio' && (
-        <a
-          href="/quote"
-          data-contact-action="request"
-          data-contact-location={location}
-          class:list={[base, secondary, 'col-span-2 sm:col-span-1']}
-        >
-          <Icon name="clipboard-list" class="size-4 shrink-0" />
-          Request Estimate
-        </a>
-      )
-    }
-  </div>
-
-  {
-    variant === 'pair' && (
-      <a
-        href="/quote"
-        data-contact-action="request"
-        data-contact-location={location}
-        class:list={[
-          'group mt-4 inline-flex items-center justify-center gap-1.5 self-center text-sm font-semibold underline-offset-4 hover:underline sm:justify-start sm:self-start',
-          tone === 'dark' ? 'text-white/80 hover:text-white' : 'text-ink-soft hover:text-ink',
-        ]}
-      >
-        Or request service online
-        <Icon
-          name="arrow-up-right"
-          class="size-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-        />
-      </a>
-    )
-  }
+    <Icon name="message-square" class="size-4 shrink-0" />
+    Text Us
+  </a>
+  <a
+    href={business.phoneHref}
+    data-contact-action="call"
+    data-contact-location={location}
+    class:list={[base, secondary]}
+  >
+    <Icon name="phone" class="size-4 shrink-0" />
+    Call Us
+  </a>
 </div>

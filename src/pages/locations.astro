@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
 import ImageBand from '../components/ImageBand.astro';
+import ContactActions from '../components/ContactActions.astro';
 import { business } from '../lib/business';
 import { locationsByTier } from '../lib/locations';
 import { breadcrumbJsonLd } from '../lib/seo';
@@ -22,7 +23,7 @@ const groups = [
 
 <BaseLayout
   title={`Auto Repair Near Binghamton & Johnson City, NY`}
-  description={`Budget Auto Repair serves Johnson City, Binghamton, Endicott, Vestal, Endwell, and 30+ nearby service areas from our shop on Airport Rd. Get a free photo quote.`}
+  description={`Budget Auto Repair serves Johnson City, Binghamton, Endicott, Vestal, Endwell, and 30+ nearby service areas from our shop on Airport Rd. Book an appointment online.`}
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
@@ -41,10 +42,13 @@ const groups = [
   >
     <a
       slot="actions"
-      href="/quote"
+      href="/book"
+      data-contact-action="schedule"
+      data-contact-location="locations-hero"
       class="btn btn-primary"
     >
-      Get a free quote
+      <Icon name="calendar-check" class="size-4 shrink-0" />
+      Schedule Appointment
     </a>
   </PageHero>
 
@@ -84,13 +88,9 @@ const groups = [
       Don&rsquo;t see your town?
     </h2>
     <p class="mt-2 text-steel-300">
-      If you can get to Airport Rd in Johnson City, we can usually help. Send a photo and we&rsquo;ll take a look.
+      If you can get to Airport Rd in Johnson City, we can usually help. Text us a photo and
+      we&rsquo;ll take a look.
     </p>
-    <a
-      href="/quote"
-      class="mt-6 btn btn-primary"
-    >
-      Start your free quote
-    </a>
+    <ContactActions tone="dark" location="locations-cta" class="mt-6 max-w-lg" />
   </ImageBand>
 </BaseLayout>

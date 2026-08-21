@@ -2,12 +2,18 @@
 import Icon from './Icon.astro';
 import { business } from '../lib/business';
 
-// Thumb-reachable version of the shop's three contact choices. On any quote page
-// the form itself is the primary action, so the bar is hidden entirely there -
-// otherwise the fixed CTA overlaps the form's submit button on mobile.
+// Thumb-reachable version of the shop's contact choices. On any page where a
+// form is itself the primary action the bar is hidden entirely - otherwise the
+// fixed CTA overlaps that form's submit button on mobile. /book is in that list
+// for the same reason: its calendar and confirm button own the screen.
+//
+// The quote pages are no longer linked from anywhere in the site chrome, but
+// they stay reachable from search and from the blog, so they still need to be
+// on this list for anyone who lands on one.
 const path = Astro.url.pathname.replace(/\/$/, '');
 const isQuotePage = path === '/quote' || path.startsWith('/quote/');
-const hideActionBar = isQuotePage || path === '/rental' || path === '/thank-you';
+const hideActionBar =
+  isQuotePage || path === '/rental' || path === '/thank-you' || path === '/book';
 
 const item =
   'inline-flex min-h-12 flex-1 touch-manipulation flex-col items-center justify-center gap-0.5 rounded-control py-1.5 text-[11px] font-semibold leading-tight';
@@ -46,13 +52,13 @@ const item =
             Call Us
           </a>
           <a
-            href="/quote"
-            data-contact-action="request"
+            href="/book"
+            data-contact-action="schedule"
             data-contact-location="mobile-bar"
             class={`${item} border border-ink/15 text-ink`}
           >
-            <Icon name="clipboard-list" class="size-4" />
-            Request
+            <Icon name="calendar-check" class="size-4" />
+            Book
           </a>
         </div>
       </div>

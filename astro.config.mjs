@@ -35,7 +35,10 @@ export default defineConfig({
   integrations: [
     preact(),
     sitemap({
-      filter: (page) => !page.includes('/thank-you') && !page.includes('/404'),
+      // /book is a transactional step reached from the service pages, and is
+      // served noindex, so keep it out of the sitemap too.
+      filter: (page) =>
+        !page.includes('/thank-you') && !page.includes('/404') && !page.includes('/book'),
     }),
   ],
 });

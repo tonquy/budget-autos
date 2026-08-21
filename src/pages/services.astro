@@ -18,7 +18,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 
 <BaseLayout
   title={`Auto Repair Services in ${business.address.city}, ${business.address.state}`}
-  description={`Brakes, diagnostics, alignments, electrical, and more at ${business.name} in ${business.address.city}, ${business.address.state}. Browse services and request a free quote.`}
+  description={`Brakes, diagnostics, alignments, electrical, and more at ${business.name} in ${business.address.city}, ${business.address.state}. Browse services and book an appointment online.`}
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
@@ -31,15 +31,18 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     alt={`Service bays and alignment work at ${business.name}`}
     eyebrow={`${business.address.city}, ${business.address.state}`}
     title={`Auto repair services in ${business.address.city}`}
-    description={`Family-owned shop on ${business.address.line1}. Pick a service to learn what we cover, then send a photo for a free quote.`}
+    description={`Family-owned shop on ${business.address.line1}. Pick a service below, or book a time and tell us what is going on.`}
     priority
   >
     <a
       slot="actions"
-      href="/quote"
+      href="/book"
+      data-contact-action="schedule"
+      data-contact-location="services-hero"
       class="btn btn-primary"
     >
-      Get a free quote
+      <Icon name="calendar-check" class="size-4 shrink-0" />
+      Schedule Appointment
     </a>
   </PageHero>
 
@@ -80,8 +83,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
       Don't see what's wrong with your car listed?
     </h2>
     <p class="mt-2 text-steel-300">
-      Text us a photo, call the shop, or send it through the online form - we'll figure out what it
-      is and get back to you.
+      Text us a photo or call the shop - we'll figure out what it is and get back to you.
     </p>
     <ContactActions tone="dark" location="services-cta" class="mt-6 max-w-lg" />
     <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>

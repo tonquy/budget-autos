@@ -1,0 +1,86 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import BookingFlow from '../components/booking/BookingFlow';
+import { business, services } from '../lib/business';
+import { SHOP_TIMEZONE, getAppointmentBySlug, serviceAppointments } from '../lib/booking';
+import { breadcrumbJsonLd } from '../lib/seo';
+import heroQuote from '../assets/images/hero-quote.jpg';
+
+// Server-rendered rather than prerendered so ?service= is resolved before the
+// island mounts. Reading it client-side instead would flash the service picker
+// for a visitor who already told us what they need by clicking a service page.
+export const prerender = false;
+
+const requestedService = Astro.url.searchParams.get('service') ?? '';
+const preselected = getAppointmentBySlug(requestedService);
+
+// Merge the booking config (durations) with the marketing copy (icons) so the
+// picker matches the service cards elsewhere on the site.
+const serviceOptions = serviceAppointments.map((appointment) => {
+  const service = services.find((entry) => entry.slug === appointment.slug);
+  return {
+    slug: appointment.slug,
+    name: appointment.name,
+    icon: service?.icon ?? 'wrench',
+    durationMinutes: appointment.durationMinutes,
+  };
+});
+
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+---
+
+<BaseLayout
+  title="Schedule an Appointment"
+  description={`Book an appointment online with ${business.name} in ${business.address.city}, ${business.address.state}. Pick your service, choose a time, and get an instant confirmation.`}
+  robots="noindex, follow"
+  jsonLd={[
+    breadcrumbJsonLd(siteUrl, [
+      { name: 'Home', path: '/' },
+      { name: 'Services', path: '/services' },
+      { name: 'Schedule an Appointment', path: '/book' },
+    ]),
+  ]}
+>
+  <PageHero
+    image={heroQuote}
+    alt={`Booking a service appointment at ${business.name}`}
+    eyebrow="Scheduling"
+    title={preselected ? `Schedule your ${preselected.name.toLowerCase()}.` : 'Schedule an appointment.'}
+    description="Pick your service, choose a time that works, and we'll have the bay ready. You'll get a confirmation email straight away."
+    size="compact"
+    objectPosition="center 40%"
+    priority
+  />
+
+  <section class="bg-paper py-8 sm:py-12 lg:py-16">
+    <div class="mx-auto w-full max-w-xl px-5 sm:px-8 lg:max-w-2xl">
+      <div class="rounded-card border border-black/5 bg-surface p-5 shadow-card sm:p-8 lg:p-10">
+        <BookingFlow
+          services={serviceOptions}
+          initialService={preselected?.slug}
+          timeZone={SHOP_TIMEZONE}
+          timeZoneLabel="Eastern time"
+          client:load
+        />
+      </div>
+
+      <p class="mt-5 text-center text-sm text-steel-600">
+        Not sure what you need?{' '}
+        <button type="button" data-open-chat class="font-semibold text-accent hover:text-accent-dark">
+          Chat with us
+        </button>{' '}
+        or call{' '}
+        <a
+          href={business.phoneHref}
+          data-contact-action="call"
+          data-contact-location="booking-page"
+          class="font-semibold text-accent hover:text-accent-dark"
+        >
+          {business.phoneDisplay}
+        </a>
+        .
+      </p>
+    </div>
+  </section>
+</BaseLayout>

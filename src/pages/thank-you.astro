@@ -3,35 +3,67 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import { business } from '../lib/business';
 
-export const prerender = true;
+// Server-rendered so the booking confirmation copy is chosen before first paint.
+// A booked appointment and a submitted quote are different promises - "we'll be
+// in touch soon" is wrong for someone who already holds a time slot.
+export const prerender = false;
+
+const booked = Astro.url.searchParams.has('booked');
 ---
 
 <BaseLayout
-  title="Thank You"
-  description={`Thanks for contacting ${business.name}. We've got your request and will be in touch soon.`}
+  title={booked ? 'Appointment Confirmed' : 'Thank You'}
+  description={
+    booked
+      ? `Your appointment with ${business.name} is confirmed. Check your email for the details.`
+      : `Thanks for contacting ${business.name}. We've got your request and will be in touch soon.`
+  }
   robots="noindex, nofollow"
 >
   <section class="bg-paper py-16 sm:py-24">
     <div class="mx-auto w-full max-w-lg px-5 text-center sm:px-8">
       <div class="mx-auto grid size-16 place-items-center rounded-full bg-accent-soft text-accent">
-        <Icon name="circle-check-big" class="size-8" />
+        <Icon name={booked ? 'calendar-check' : 'circle-check-big'} class="size-8" />
       </div>
       <h1 class="mt-6 font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-        Request sent.
+        {booked ? "You're booked." : 'Request sent.'}
       </h1>
-      <p class="mt-3 text-base leading-relaxed text-steel-700 sm:text-lg">
-        Thanks - we&rsquo;ve got your details. We&rsquo;ll be in touch soon, usually within the hour during shop
-        hours.
-      </p>
+      {
+        booked ? (
+          <p class="mt-3 text-base leading-relaxed text-steel-700 sm:text-lg">
+            Your appointment is confirmed and we&rsquo;ve emailed you the details. Come a few minutes early
+            so we can get your keys and details.
+          </p>
+        ) : (
+          <p class="mt-3 text-base leading-relaxed text-steel-700 sm:text-lg">
+            Thanks - we&rsquo;ve got your details. We&rsquo;ll be in touch soon, usually within the hour
+            during shop hours.
+          </p>
+        )
+      }
       <p class="mt-2 text-sm text-steel-600">
-        Prefer to talk now?{' '}
-        <button
-          type="button"
-          data-open-chat
-          class="font-semibold text-accent hover:text-accent-dark"
-        >
-          Chat with us
-        </button>
+        {booked ? 'Need to change it, or need us sooner? Call ' : 'Prefer to talk now? '}
+        {
+          booked ? (
+            <a
+              href={business.phoneHref}
+              data-contact-action="call"
+              data-contact-location="thank-you-booked"
+              class="font-semibold text-accent hover:text-accent-dark"
+            >
+              {business.phoneDisplay}
+            </a>
+          ) : (
+            <button
+              type="button"
+              data-open-chat
+              class="font-semibold text-accent hover:text-accent-dark"
+            >
+              Chat with us
+            </button>
+          )
+        }
+        {booked ? '. We keep room for urgent and safety work.' : ''}
       </p>
 
       <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
@@ -61,7 +93,11 @@ export const prerender = true;
   <script is:inline>
     (function () {
       try {
-        var submittedKeys = ['budgetauto-quote-submitted', 'budgetauto-rental-submitted'];
+        var submittedKeys = [
+          'budgetauto-quote-submitted',
+          'budgetauto-rental-submitted',
+          'budgetauto-booking-submitted',
+        ];
         var submitted = submittedKeys.some(function (key) {
           if (sessionStorage.getItem(key) !== '1') return false;
           sessionStorage.removeItem(key);

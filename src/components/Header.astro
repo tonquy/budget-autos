@@ -7,7 +7,7 @@ const navLinks = [
   { href: '/services', label: 'Services' },
   { href: '/locations', label: 'Service Areas' },
   { href: '/blog', label: 'Questions' },
-  { href: '/quote', label: 'Request Service' },
+  { href: '/book', label: 'Schedule' },
 ];
 
 const currentPath = Astro.url.pathname;
@@ -28,7 +28,9 @@ const isNavActive = (href: string) =>
           <a
             href={link.href}
             class:list={[
-              'rounded-control px-4 py-2 text-sm font-medium transition-colors',
+              // px-3 rather than px-4: the nav items plus the two contact
+              // buttons would otherwise overflow the row at the lg breakpoint.
+              'rounded-control px-3 py-2 text-sm font-medium transition-colors',
               isActive
                 ? 'bg-ink text-paper'
                 : 'text-ink-soft hover:bg-steel-100',

@@ -89,7 +89,7 @@ export const services: Service[] = [
       {
         question: 'Do you charge for a diagnostic scan?',
         answer:
-          'Ask when you book - diagnostic fees vary by vehicle and concern. If you send a photo or code through our quote form, we can often tell you what to expect before you bring the car in.',
+          'Ask when you book - diagnostic fees vary by vehicle and concern. If you text us a photo or the code, we can often tell you what to expect before you bring the car in.',
       },
       {
         question: 'Can you diagnose intermittent problems?',
@@ -145,7 +145,7 @@ export const services: Service[] = [
       {
         question: 'How do I know if I need brakes?',
         answer:
-          'Common signs: squealing, grinding, longer stopping distance, vibration when braking, or a dashboard brake light. Send a photo or short video through our quote form if you’re unsure.',
+          'Common signs: squealing, grinding, longer stopping distance, vibration when braking, or a dashboard brake light. Text us a photo or short video if you’re unsure.',
       },
       {
         question: 'Do you replace brakes on one axle only?',
@@ -178,7 +178,7 @@ export const services: Service[] = [
       {
         question: 'Do I need an appointment for alignment?',
         answer:
-          'Yes - alignments need the rack. Request a quote or chat with us online and we’ll get you on the schedule.',
+          'Yes - alignments need the rack. Book a time online or chat with us and we’ll get you on the schedule.',
       },
     ],
     icon: 'sliders-horizontal',
@@ -201,7 +201,7 @@ export const services: Service[] = [
       {
         question: 'My car won’t start - is that electrical?',
         answer:
-          'Often yes: battery, starter, or connections. Sometimes it’s fuel or security-related. Describe what happens (clicks, nothing, slow crank) in the quote form and we’ll point you the right way.',
+          'Often yes: battery, starter, or connections. Sometimes it’s fuel or security-related. Text us what happens (clicks, nothing, slow crank) and we’ll point you the right way.',
       },
       {
         question: 'Can you replace a battery the same day?',
@@ -235,7 +235,7 @@ export const services: Service[] = [
       {
         question: 'Do you inspect cars for out-of-town buyers?',
         answer:
-          'Often. Send the vehicle details through chat or the quote form and we’ll tell you what we can check and how we report back.',
+          'Often. Send the vehicle details through chat or text and we’ll tell you what we can check and how we report back.',
       },
     ],
     icon: 'clipboard-check',

@@ -47,7 +47,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Johnson City?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Johnson City.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Johnson City.',
       },
       {
         question: 'What repairs do you offer for Johnson City drivers?',
@@ -79,7 +79,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Binghamton?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Binghamton.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Binghamton.',
       },
       {
         question: 'What repairs do you offer for Binghamton drivers?',
@@ -111,7 +111,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Endicott?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Endicott.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Endicott.',
       },
       {
         question: 'What repairs do you offer for Endicott drivers?',
@@ -143,7 +143,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Endwell?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Endwell.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Endwell.',
       },
       {
         question: 'What repairs do you offer for Endwell drivers?',
@@ -175,7 +175,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Vestal?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Vestal.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Vestal.',
       },
       {
         question: 'What repairs do you offer for Vestal drivers?',
@@ -207,7 +207,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Port Dickinson?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Port Dickinson.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Port Dickinson.',
       },
       {
         question: 'What repairs do you offer for Port Dickinson drivers?',
@@ -239,7 +239,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Chenango?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Chenango.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Chenango.',
       },
       {
         question: 'What repairs do you offer for Chenango drivers?',
@@ -271,7 +271,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Conklin?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Conklin.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Conklin.',
       },
       {
         question: 'What repairs do you offer for Conklin drivers?',
@@ -303,7 +303,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Kirkwood?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Kirkwood.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Kirkwood.',
       },
       {
         question: 'What repairs do you offer for Kirkwood drivers?',
@@ -335,7 +335,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Dickinson?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Dickinson.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Dickinson.',
       },
       {
         question: 'What repairs do you offer for Dickinson drivers?',
@@ -367,7 +367,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Maine?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Maine.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Maine.',
       },
       {
         question: 'What repairs do you offer for Maine drivers?',
@@ -399,7 +399,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Whitney Point?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Whitney Point.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Whitney Point.',
       },
       {
         question: 'What repairs do you offer for Whitney Point drivers?',
@@ -431,7 +431,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Windsor?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Windsor.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Windsor.',
       },
       {
         question: 'What repairs do you offer for Windsor drivers?',
@@ -463,7 +463,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Deposit?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Deposit.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Deposit.',
       },
       {
         question: 'What repairs do you offer for Deposit drivers?',
@@ -495,7 +495,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Lisle?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Lisle.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Lisle.',
       },
       {
         question: 'What repairs do you offer for Lisle drivers?',
@@ -527,7 +527,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Colesville?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Colesville.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Colesville.',
       },
       {
         question: 'What repairs do you offer for Colesville drivers?',
@@ -559,7 +559,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Harpursville?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Harpursville.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Harpursville.',
       },
       {
         question: 'What repairs do you offer for Harpursville drivers?',
@@ -591,7 +591,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Fenton?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Fenton.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Fenton.',
       },
       {
         question: 'What repairs do you offer for Fenton drivers?',
@@ -623,7 +623,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Port Crane?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Port Crane.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Port Crane.',
       },
       {
         question: 'What repairs do you offer for Port Crane drivers?',
@@ -655,7 +655,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Barker?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Barker.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Barker.',
       },
       {
         question: 'What repairs do you offer for Barker drivers?',
@@ -687,7 +687,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Nanticoke?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Nanticoke.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Nanticoke.',
       },
       {
         question: 'What repairs do you offer for Nanticoke drivers?',
@@ -719,7 +719,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Triangle?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Triangle.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Triangle.',
       },
       {
         question: 'What repairs do you offer for Triangle drivers?',
@@ -751,7 +751,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Sanford?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Sanford.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Sanford.',
       },
       {
         question: 'What repairs do you offer for Sanford drivers?',
@@ -783,7 +783,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Castle Creek?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Castle Creek.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Castle Creek.',
       },
       {
         question: 'What repairs do you offer for Castle Creek drivers?',
@@ -815,7 +815,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Hillcrest?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Hillcrest.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Hillcrest.',
       },
       {
         question: 'What repairs do you offer for Hillcrest drivers?',
@@ -847,7 +847,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from West Corners?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from West Corners.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from West Corners.',
       },
       {
         question: 'What repairs do you offer for West Corners drivers?',
@@ -879,7 +879,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Apalachin?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Apalachin.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Apalachin.',
       },
       {
         question: 'What repairs do you offer for Apalachin drivers?',
@@ -911,7 +911,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Owego?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Owego.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Owego.',
       },
       {
         question: 'What repairs do you offer for Owego drivers?',
@@ -943,7 +943,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Newark Valley?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Newark Valley.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Newark Valley.',
       },
       {
         question: 'What repairs do you offer for Newark Valley drivers?',
@@ -975,7 +975,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Candor?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Candor.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Candor.',
       },
       {
         question: 'What repairs do you offer for Candor drivers?',
@@ -1007,7 +1007,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Waverly?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Waverly.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Waverly.',
       },
       {
         question: 'What repairs do you offer for Waverly drivers?',
@@ -1039,7 +1039,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Greene?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Greene.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Greene.',
       },
       {
         question: 'What repairs do you offer for Greene drivers?',
@@ -1071,7 +1071,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Marathon?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Marathon.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Marathon.',
       },
       {
         question: 'What repairs do you offer for Marathon drivers?',
@@ -1103,7 +1103,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Hallstead?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Hallstead.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Hallstead.',
       },
       {
         question: 'What repairs do you offer for Hallstead drivers?',
@@ -1135,7 +1135,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Great Bend?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Great Bend.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Great Bend.',
       },
       {
         question: 'What repairs do you offer for Great Bend drivers?',
@@ -1167,7 +1167,7 @@ export const locations: Location[] = [
       },
       {
         question: 'How do I get a quote from Susquehanna?',
-        answer: 'Text us at (607) 323-0236, call the shop, or use the Request Service Online form - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Susquehanna.',
+        answer: 'Text us at (607) 323-0236 or call the shop - send your name, vehicle and what\'s going on, plus a photo of the problem or another shop\'s estimate. We\'ll come back to you with the next step before you drive over from Susquehanna.',
       },
       {
         question: 'What repairs do you offer for Susquehanna drivers?',

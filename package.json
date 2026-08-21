@@ -10,7 +10,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "setup:cal": "node scripts/setup-cal.mjs",
+    "verify:booking": "node scripts/verify-booking-rules.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.2.3",

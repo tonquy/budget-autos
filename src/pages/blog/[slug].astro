@@ -96,7 +96,16 @@ const jsonLd = [
         <li class="font-medium text-white" aria-current="page">Article</li>
       </ol>
     </nav>
-    <a slot="actions" href="/quote" class="btn btn-primary">Get a free quote</a>
+    <a
+      slot="actions"
+      href="/book"
+      data-contact-action="schedule"
+      data-contact-location="blog-hero"
+      class="btn btn-primary"
+    >
+      <Icon name="calendar-check" class="size-4 shrink-0" />
+      Schedule Appointment
+    </a>
     <a
       slot="actions"
       href={`sms:${business.smsNumber}`}
@@ -183,14 +192,35 @@ const jsonLd = [
 
   <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
     <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-      Ready for a real number?
+      Ready to get it looked at?
     </h2>
     <p class="mt-2 text-steel-300">
-      Send a photo. We reply with a quote, usually within the hour during shop hours.
+      Book a time online, or text us a photo and we&rsquo;ll reply - usually within the hour during
+      shop hours.
     </p>
-    <a href="/quote" class="mt-6 btn btn-primary">
-      Start your free quote
-    </a>
+    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <a
+        href="/book"
+        data-contact-action="schedule"
+        data-contact-location="blog-band"
+        class="btn btn-primary"
+      >
+        <Icon name="calendar-check" class="size-4 shrink-0" />
+        Schedule Appointment
+      </a>
+      <a
+        href={`sms:${business.smsNumber}`}
+        data-sms-link
+        data-sms-number={business.smsNumber}
+        data-sms-body={business.smsBody}
+        data-contact-action="text"
+        data-contact-location="blog-band"
+        class="btn btn-on-dark"
+      >
+        <Icon name="message-square" class="size-4 shrink-0" />
+        Text {business.phoneDisplay}
+      </a>
+    </div>
     <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
   </ImageBand>
 </BaseLayout>

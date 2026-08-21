@@ -1,4 +1,5 @@
 import { business } from './business';
+import { formatAppointmentForShop, formatDateForShop, formatTimeForShop } from './booking';
 import { flowLabels, type IntakeFormValues } from './quoteSchema';
 import type { ChatIntake, ChatMessage } from './chatIntake';
 import type { RentalFormValues } from './rentalSchema';
@@ -387,6 +388,152 @@ export function customerRentalConfirmationEmail(data: RentalFormValues) {
   const text = `Thanks, ${firstName}. We got your rental request for ${formatDate(data.pickupDate)} through ${formatDate(
     data.returnDate,
   )} at ${business.name}. Submitting this request does not guarantee a rental vehicle - it is subject to insurance verification, customer eligibility, and vehicle availability. We will contact you to confirm. Email ${business.email} or call ${business.phoneDisplay} if you need to reach us sooner.`;
+
+  return { subject, html, text };
+}
+
+// --- Appointment booking ------------------------------------------------------
+
+export type BookingEmailPayload = {
+  appointmentName: string;
+  durationMinutes: number;
+  /** Start of the appointment. Always rendered in the shop's timezone. */
+  start: Date;
+  name: string;
+  phone: string;
+  email: string;
+  vehicle: string;
+  mileage: string;
+  notes: string;
+  /** Cal.com booking reference, when the slot was reserved on the real calendar. */
+  bookingRef: string | null;
+  /**
+   * False when Cal.com was not configured, so the slot is not actually held.
+   * The owner email says so plainly rather than implying a confirmed booking.
+   */
+  reserved: boolean;
+};
+
+const shopAddress = `${business.address.line1}, ${business.address.city}, ${business.address.state} ${business.address.zip}`;
+
+export function ownerBookingNotificationEmail(data: BookingEmailPayload) {
+  const when = formatAppointmentForShop(data.start);
+  const subject = `${data.reserved ? 'New appointment' : 'Appointment request'}: ${data.name} - ${when}`;
+
+  const detailRows = [
+    row('When', when),
+    row('Service', data.appointmentName),
+    row('Length', `${data.durationMinutes} minutes`),
+    row('Phone', data.phone),
+    row('Email', data.email),
+    row('Vehicle', data.vehicle),
+    row('Mileage', data.mileage),
+    row('Booking ref', data.bookingRef ?? ''),
+  ]
+    .filter(Boolean)
+    .join('');
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:560px;margin:0 auto;">
+    <div style="background:#17181c;padding:24px 28px;border-radius:12px 12px 0 0;">
+      <p style="margin:0;color:#d9611f;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">${
+        data.reserved ? 'Booked online' : 'Appointment request'
+      }</p>
+      <h1 style="margin:6px 0 0;color:#fff;font-size:22px;">${escapeHtml(data.name)}</h1>
+      <p style="margin:6px 0 0;color:#c9c6bd;font-size:14px;">${escapeHtml(when)}</p>
+    </div>
+    <div style="border:1px solid #eceae4;border-top:none;border-radius:0 0 12px 12px;padding:24px 28px;">
+      <table style="width:100%;border-collapse:collapse;">
+        ${detailRows}
+      </table>
+      ${textBlock('What they told us', data.notes)}
+      ${
+        data.reserved
+          ? `<p style="margin:22px 0 0;font-size:13px;color:#8b8a83;">This slot is held on the calendar. Reply to this email or call ${escapeHtml(
+              data.phone,
+            )} to reach them.</p>`
+          : `<p style="margin:22px 0 0;padding:14px 16px;background:#fdf2e6;border-radius:8px;font-size:13px;color:#7a340a;">Heads up: the scheduling calendar is not connected, so this time is <strong>not</strong> reserved. Confirm with the customer before relying on it.</p>`
+      }
+    </div>
+  </div>`;
+
+  const text = [
+    data.reserved ? 'New appointment booked online' : 'Appointment request (calendar not connected)',
+    `Name: ${data.name}`,
+    `When: ${when}`,
+    `Service: ${data.appointmentName} (${data.durationMinutes} minutes)`,
+    `Phone: ${data.phone}`,
+    `Email: ${data.email}`,
+    data.vehicle ? `Vehicle: ${data.vehicle}` : '',
+    data.mileage ? `Mileage: ${data.mileage}` : '',
+    data.bookingRef ? `Booking ref: ${data.bookingRef}` : '',
+    data.notes ? `\nWhat they told us:\n${data.notes}` : '',
+    data.reserved ? '' : '\nThis time is NOT reserved - the scheduling calendar is not connected.',
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  return { subject, html, text };
+}
+
+export function customerBookingConfirmationEmail(data: BookingEmailPayload) {
+  const firstName = data.name.split(' ')[0] ?? data.name;
+  const dateLine = formatDateForShop(data.start);
+  const timeLine = formatTimeForShop(data.start);
+  const subject = `Appointment confirmed - ${dateLine} at ${timeLine}`;
+
+  const html = `
+  <div style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:0 auto;">
+    <div style="padding:28px 28px 0;">
+      <h1 style="margin:0 0 4px;color:#17181c;font-size:20px;">You&rsquo;re booked, ${escapeHtml(firstName)}.</h1>
+      <p style="margin:0 0 18px;color:#55544d;font-size:15px;line-height:1.6;">
+        We&rsquo;ve got you down for ${escapeHtml(data.appointmentName.toLowerCase())} at ${business.name}.
+      </p>
+
+      <div style="padding:18px 20px;background:#17181c;border-radius:12px;color:#fff;">
+        <p style="margin:0;color:#d9611f;font-size:12px;font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">Your appointment</p>
+        <p style="margin:8px 0 0;font-size:18px;font-weight:600;">${escapeHtml(dateLine)}</p>
+        <p style="margin:2px 0 0;font-size:18px;font-weight:600;">${escapeHtml(timeLine)}</p>
+        <p style="margin:10px 0 0;color:#c9c6bd;font-size:13px;">Plan on about ${data.durationMinutes} minutes.</p>
+      </div>
+
+      <table style="width:100%;border-collapse:collapse;margin-top:18px;">
+        ${row('Service', data.appointmentName)}
+        ${row('Vehicle', data.vehicle)}
+        ${row('Where', shopAddress)}
+      </table>
+
+      <div style="margin-top:18px;padding:14px 16px;background:#f8f6f2;border-radius:8px;font-size:14px;color:#17181c;line-height:1.55;">
+        <strong>Bringing your vehicle in</strong>
+        <p style="margin:8px 0 0;color:#55544d;">
+          Come a few minutes early so we can get your keys and details. Bring anything that helps -
+          a previous estimate, or the codes if you&rsquo;ve had it scanned.
+        </p>
+      </div>
+
+      <p style="margin:20px 0 0;color:#55544d;font-size:14px;line-height:1.6;">
+        Need to change or cancel, or need us sooner than this? Call
+        <a href="${business.phoneHref}" style="color:#d9611f;text-decoration:none;font-weight:600;">${business.phoneDisplay}</a>
+        or reply to this email. We keep room for urgent and safety work.
+      </p>
+      <p style="margin:22px 0 28px;color:#8b8a83;font-size:12px;line-height:1.6;">${escapeHtml(business.laborGuide)}</p>
+    </div>
+  </div>`;
+
+  const text = [
+    `You're booked, ${firstName}.`,
+    `${dateLine} at ${timeLine} (about ${data.durationMinutes} minutes)`,
+    `Service: ${data.appointmentName}`,
+    data.vehicle ? `Vehicle: ${data.vehicle}` : '',
+    `Where: ${shopAddress}`,
+    '',
+    'Come a few minutes early so we can get your keys and details.',
+    `Need to change or cancel, or need us sooner? Call ${business.phoneDisplay} or reply to this email. We keep room for urgent and safety work.`,
+    '',
+    business.laborGuide,
+  ]
+    .filter(Boolean)
+    .join('\n');
 
   return { subject, html, text };
 }

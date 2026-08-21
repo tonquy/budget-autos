@@ -65,10 +65,13 @@ const jsonLd = [
     </nav>
     <a
       slot="actions"
-      href={`/quote/${service.slug}`}
+      href={`/book?service=${service.slug}`}
+      data-contact-action="schedule"
+      data-contact-location="service-hero"
       class="btn btn-primary"
     >
-      Get a free {service.name.toLowerCase()} quote
+      <Icon name="calendar-check" class="size-4 shrink-0" />
+      Schedule Appointment
     </a>
     <button
       slot="actions"
@@ -142,17 +145,32 @@ const jsonLd = [
 
   <ImageBand image={bgCta} alt="Close-up of precision auto repair work under warm shop lights">
     <h2 class="font-display text-2xl font-bold tracking-tight sm:text-3xl">
-      Ready for a real number?
+      Ready to get it fixed?
     </h2>
     <p class="mt-2 text-steel-300">
-      Send a photo or a few details - we reply with a quote, usually within the hour during shop hours.
+      Book a time that works and we&rsquo;ll have the bay ready. Need it sooner than the calendar
+      shows, or not sure it&rsquo;s safe to drive? Call or text us and we&rsquo;ll sort it out.
     </p>
-    <a
-      href={`/quote/${service.slug}`}
-      class="mt-6 btn btn-primary"
-    >
-      Start your free quote
-    </a>
+    <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <a
+        href={`/book?service=${service.slug}`}
+        data-contact-action="schedule"
+        data-contact-location="service-band"
+        class="btn btn-primary"
+      >
+        <Icon name="calendar-check" class="size-4 shrink-0" />
+        Schedule Appointment
+      </a>
+      <a
+        href={business.phoneHref}
+        data-contact-action="call"
+        data-contact-location="service-band"
+        class="btn btn-on-dark"
+      >
+        <Icon name="phone" class="size-4 shrink-0" />
+        Call {business.phoneDisplay}
+      </a>
+    </div>
     <p class="mt-6 text-sm leading-relaxed text-steel-500">{business.laborGuide}</p>
   </ImageBand>
 </BaseLayout>
