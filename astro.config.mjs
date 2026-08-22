@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import cloudflare from '@astrojs/cloudflare';
 import preact from '@astrojs/preact';
 import sitemap from '@astrojs/sitemap';
+import { canonicalHostWorkerEntry } from './scripts/canonical-worker-entry.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -33,6 +34,7 @@ export default defineConfig({
 
   adapter: cloudflare(),
   integrations: [
+    canonicalHostWorkerEntry(),
     preact(),
     sitemap({
       // /book is a transactional step reached from the service pages, and is

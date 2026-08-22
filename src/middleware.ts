@@ -2,8 +2,15 @@ import { defineMiddleware } from 'astro:middleware';
 
 const CANONICAL_HOST = 'budgetautosrepair.com';
 
-export const onRequest = defineMiddleware(({ url }, next) => {
-  const host = url.hostname;
+function requestHostname(request: Request, url: URL): string {
+  const forwarded = request.headers.get('x-forwarded-host');
+  const hostHeader = request.headers.get('host');
+  const raw = forwarded ?? hostHeader ?? url.host;
+  return raw.split(',')[0].trim().split(':')[0].toLowerCase();
+}
+
+export const onRequest = defineMiddleware(({ request, url }, next) => {
+  const host = requestHostname(request, url);
   const isPreview =
     host === 'localhost' ||
     host === '127.0.0.1' ||
@@ -23,6 +30,13 @@ export const onRequest = defineMiddleware(({ url }, next) => {
 
   if (url.protocol === 'http:') {
     nextUrl.protocol = 'https:';
+    redirect = true;
+  }
+
+  const path = url.pathname.replace(/\/+$/, '') || '/';
+  if (path === '/book-online') {
+    nextUrl.hostname = CANONICAL_HOST;
+    nextUrl.pathname = '/book';
     redirect = true;
   }
 
