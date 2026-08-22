@@ -1,8 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'preact/hooks';
 import { business } from '../../lib/business';
-import type { IntakeFlow } from '../../lib/quoteSchema';
 import {
-  ChoiceCard,
   Field,
   Icon,
   MediaUploader,
@@ -33,60 +31,22 @@ declare global {
   }
 }
 
-// Turnstile site keys are public by design (they are rendered into the page for
-// every visitor), so it is safe to ship the production key as a fallback. This
-// keeps the widget working even when the build-time PUBLIC_TURNSTILE_SITE_KEY
-// env var is missing in CI (e.g. Cloudflare Workers Builds).
 const TURNSTILE_SITE_KEY =
   import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() || '0x4AAAAAAD7eom-KB1HZ1Qex';
 const TURNSTILE_SCRIPT_ID = 'turnstile-script';
 
-// The owner's three choices, in his words. Each maps onto an existing intake
-// flow so the API, owner email and R2 storage keep working unchanged.
-const REQUEST_KINDS: {
-  flow: IntakeFlow;
-  title: string;
-  icon: string;
-  descriptionLabel: string;
-  placeholder: string;
-}[] = [
-  {
-    flow: 'known-repair',
-    title: 'I know what needs repair',
-    icon: 'wrench',
-    descriptionLabel: 'What needs to be done?',
-    placeholder: 'e.g. Front brake pads and rotors need replacing.',
-  },
-  {
-    flow: 'unknown-intake',
-    title: "I'm not sure what's wrong",
-    icon: 'help-circle',
-    descriptionLabel: 'What is the vehicle doing?',
-    placeholder: 'e.g. Grinding noise when I brake, and the check engine light came on this week.',
-  },
-  {
-    flow: 'estimate-review',
-    title: 'I already have an estimate',
-    icon: 'clipboard-check',
-    descriptionLabel: 'What would you like us to look at?',
-    placeholder: 'e.g. The dealer quoted struts and an alignment. Is that fair?',
-  },
-];
-
-type Step = 'choose' | 'details';
 type SubmitState = 'idle' | 'submitting' | 'error';
 
+/**
+ * Single-screen quote intake. Same details the booking flow asks for at the
+ * end, plus photos, posted to /api/quote so the shop still gets the email.
+ */
 export default function ServiceRequestForm() {
   const idBase = useId();
-  const [step, setStep] = useState<Step>('choose');
-  const [flow, setFlow] = useState<IntakeFlow | ''>('');
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [vehicleYear, setVehicleYear] = useState('');
-  const [vehicleMake, setVehicleMake] = useState('');
-  const [vehicleModel, setVehicleModel] = useState('');
-  const [mileage, setMileage] = useState('');
-  const [vin, setVin] = useState('');
   const [message, setMessage] = useState('');
 
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
@@ -100,28 +60,8 @@ export default function ServiceRequestForm() {
   const turnstileWidgetRef = useRef<string | null>(null);
   const honeypotRef = useRef<HTMLInputElement>(null);
 
-  const selected = REQUEST_KINDS.find((k) => k.flow === flow);
-
-  function chooseKind(kind: IntakeFlow) {
-    setFlow(kind);
-    setStep('details');
-    // Step two always starts at the top, not wherever step one was scrolled to.
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }
-
-  function backToChoices() {
-    setStep('choose');
-    setErrorMessage(null);
-    window.scrollTo({ top: 0, behavior: 'auto' });
-  }
-
-  // The Turnstile container only exists on step two, so render it there.
   useEffect(() => {
     if (!TURNSTILE_SITE_KEY) return;
-    if (step !== 'details') {
-      turnstileWidgetRef.current = null;
-      return;
-    }
 
     function renderWidget() {
       if (turnstileWidgetRef.current) return;
@@ -152,36 +92,29 @@ export default function ServiceRequestForm() {
     script.defer = true;
     script.onload = renderWidget;
     document.head.appendChild(script);
-  }, [step]);
+  }, []);
 
   async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
     setErrorMessage(null);
     setFieldErrors({});
 
-    if (!flow) {
-      setStep('choose');
-      return;
-    }
     if (TURNSTILE_SITE_KEY && !turnstileTokenRef.current) {
       setErrorMessage('Please complete the verification above before submitting.');
       return;
     }
 
+    const notes = message.trim() || 'Quote request from the website.';
+
     const fd = new FormData();
     const scalars: Record<string, string> = {
-      flow,
+      flow: 'unknown-intake',
       name,
       phone,
-      // The shop follows up by text, so that is the default and only preference
-      // this short form collects.
-      contactPreference: 'text',
+      email,
+      contactPreference: email ? 'email' : 'text',
       vehicleYear,
-      vehicleMake,
-      vehicleModel,
-      vin,
-      mileage,
-      message,
+      message: notes,
     };
     for (const [key, value] of Object.entries(scalars)) {
       if (value) fd.set(key, value);
@@ -223,38 +156,8 @@ export default function ServiceRequestForm() {
     }
   }
 
-  // --- Step one: the three questions, and nothing else on the screen. ---
-
-  if (step === 'choose') {
-    return (
-      <div class="flex flex-1 flex-col justify-center">
-        <p class="text-sm font-medium text-steel-500">Step 1 of 2</p>
-        <h1 class="mt-1.5 font-display text-2xl font-bold text-ink sm:text-3xl">
-          Which sounds like you?
-        </h1>
-        <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
-          Pick one. We'll ask for your details next.
-        </p>
-
-        <div class="mt-6 grid gap-3">
-          {REQUEST_KINDS.map((kind) => (
-            <ChoiceCard
-              key={kind.flow}
-              icon={kind.icon}
-              title={kind.title}
-              onClick={() => chooseKind(kind.flow)}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  // --- Step two: everything else, in one pass. ---
-
   return (
     <form onSubmit={handleSubmit}>
-      {/* Honeypot - hidden from real users. */}
       <input
         ref={honeypotRef}
         type="text"
@@ -267,33 +170,15 @@ export default function ServiceRequestForm() {
 
       <div class="space-y-5">
         <div>
-          {/* Back and the step label share one row so the header block stays
-              short - this step is the only one that scrolls. */}
-          <div class="flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={backToChoices}
-              class="-ml-2 inline-flex min-h-9 touch-manipulation items-center gap-1 rounded-control px-2 text-sm font-medium text-steel-700 transition-colors hover:text-ink"
-            >
-              <Icon name="chevron-left" class="size-4" />
-              Back
-            </button>
-            <span class="text-sm font-medium text-steel-500">Step 2 of 2</span>
-          </div>
-
-          <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-2">
-            <h1 class="font-display text-2xl font-bold text-ink sm:text-3xl">Your details</h1>
-            {selected && (
-              <span class="inline-flex items-center gap-1.5 rounded-control bg-accent-soft px-3 py-1 text-sm font-medium text-accent-ink">
-                <Icon name={selected.icon} class="size-3.5 shrink-0" />
-                {selected.title}
-              </span>
-            )}
-          </div>
+          <h1 class="font-display text-2xl font-bold text-ink sm:text-3xl">Get a quote</h1>
+          <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
+            Name, how to reach you, and a photo if you have one. We&rsquo;ll get back to you with a
+            number.
+          </p>
         </div>
 
         <div class="grid gap-4 sm:grid-cols-2">
-          <Field label="Your name" htmlFor={`${idBase}-name`} error={fieldErrors.name?.[0]}>
+          <Field label="Full name" htmlFor={`${idBase}-name`} error={fieldErrors.name?.[0]}>
             <TextInput
               id={`${idBase}-name`}
               value={name}
@@ -303,88 +188,51 @@ export default function ServiceRequestForm() {
               required
             />
           </Field>
-          <Field label="Mobile number" htmlFor={`${idBase}-phone`} error={fieldErrors.phone?.[0]}>
+          <Field label="Phone number" htmlFor={`${idBase}-phone`} error={fieldErrors.phone?.[0]}>
             <TextInput
               id={`${idBase}-phone`}
               value={phone}
               onValue={setPhone}
               type="tel"
               autoComplete="tel"
-              placeholder="(607) 555-0123"
+              placeholder="(555) 123-4567"
               required
             />
           </Field>
         </div>
 
-        {/* Vehicle fields stay side by side even on mobile. They hold short
-            values, and stacking five of them doubles the length of the step. */}
-        <div>
-          <p class="mb-3 font-display text-base font-semibold text-ink">Your vehicle</p>
-          <div class="grid grid-cols-3 gap-3">
-            <Field label="Year" htmlFor={`${idBase}-year`} error={fieldErrors.vehicleYear?.[0]}>
-              <TextInput
-                id={`${idBase}-year`}
-                value={vehicleYear}
-                onValue={setVehicleYear}
-                type="text"
-                inputMode="numeric"
-                maxLength={4}
-                placeholder="2018"
-              />
-            </Field>
-            <Field label="Make" htmlFor={`${idBase}-make`} error={fieldErrors.vehicleMake?.[0]}>
-              <TextInput
-                id={`${idBase}-make`}
-                value={vehicleMake}
-                onValue={setVehicleMake}
-                type="text"
-                placeholder="Toyota"
-              />
-            </Field>
-            <Field label="Model" htmlFor={`${idBase}-model`} error={fieldErrors.vehicleModel?.[0]}>
-              <TextInput
-                id={`${idBase}-model`}
-                value={vehicleModel}
-                onValue={setVehicleModel}
-                type="text"
-                placeholder="Camry"
-              />
-            </Field>
-          </div>
-          <div class="mt-3 grid grid-cols-2 gap-3">
-            <Field label="Mileage" htmlFor={`${idBase}-mileage`} error={fieldErrors.mileage?.[0]}>
-              <TextInput
-                id={`${idBase}-mileage`}
-                value={mileage}
-                onValue={setMileage}
-                type="text"
-                inputMode="numeric"
-                placeholder="86,000"
-              />
-            </Field>
-            <Field
-              label="VIN"
-              hint="(optional)"
-              htmlFor={`${idBase}-vin`}
-              error={fieldErrors.vin?.[0]}
-            >
-              <TextInput
-                id={`${idBase}-vin`}
-                value={vin}
-                onValue={setVin}
-                type="text"
-                autoComplete="off"
-                spellcheck={false}
-                maxLength={17}
-                placeholder="Dash or door jamb"
-                class="uppercase"
-              />
-            </Field>
-          </div>
+        <div class="grid gap-4 sm:grid-cols-2">
+          <Field label="Email" htmlFor={`${idBase}-email`} error={fieldErrors.email?.[0]}>
+            <TextInput
+              id={`${idBase}-email`}
+              value={email}
+              onValue={setEmail}
+              type="email"
+              autoComplete="email"
+              required
+            />
+          </Field>
+          <Field
+            label="Year"
+            hint="(optional)"
+            htmlFor={`${idBase}-year`}
+            error={fieldErrors.vehicleYear?.[0]}
+          >
+            <TextInput
+              id={`${idBase}-year`}
+              value={vehicleYear}
+              onValue={setVehicleYear}
+              type="text"
+              inputMode="numeric"
+              maxLength={4}
+              placeholder="2018"
+            />
+          </Field>
         </div>
 
         <Field
-          label={selected?.descriptionLabel ?? 'What is going on with the vehicle?'}
+          label="Anything we should know?"
+          hint="(optional)"
           htmlFor={`${idBase}-message`}
           error={fieldErrors.message?.[0]}
         >
@@ -393,16 +241,14 @@ export default function ServiceRequestForm() {
             value={message}
             onValue={setMessage}
             rows={3}
-            required
-            minLength={10}
-            placeholder={selected?.placeholder ?? 'A couple of sentences is plenty.'}
+            placeholder="e.g. Grinding noise from the front when I brake, started this week."
           />
         </Field>
 
         <div>
-          <p class="font-display text-base font-semibold text-ink">Add photos or video</p>
-          <p class="mb-3 mt-1 text-sm text-steel-500">
-            Optional. A photo of the VIN, the problem, or another shop's estimate all help.
+          <p class="mb-2 block text-sm font-medium text-ink-soft">
+            Add photos or video{' '}
+            <span class="font-normal text-steel-500">(optional, but it helps us quote faster)</span>
           </p>
           <MediaUploader
             media={media}

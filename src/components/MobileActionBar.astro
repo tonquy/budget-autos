@@ -7,9 +7,7 @@ import { business } from '../lib/business';
 // fixed CTA overlaps that form's submit button on mobile. /book is in that list
 // for the same reason: its calendar and confirm button own the screen.
 //
-// The quote pages are no longer linked from anywhere in the site chrome, but
-// they stay reachable from search and from the blog, so they still need to be
-// on this list for anyone who lands on one.
+// Quote and booking pages hide the bar so its CTA does not cover the form.
 const path = Astro.url.pathname.replace(/\/$/, '');
 const isQuotePage = path === '/quote' || path.startsWith('/quote/');
 const hideActionBar =

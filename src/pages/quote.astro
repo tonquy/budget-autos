@@ -8,13 +8,11 @@ export const prerender = true;
 
 {/*
   No photo hero on this page. The page has exactly one job - collect the
-  request - and a 16rem hero image pushed the first question below the fold on
-  a phone. The section fills the viewport under the sticky header so step one
-  is fully visible the moment the page loads, with nothing to scroll past.
+  request - and a 16rem hero image pushed the form below the fold on a phone.
 */}
 <BaseLayout
-  title="Request Service Online"
-  description={`Request service from ${business.name} in ${business.address.city}. Two quick steps - what you need, then your details. No account, no chatbot.`}
+  title="Get a Free Quote"
+  description={`Get a free repair quote from ${business.name} in ${business.address.city}. Name, phone, email, and a photo if you have one. No account.`}
 >
   <section class="flex min-h-[calc(100dvh-4.25rem)] flex-col bg-paper py-6 sm:py-12 lg:py-16">
     <div

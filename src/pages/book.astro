@@ -33,7 +33,6 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 <BaseLayout
   title="Schedule an Appointment"
   description={`Book an appointment online with ${business.name} in ${business.address.city}, ${business.address.state}. Pick your service, choose a time, and get an instant confirmation.`}
-  robots="noindex, follow"
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },

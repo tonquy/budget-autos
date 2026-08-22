@@ -31,13 +31,11 @@ const {
 ---
 
 {/*
-  One photo, one message, one action. Nothing else.
+  One photo, one message, two shop actions: get a quote or book a time.
 
   The hero is the first thing a visitor sees, usually on a phone, usually
-  because something is wrong with their car. Everything that is not the
-  headline or the single conversion action has been moved below the fold:
-  the eyebrow (the header already carries the logo), the support paragraph
-  (it repeats what the sections below say), and the secondary links.
+  because something is wrong with their car. Extra copy stays below the fold:
+  the eyebrow (the header already carries the logo) and the support paragraph.
 
   Mobile centres the composition and runs near full height. Desktop keeps the
   left-aligned composition because the photo's subject sits on the right.
@@ -64,8 +62,8 @@ const {
     ></div>
   </div>
 
-  <div class="relative container-shop w-full pb-20 pt-16 sm:pb-14 sm:pt-20 lg:pb-16">
-    <div class="hero-copy mx-auto max-w-lg text-center sm:mx-0 sm:max-w-xl sm:text-left lg:max-w-2xl">
+  <div class="relative container-shop w-full pb-16 pt-16 sm:pb-16 sm:pt-20 lg:pb-20">
+    <div class="hero-copy mx-auto max-w-lg text-center sm:mx-0 sm:max-w-2xl sm:text-left">
       {
         eyebrow && (
           <p class="mb-2.5 hidden font-display text-sm font-semibold uppercase tracking-[0.18em] text-accent sm:block">
@@ -101,10 +99,14 @@ const {
       <div data-hero-actions class="mt-8 md:hidden">
         <ContactActions tone="dark" location="home-hero" />
 
-        {/* Booking gets its own full-width row beneath the instant-contact pair
-            rather than becoming a third cell in their grid: it is the action
-            this page is built around and it needs the width to read that way.
-            Most of this shop's traffic is phones, so it cannot be desktop-only. */}
+        <a
+          href="/quote"
+          data-contact-action="quote"
+          data-contact-location="home-hero"
+          class="btn btn-primary mt-2.5 w-full"
+        >
+          Get Quote
+        </a>
         <a
           href="/book"
           data-contact-action="schedule"
@@ -116,18 +118,20 @@ const {
         </a>
       </div>
 
-      {/*
-        Desktop keeps Call/Text in the header, so they are not repeated here,
-        which leaves booking as the single action on the first screen. It links
-        straight to /book - the flow opens on service selection, so routing
-        through /services first would only add a step to the same choice.
-      */}
       <div class="mt-9 hidden flex-wrap items-center gap-3 md:flex">
+        <a
+          href="/quote"
+          data-contact-action="quote"
+          data-contact-location="home-hero"
+          class="btn btn-lg btn-primary"
+        >
+          Get Quote
+        </a>
         <a
           href="/book"
           data-contact-action="schedule"
           data-contact-location="home-hero"
-          class="btn btn-lg btn-primary"
+          class="btn btn-lg btn-on-dark"
         >
           Schedule Appointment
           <Icon name="calendar-check" class="size-4" />

@@ -37,10 +37,13 @@ export default defineConfig({
     canonicalHostWorkerEntry(),
     preact(),
     sitemap({
-      // /book is a transactional step reached from the service pages, and is
-      // served noindex, so keep it out of the sitemap too.
+      // /book is SSR (prerender = false), so the crawler will not discover it
+      // from the static build. Add it by hand so Google can find the page.
+      customPages: ['https://budgetautosrepair.com/book'],
       filter: (page) =>
-        !page.includes('/thank-you') && !page.includes('/404') && !page.includes('/book'),
+        !page.includes('/thank-you') &&
+        !page.includes('/404') &&
+        page !== 'https://budgetautosrepair.com/book/',
     }),
   ],
 });
