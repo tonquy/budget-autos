@@ -39,11 +39,10 @@ export default defineConfig({
     sitemap({
       // /book is SSR (prerender = false), so the crawler will not discover it
       // from the static build. Add it by hand so Google can find the page.
-      customPages: ['https://budgetautosrepair.com/book'],
-      filter: (page) =>
-        !page.includes('/thank-you') &&
-        !page.includes('/404') &&
-        page !== 'https://budgetautosrepair.com/book/',
+      // Trailing slash to match every other URL in the sitemap and the 301
+      // the Worker entry issues for /book.
+      customPages: ['https://budgetautosrepair.com/book/'],
+      filter: (page) => !page.includes('/thank-you') && !page.includes('/404'),
     }),
   ],
 });
