@@ -1,7 +1,9 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { business } from '../lib/business';
 import { featuredLocations } from '../lib/locations';
+import logo from '../assets/images/logo.png';
 
 const year = new Date().getFullYear();
 const areaLinks = featuredLocations(5);
@@ -11,7 +13,16 @@ const areaLinks = featuredLocations(5);
   <div class="container-shop grid gap-10 py-14 md:grid-cols-[1.3fr_1fr_1fr_1fr]">
     <div>
       <a href="/" class="inline-flex items-center rounded-lg bg-white px-3 py-2">
-        <img src="/logo.png" alt={business.name} class="h-8 w-auto" width="1080" height="361" />
+        <Image
+          src={logo}
+          alt={business.name}
+          widths={[160, 240, 320]}
+          sizes="(min-width: 640px) 160px, 140px"
+          format="png"
+          class="h-10 w-auto object-contain object-left sm:h-11"
+          loading="lazy"
+          decoding="async"
+        />
       </a>
       <p class="mt-4 max-w-sm text-sm leading-relaxed text-steel-300">
         Family-owned auto repair serving {business.address.city} and the surrounding area since {business.foundedYear}. {business.warranty}.

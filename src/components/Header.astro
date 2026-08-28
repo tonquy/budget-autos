@@ -1,6 +1,8 @@
 ---
+import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
 import { business } from '../lib/business';
+import logo from '../assets/images/logo.png';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -17,8 +19,17 @@ const isNavActive = (href: string) =>
 
 <header class="sticky top-0 z-40 border-b border-black/5 bg-paper/90 backdrop-blur-md">
   <div class="container-shop flex items-center justify-between gap-4 py-3">
-    <a href="/" class="flex items-center">
-      <img src="/logo.png" alt={business.name} class="h-9 w-auto sm:h-10" width="1080" height="361" />
+    <a href="/" class="flex shrink-0 items-center" aria-label={business.name}>
+      <Image
+        src={logo}
+        alt={business.name}
+        widths={[160, 240, 320, 480]}
+        sizes="(min-width: 1024px) 180px, (min-width: 640px) 150px, 130px"
+        format="png"
+        class="h-10 w-auto object-contain object-left sm:h-11 lg:h-12"
+        loading="eager"
+        decoding="async"
+      />
     </a>
 
     <nav class="hidden items-center gap-1 lg:flex" aria-label="Primary">
@@ -97,8 +108,17 @@ const isNavActive = (href: string) =>
     class="fixed inset-0 z-50 bg-ink/95 text-white backdrop-blur-xl lg:hidden"
   >
     <div class="container-shop flex h-full flex-col pb-[calc(1.5rem+env(safe-area-inset-bottom))] pt-3">
-      <a href="/" class="menu-item inline-flex w-max items-center rounded-lg bg-white/95 px-2 py-1" style="--i:0">
-        <img src="/logo.png" alt={business.name} class="h-8 w-auto" width="1080" height="361" />
+      <a href="/" class="menu-item inline-flex w-max items-center rounded-lg bg-white px-2.5 py-1.5" style="--i:0">
+        <Image
+          src={logo}
+          alt={business.name}
+          widths={[160, 240, 320]}
+          sizes="160px"
+          format="png"
+          class="h-10 w-auto object-contain object-left"
+          loading="eager"
+          decoding="async"
+        />
       </a>
 
       <nav class="mt-10 flex flex-1 flex-col" aria-label="Mobile primary">
