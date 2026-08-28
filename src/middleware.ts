@@ -33,11 +33,28 @@ export const onRequest = defineMiddleware(({ request, url }, next) => {
     redirect = true;
   }
 
-  const path = url.pathname.replace(/\/+$/, '') || '/';
-  if (path === '/book-online') {
+  const legacy = url.pathname.replace(/\/+$/, '') || '/';
+  if (legacy === '/book-online') {
     nextUrl.hostname = CANONICAL_HOST;
     nextUrl.pathname = '/book';
     redirect = true;
+  }
+
+  // Keep in sync with scripts/canonical-worker-entry.mjs, which owns the same
+  // normalisation for prerendered pages. Page routes are canonical with a
+  // trailing slash; API routes and files with an extension are left alone.
+  const current = nextUrl.pathname;
+  if (!current.startsWith('/api/') && current !== '/') {
+    if (current.endsWith('/index.html')) {
+      nextUrl.pathname = current.slice(0, -'index.html'.length);
+      redirect = true;
+    } else if (/\/{2,}$/.test(current)) {
+      nextUrl.pathname = current.replace(/\/+$/, '/');
+      redirect = true;
+    } else if (!/\.[^/]+$/.test(current) && !current.endsWith('/')) {
+      nextUrl.pathname = current + '/';
+      redirect = true;
+    }
   }
 
   if (redirect) {
