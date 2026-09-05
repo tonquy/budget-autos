@@ -18,6 +18,7 @@ export const prerender = true;
   title={`Auto Repair in ${business.address.city}, ${business.address.state}`}
   description={`Family-owned auto repair on ${business.address.line1} in ${business.address.city} since ${business.foundedYear}. Brakes, diagnostics, alignments & more - send a photo for a free quote.`}
   jsonLd={[faqJsonLd(homeFaqs)]}
+  withServiceCatalog
 >
   <Hero />
   <TrustBar />

@@ -17,6 +17,8 @@ interface Props {
   publishedTime?: Date;
   /** Extra JSON-LD graphs (FAQ, Service, BreadcrumbList) merged after AutoRepair */
   jsonLd?: Record<string, unknown>[];
+  /** Attach the full GBP service catalog to the AutoRepair schema (home and /services/). */
+  withServiceCatalog?: boolean;
 }
 
 const {
@@ -27,12 +29,13 @@ const {
   ogType = 'website',
   publishedTime,
   jsonLd: extraJsonLd = [],
+  withServiceCatalog = false,
 } = Astro.props;
 
 const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url).toString();
 const ogImageUrl = new URL(image, Astro.site ?? Astro.url).toString();
-const jsonLdBlocks = [localBusinessJsonLd(siteUrl), ...extraJsonLd];
+const jsonLdBlocks = [localBusinessJsonLd(siteUrl, { withServiceCatalog }), ...extraJsonLd];
 ---
 
 <!doctype html>

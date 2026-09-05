@@ -5,7 +5,7 @@ import { business, yearsInBusiness } from '../../lib/business';
 const stats = [
   { icon: 'calendar-days', label: `${yearsInBusiness}+ years serving the area` },
   { icon: 'shield-check', label: business.warranty },
-  { icon: 'badge-check', label: 'Licensed & insured technicians' },
+  { icon: 'badge-check', label: `NYS DMV registered repair shop #${business.registration.number}` },
   { icon: 'thumbs-up', label: 'Free quotes, no pressure' },
 ];
 ---

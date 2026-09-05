@@ -1,5 +1,6 @@
 import { business, type Service } from './business';
 import { locations } from './locations';
+import { serviceGroups, groupHref } from './serviceCatalog';
 
 export type PageSeo = {
   title: string;
@@ -34,6 +35,22 @@ export const OG_IMAGE = {
   height: 1024,
 } as const;
 
+/**
+ * Photo of the NYS DMV "Registered Motor Vehicle Repair Shop" sign posted at
+ * the shop. Listed in the AutoRepair schema `image` array and rendered on the
+ * homepage so Google has a real photo of the licensed facility, matching the
+ * same photo on the Google Business Profile.
+ */
+export const REGISTRATION_IMAGE = {
+  path: '/registered-sign.jpg',
+  width: 1600,
+  height: 1200,
+} as const;
+
+export function registrationImageCaption() {
+  return `${business.registration.label} No. ${business.registration.number} - ${business.name}, ${business.address.line1}, ${business.address.city}, ${business.address.state}`;
+}
+
 export function pageTitle(title: string) {
   return title === SITE_NAME ? title : `${title} | ${SITE_NAME}`;
 }
@@ -50,7 +67,38 @@ function openingHoursFromBusiness() {
   ];
 }
 
-export function localBusinessJsonLd(siteUrl: string) {
+/**
+ * The GBP service list as a schema.org OfferCatalog, one sub-catalog per
+ * display group. Mirrors the names on the Google Business Profile exactly so
+ * the site and the listing describe the same business.
+ */
+export function serviceCatalogJsonLd(siteUrl: string) {
+  return {
+    '@type': 'OfferCatalog',
+    name: `${business.name} services`,
+    itemListElement: serviceGroups.map((group) => ({
+      '@type': 'OfferCatalog',
+      name: group.name,
+      url: `${siteUrl}${groupHref(group)}`,
+      itemListElement: group.items.map((name) => ({
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name,
+          serviceType: name,
+          areaServed: { '@type': 'City', name: business.address.city },
+        },
+      })),
+    })),
+  };
+}
+
+type LocalBusinessOptions = {
+  /** Attach the full GBP service list. Only the pages that list services on-page set this - it is ~6 KB of JSON-LD. */
+  withServiceCatalog?: boolean;
+};
+
+export function localBusinessJsonLd(siteUrl: string, options: LocalBusinessOptions = {}) {
   // `sameAs` asserts "these profiles are this same business", so it lists only
   // this shop's own profiles. The Facebook page belongs to the dealership next
   // door (same address, same family, different entity); claiming it here would
@@ -62,7 +110,35 @@ export function localBusinessJsonLd(siteUrl: string) {
     '@type': 'AutoRepair',
     '@id': `${siteUrl}/#business`,
     name: business.name,
-    image: `${siteUrl}${OG_IMAGE.path}`,
+    image: [
+      `${siteUrl}${OG_IMAGE.path}`,
+      {
+        '@type': 'ImageObject',
+        url: `${siteUrl}${REGISTRATION_IMAGE.path}`,
+        contentUrl: `${siteUrl}${REGISTRATION_IMAGE.path}`,
+        width: REGISTRATION_IMAGE.width,
+        height: REGISTRATION_IMAGE.height,
+        caption: registrationImageCaption(),
+      },
+    ],
+    // NYS DMV repair shop registration - the state licence every paid repair
+    // shop in New York must hold. Both the credential and the identifier are
+    // stated so the entity reads as a regulated repair facility.
+    identifier: {
+      '@type': 'PropertyValue',
+      propertyID: 'NYS DMV Repair Shop Registration',
+      value: business.registration.number,
+    },
+    hasCredential: {
+      '@type': 'EducationalOccupationalCredential',
+      credentialCategory: 'license',
+      name: business.registration.label,
+      identifier: business.registration.number,
+      recognizedBy: {
+        '@type': 'GovernmentOrganization',
+        name: business.registration.issuer,
+      },
+    },
     email: business.email,
     telephone: business.smsNumber,
     url: siteUrl,
@@ -91,6 +167,7 @@ export function localBusinessJsonLd(siteUrl: string) {
     ],
     openingHoursSpecification: openingHoursFromBusiness(),
     sameAs,
+    ...(options.withServiceCatalog ? { hasOfferCatalog: serviceCatalogJsonLd(siteUrl) } : {}),
   };
 }
 

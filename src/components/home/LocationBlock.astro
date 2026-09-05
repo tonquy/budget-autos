@@ -3,6 +3,8 @@ import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import { business } from '../../lib/business';
 import shopExterior from '../../assets/images/hero-locations.jpg';
+import registeredSign from '../../assets/images/registered-sign.jpg';
+import { registrationImageCaption } from '../../lib/seo';
 
 const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(business.mapsQuery)}`;
 ---
@@ -58,14 +60,38 @@ const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${enco
     </div>
 
     <div class="grid gap-4">
-      <div class="overflow-hidden rounded-card border border-black/5 shadow-card">
-        <Image
-          src={shopExterior}
-          alt={`Shop exterior vibe near ${business.address.city} - Budget Autos Repair is on Airport Rd`}
-          widths={[640, 960, 1280]}
-          sizes="(min-width: 1024px) 50vw, 100vw"
-          class="aspect-16/10 w-full object-cover object-[center_60%]"
-        />
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="overflow-hidden rounded-card border border-black/5 shadow-card">
+          <Image
+            src={shopExterior}
+            alt={`Shop exterior vibe near ${business.address.city} - Budget Autos Repair is on Airport Rd`}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            class="aspect-4/3 w-full object-cover object-[center_60%]"
+          />
+        </div>
+        {/*
+          The NYS DMV registration sign posted at the shop. Every shop that
+          repairs cars for pay in New York has to hold this registration, so it
+          is the plainest proof this is a real, regulated repair facility. The
+          same photo is on the Google Business Profile, and the caption keeps
+          the registration number in crawlable text next to the address.
+        */}
+        <figure class="overflow-hidden rounded-card border border-black/5 bg-paper shadow-card">
+          <Image
+            src={registeredSign}
+            alt={registrationImageCaption()}
+            widths={[640, 960, 1280]}
+            sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+            class="aspect-4/3 w-full object-cover"
+          />
+          <figcaption class="flex items-start gap-2 px-4 py-3 text-xs leading-relaxed text-steel-700">
+            <Icon name="badge-check" class="mt-0.5 size-4 shrink-0 text-accent" />
+            <span>
+              {business.registration.label}, No. {business.registration.number}.
+            </span>
+          </figcaption>
+        </figure>
       </div>
       <div class="overflow-hidden rounded-card border border-black/5 shadow-card">
         <iframe

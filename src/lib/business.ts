@@ -23,6 +23,18 @@ export const business = {
     state: 'NY',
     zip: '13790',
   },
+  /**
+   * NYS DMV repair shop registration, as printed on the sign posted at the
+   * shop (photo: public/registered-sign.jpg). Every shop that repairs cars for
+   * pay in New York must hold one, so it is the clearest public proof that
+   * this is a real, regulated repair facility - not just the dealership next
+   * door with a website.
+   */
+  registration: {
+    number: '7075576',
+    label: 'Registered New York State Motor Vehicle Repair Shop',
+    issuer: 'New York State Department of Motor Vehicles',
+  },
   mapsQuery: '2344 Airport Rd, Johnson City, NY 13790',
   mapsEmbedSrc:
     'https://www.google.com/maps?q=2344+Airport+Rd+Johnson+City+NY+13790&output=embed',
