@@ -2,14 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/home/Hero.astro';
 import TrustBar from '../../components/home/TrustBar.astro';
+import LocationIntro from '../../components/locations/LocationIntro.astro';
 import ServicesPreview from '../../components/home/ServicesPreview.astro';
 import QuoteCallout from '../../components/home/QuoteCallout.astro';
 import ReviewsCta from '../../components/home/ReviewsCta.astro';
 import LocationBlock from '../../components/home/LocationBlock.astro';
 import HomeFaq from '../../components/home/HomeFaq.astro';
 import { business } from '../../lib/business';
-import { locations, type Location } from '../../lib/locations';
-import { breadcrumbJsonLd, faqJsonLd, homeFaqs } from '../../lib/seo';
+import { isIndexableLocation, locations, type Location } from '../../lib/locations';
+import { breadcrumbJsonLd, faqJsonLd } from '../../lib/seo';
 
 export function getStaticPaths() {
   return locations.map((location) => ({
@@ -30,32 +31,39 @@ const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
 ---
 
 {/*
-  City landings mirror the homepage layout 1:1 - only the H1 (and SEO) change
-  so each town gets a dedicated page without a different page design.
+  City landings share the homepage sections but lead with a block that is
+  actually about the town (LocationIntro) and close with that town's own FAQ,
+  so no two city pages read as copies of each other or of the homepage.
 */}
 <BaseLayout
-  title={`Auto Repair in ${location.name}, ${regionLabel}`}
+  title={location.seoTitle ?? `Auto Repair in ${location.name}, ${regionLabel}`}
   description={location.seoDescription}
+  robots={isIndexableLocation(location) ? undefined : 'noindex, follow'}
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Service Areas', path: '/locations' },
-      { name: location.name, path: `/locations/${location.slug}` },
+      { name: 'Service Areas', path: '/locations/' },
+      { name: location.name, path: `/locations/${location.slug}/` },
     ]),
-    faqJsonLd(homeFaqs),
+    faqJsonLd(location.faqs),
   ]}
 >
   <Hero
     titleLine1={`Auto repair in ${location.name}`}
     titleLine2="No surprises on the bill."
-    description={`Family-owned shop on ${business.address.line1} in ${business.address.city} - serving ${location.name} drivers since ${business.foundedYear}. Send a photo for a free quote, or chat with us anytime.`}
+    description={`Family-owned shop on ${business.address.line1} in ${business.address.city} - serving ${location.name} drivers since ${business.foundedYear}. ${location.driveNote}`}
     eyebrow={business.name}
     imageAlt={`Auto repair for ${location.name} drivers from ${business.name} in ${business.address.city}`}
   />
   <TrustBar />
+  <LocationIntro location={location} />
   <ServicesPreview />
   <QuoteCallout />
   <ReviewsCta />
   <LocationBlock />
-  <HomeFaq />
+  <HomeFaq
+    faqs={location.faqs}
+    title={`Questions from ${location.name} drivers.`}
+    intro={`How to reach us from ${location.name}, how quotes work, and what we fix.`}
+  />
 </BaseLayout>

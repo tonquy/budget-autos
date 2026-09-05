@@ -17,19 +17,19 @@ faqs:
 
 Buying a used car in Binghamton is easy to rush. Facebook Marketplace, a driveway in Endicott, a lot off Vestal Parkway. The seller is friendly. The price is "for a quick sale." Then you find the rust, the misfire, or the salvage history after the title is in your name.
 
-Budget Auto Repair is a family-owned shop at 2344 Airport Rd in Johnson City. Since 2004 we have been the stop Binghamton, Endicott, Vestal, and Endwell drivers use when they want facts before money moves. A [presale inspection](/services/presale-inspection) is how you get those facts on paper, with photos.
+Budget Auto Repair is a family-owned shop at 2344 Airport Rd in Johnson City. Since 2004 we have been the stop Binghamton, Endicott, Vestal, and Endwell drivers use when they want facts before money moves. A [presale inspection](/services/presale-inspection/) is how you get those facts on paper, with photos.
 
 ## Check this before you fall in love with the listing
 
 Do this in order. Skip the romance until the boring items pass.
 
-**Title, VIN, and the story on paper.** Match the VIN on the dash, the door sticker, and the listing. If they do not match, walk away. Ask for a Carfax or similar history. We can [pull Carfax as part of the inspection](/services/presale-inspection) so the mechanical findings and the history sit in one summary.
+**Title, VIN, and the story on paper.** Match the VIN on the dash, the door sticker, and the listing. If they do not match, walk away. Ask for a Carfax or similar history. We can [pull Carfax as part of the inspection](/services/presale-inspection/) so the mechanical findings and the history sit in one summary.
 
 **Who is selling, and why.** A private seller in Binghamton who has service records is a different risk than a car that "just needs a battery" with no keys to the second set. You are not rude for asking how long they have owned it.
 
 **Rust, especially underneath.** Broome County winters and road salt are hard on rocker panels, brake lines, subframes, and exhaust. A clean paint job on the hood does not mean the floor pans are honest. Look at wheel wells, rockers, and under the carpets if the seller will let you. The lift at the shop sees what a parking-lot crouch misses.
 
-**Leaks on the driveway.** Oil, coolant, and transmission fluid all tell a story. Photograph the puddle and the color. [Send it with the quote request](/quote/presale-inspection) if you want us looking at the same stain you saw in Endwell.
+**Leaks on the driveway.** Oil, coolant, and transmission fluid all tell a story. Photograph the puddle and the color. [Send it with the quote request](/quote/presale-inspection/) if you want us looking at the same stain you saw in Endwell.
 
 **Tires and uneven wear.** Inner-edge wear often points to alignment or worn suspension, not "it just needs an alignment" as a throwaway line. Factor tires into the price. Uneven wear is also a clue we will chase in the bay.
 
@@ -47,9 +47,9 @@ If the seller will not allow an independent inspection, that is your answer. A g
 
 You can catch a bald tire yourself. You cannot see a leaking caliper, a cracked spring, a wet head gasket, or a timing issue from the curb. Code readers from a parts store spit a number. They do not explain what it means for this car.
 
-Our [presale inspection](/services/presale-inspection) is a full walk-around mechanical inspection. We document findings with photos. We can pull Carfax so negotiations start from facts, not hopes. You get a summary you can send to the seller or keep for yourself.
+Our [presale inspection](/services/presale-inspection/) is a full walk-around mechanical inspection. We document findings with photos. We can pull Carfax so negotiations start from facts, not hopes. You get a summary you can send to the seller or keep for yourself.
 
-Out-of-town buyers use this too. If you are coming in from elsewhere and the car is in Binghamton, send the vehicle details through [the quote form](/quote/presale-inspection) or [text (607) 323-0236](sms:+16073230236). We will tell you what we can check and how we report back.
+Out-of-town buyers use this too. If you are coming in from elsewhere and the car is in Binghamton, send the vehicle details through [the quote form](/quote/presale-inspection/) or [text (607) 323-0236](sms:+16073230236). We will tell you what we can check and how we report back.
 
 ## How to get it on our schedule
 
@@ -57,7 +57,7 @@ Shop hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday is by appoint
 
 Have the seller meet you at 2344 Airport Rd, or drive the car over yourself if you already have permission. Do this before cash, before Venmo, before "I already told them yes."
 
-Text is usually fastest: name, year, make, model, and that you need a presale inspection. Or use [Request Service Online](/quote) and pick the path that fits. We usually reply within the hour during shop hours.
+Text is usually fastest: name, year, make, model, and that you need a presale inspection. Or use [Request Service Online](/quote/) and pick the path that fits. We usually reply within the hour during shop hours.
 
 If you already have another shop's notes, photograph them. Second looks are normal. We quote labor against the Mitchell 1 Labor Structure so the time on an estimate is grounded in a standard, not a guess.
 
@@ -89,4 +89,4 @@ And do not use a free code read as a substitute for a mechanical inspection. A l
 
 ## Ready when you are
 
-[Request a presale inspection](/quote/presale-inspection), [text (607) 323-0236](sms:+16073230236), or call the same number. Bring the car to Airport Rd before the money moves.
+[Request a presale inspection](/quote/presale-inspection/), [text (607) 323-0236](sms:+16073230236), or call the same number. Bring the car to Airport Rd before the money moves.

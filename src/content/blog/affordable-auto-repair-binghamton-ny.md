@@ -21,29 +21,29 @@ We are at 2344 Airport Rd in Johnson City. Family-owned since 2004. Binghamton, 
 
 ## What affordable looks like on Airport Rd
 
-**A real number, not a range.** Half the country sells "affordable" as $199 to $799. That is a magazine. [Send a photo](/quote). We call or text back, usually within the hour during shop hours, with a figure tied to what you showed us. Labor follows the Mitchell 1 Labor Structure.
+**A real number, not a range.** Half the country sells "affordable" as $199 to $799. That is a magazine. [Send a photo](/quote/). We call or text back, usually within the hour during shop hours, with a figure tied to what you showed us. Labor follows the Mitchell 1 Labor Structure.
 
 **No pressure.** The site says free quotes, no pressure because that is the policy, not a slogan we run once. You can take the number and think.
 
 **Repair only what failed.** Front brakes when the rears are fine. An alignment after the suspension can hold it. A scan before a handful of sensors. Affordable is subtraction.
 
-**The trip should not cost more than the job.** Drop the car overnight. Keep a [rental at $35 a day](/rental), up to 100 miles included. For a lot of Binghamton households, time is the expensive part.
+**The trip should not cost more than the job.** Drop the car overnight. Keep a [rental at $35 a day](/rental/), up to 100 miles included. For a lot of Binghamton households, time is the expensive part.
 
 Warranty is on parts and labor. Ask for the coverage on your job.
 
 ## How to start from Binghamton without wasting a Saturday
 
-Text **(607) 323-0236**, call, or use [Request Service Online](/quote). Hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday by appointment.
+Text **(607) 323-0236**, call, or use [Request Service Online](/quote/). Hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday by appointment.
 
 Tell us if you know the repair, if you are not sure, or if you already have an estimate. Photograph the leak, the light, the tire wear, or the paperwork. You do not need the part name.
 
 If the car feels unsafe, skip the form and call.
 
-The longer version of the intake is in [how to get a car repair quote online](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny).
+The longer version of the intake is in [how to get a car repair quote online](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/).
 
 ## Affordable versus cheap
 
-We wrote a separate guide on [cheap auto repair in Binghamton](/blog/cheap-auto-repair-binghamton-ny) because those searches are not identical. Cheap is the race to the bottom. Affordable is the bill you can plan around after an honest look.
+We wrote a separate guide on [cheap auto repair in Binghamton](/blog/cheap-auto-repair-binghamton-ny/) because those searches are not identical. Cheap is the race to the bottom. Affordable is the bill you can plan around after an honest look.
 
 If a quote is lower than ours, it might be right. It might also omit rotors, skip a scan, or assume you will approve extras later. Bring us the paper. Second opinions are normal.
 
@@ -53,7 +53,7 @@ If a quote is lower than ours, it might be right. It might also omit rotors, ski
 
 **The check engine light that looked expensive on Google.** Scan first, explanation second, parts third. That order is how you stay affordable.
 
-**The alignment that would not stick.** Affordable is not paying for geometry twice. We check struts, bushings, and brakes before the rack. See [alignment versus suspension](/blog/wheel-alignment-versus-suspension-repair-binghamton-ny).
+**The alignment that would not stick.** Affordable is not paying for geometry twice. We check struts, bushings, and brakes before the rack. See [alignment versus suspension](/blog/wheel-alignment-versus-suspension-repair-binghamton-ny/).
 
 ## Our opinion
 
@@ -65,4 +65,4 @@ Do not spend the savings on a second shop because the first one would not show y
 
 ## Ready when you are
 
-[Request an estimate](/quote), [text (607) 323-0236](sms:+16073230236), or call. Affordable auto repair in Binghamton starts with the same photo you would send a friend.
+[Request an estimate](/quote/), [text (607) 323-0236](sms:+16073230236), or call. Affordable auto repair in Binghamton starts with the same photo you would send a friend.

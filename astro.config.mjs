@@ -6,6 +6,28 @@ import cloudflare from '@astrojs/cloudflare';
 import preact from '@astrojs/preact';
 import sitemap from '@astrojs/sitemap';
 import { canonicalHostWorkerEntry } from './scripts/canonical-worker-entry.mjs';
+import { isIndexableLocation, locations } from './src/lib/locations.ts';
+
+/**
+ * Only URLs that are meant to rank belong in the sitemap. Submitting noindex or
+ * near-duplicate pages just spends this new domain's small crawl budget on URLs
+ * Google will not index anyway.
+ *
+ * @param {string} page absolute URL of a page the sitemap integration found
+ * @returns {boolean}
+ */
+function isSitemapPage(page) {
+  const { pathname } = new URL(page);
+  if (pathname.includes('/thank-you') || pathname.includes('/404')) return false;
+  // Per-service quote forms are noindex - they are one short form each.
+  if (/^\/quote\/[^/]+\/$/.test(pathname)) return false;
+  const city = pathname.match(/^\/locations\/([^/]+)\/$/)?.[1];
+  if (city) {
+    const location = locations.find((entry) => entry.slug === city);
+    if (location && !isIndexableLocation(location)) return false;
+  }
+  return true;
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -42,7 +64,7 @@ export default defineConfig({
       // Trailing slash to match every other URL in the sitemap and the 301
       // the Worker entry issues for /book.
       customPages: ['https://budgetautosrepair.com/book/'],
-      filter: (page) => !page.includes('/thank-you') && !page.includes('/404'),
+      filter: isSitemapPage,
     }),
   ],
 });

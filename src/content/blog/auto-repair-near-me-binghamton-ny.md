@@ -19,13 +19,13 @@ faqs:
 
 Budget Auto Repair is at **2344 Airport Rd, Johnson City, NY 13790**. Johnson City sits against Binghamton. The shop is built for easy in-and-out from Binghamton, Endicott, Vestal, and Endwell. Family-owned since 2004.
 
-If you can get to Airport Rd, we can usually help. If you do not see your town on the [service areas](/locations) list, send a photo anyway.
+If you can get to Airport Rd, we can usually help. If you do not see your town on the [service areas](/locations/) list, send a photo anyway.
 
 ## How near is near
 
 From most of Binghamton you are looking at a short drive to Johnson City, not a trip to another county. We are not a downtown storefront. We are a bay on Airport Rd with room to leave the car overnight.
 
-That matters when "near me" also means "I cannot sit here for three hours." Drop off. Keep a [rental at $35 a day](/rental) if you need to stay in Binghamton while we work.
+That matters when "near me" also means "I cannot sit here for three hours." Drop off. Keep a [rental at $35 a day](/rental/) if you need to stay in Binghamton while we work.
 
 Hours:
 
@@ -43,15 +43,15 @@ You do not have to arrive to start. "Near me" can begin with the phone in your h
 
 **Call** if it is unsafe, stranded, or overheating.
 
-**[Request Service Online](/quote)** for the two-step form. No account.
+**[Request Service Online](/quote/)** for the two-step form. No account.
 
 We usually reply within the hour during shop hours with a real number, not a range. Labor is quoted on Mitchell 1. The estimate can change after inspection. No work starts without your approval.
 
-More detail: [how to get a car repair quote online in Binghamton](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny).
+More detail: [how to get a car repair quote online in Binghamton](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/).
 
 ## What we fix for people who searched near me
 
-[Engine diagnostics](/services/diagnostics), [maintenance and repair](/services/engine-maintenance), [brakes](/services/brake-services), [suspension and alignment](/services/suspension-alignment), [electrical](/services/electrical-systems), [presale inspections](/services/presale-inspection), and [general repairs](/services/general-repairs). If it is not listed, send the photo. We will say whether we can help.
+[Engine diagnostics](/services/diagnostics/), [maintenance and repair](/services/engine-maintenance/), [brakes](/services/brake-services/), [suspension and alignment](/services/suspension-alignment/), [electrical](/services/electrical-systems/), [presale inspections](/services/presale-inspection/), and [general repairs](/services/general-repairs/). If it is not listed, send the photo. We will say whether we can help.
 
 Most of what breaks, we fix the same day when parts are on hand. Alignments need the rack and a scheduled time.
 
@@ -73,4 +73,4 @@ Do not assume Johnson City is "not Binghamton" for this purpose. The customer ba
 
 ## Ready when you are
 
-[Start the quote](/quote), [text (607) 323-0236](sms:+16073230236), or call. If you searched auto repair near me, this is the shop on Airport Rd that Binghamton already uses.
+[Start the quote](/quote/), [text (607) 323-0236](sms:+16073230236), or call. If you searched auto repair near me, this is the shop on Airport Rd that Binghamton already uses.

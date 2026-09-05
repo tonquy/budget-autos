@@ -25,11 +25,12 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 <BaseLayout
   title={`${service.name} Quote`}
   description={`Request a free ${service.name.toLowerCase()} quote from ${business.name} in ${business.address.city}, ${business.address.state}. Just your name, vehicle, and what's wrong.`}
+  robots="noindex, follow"
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: service.name, path: `/services/${service.slug}` },
-      { name: 'Quote', path: `/quote/${service.slug}` },
+      { name: service.name, path: `/services/${service.slug}/` },
+      { name: 'Quote', path: `/quote/${service.slug}/` },
     ]),
   ]}
 >
@@ -45,7 +46,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
   >
     <a
       slot="actions"
-      href={`/services/${service.slug}`}
+      href={`/services/${service.slug}/`}
       class="btn btn-on-dark"
     >
       See {service.name.toLowerCase()} details
@@ -63,7 +64,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 
       <p class="mt-5 text-center text-sm text-steel-600">
         Not sure what&rsquo;s wrong?{' '}
-        <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
+        <a href="/quote/" class="font-semibold text-accent hover:text-accent-dark">
           Use the general service request
         </a>
         , or text us at{' '}

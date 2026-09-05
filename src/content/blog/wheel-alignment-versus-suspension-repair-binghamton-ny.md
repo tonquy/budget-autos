@@ -17,7 +17,7 @@ faqs:
 
 If your car pulls toward the curb on a Binghamton street, or the tires are bald on one edge after one winter, people say "it needs an alignment." Sometimes that is true. Sometimes the alignment is the last step, not the first, because a worn strut or bushing will not hold the angles you just paid to set.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We handle [suspension and alignment](/services/suspension-alignment) for Binghamton, Endicott, Vestal, and Endwell drivers, and we have been doing it since 2004. We inspect struts, shocks, bushings, and ball joints, then align when the suspension is sound so the alignment actually holds.
+Budget Auto Repair is at 2344 Airport Rd in Johnson City. We handle [suspension and alignment](/services/suspension-alignment/) for Binghamton, Endicott, Vestal, and Endwell drivers, and we have been doing it since 2004. We inspect struts, shocks, bushings, and ball joints, then align when the suspension is sound so the alignment actually holds.
 
 ## What an alignment is
 
@@ -71,7 +71,7 @@ Send what you have:
 - A short video of the bounce after a driveway dip, if it is safe
 - Another shop's alignment printout or suspension estimate
 
-[Request Service Online](/quote/suspension-alignment) or [text (607) 323-0236](sms:+16073230236) with your name, the vehicle, and whether it pulls, clunks, or eats tires. During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually reply within the hour. Saturday is by appointment.
+[Request Service Online](/quote/suspension-alignment/) or [text (607) 323-0236](sms:+16073230236) with your name, the vehicle, and whether it pulls, clunks, or eats tires. During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually reply within the hour. Saturday is by appointment.
 
 If you already know you need struts, say so. If you only know the car feels wrong, say that. Both paths exist on the form.
 
@@ -93,7 +93,7 @@ Typical Tri-Cities patterns, not named files.
 
 ## After we know which job it is
 
-Drop the car on Airport Rd. Overnight is fine if that is easier. Repair customers can use a rental for $35 a day, up to 100 miles included, via the [rental page](/rental) or when we call you back.
+Drop the car on Airport Rd. Overnight is fine if that is easier. Repair customers can use a rental for $35 a day, up to 100 miles included, via the [rental page](/rental/) or when we call you back.
 
 Warranty is on parts and labor. Ask us for the terms that apply to struts, to the alignment, or to both if we do both.
 
@@ -109,4 +109,4 @@ If the car pulls and the pedal feels odd, tell us about the brakes too. A seized
 
 ## Ready when you are
 
-[Get a suspension or alignment quote](/quote/suspension-alignment), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the tire photo, the pull, or the other shop's printout. We will tell you which job you actually have.
+[Get a suspension or alignment quote](/quote/suspension-alignment/), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the tire photo, the pull, or the other shop's printout. We will tell you which job you actually have.

@@ -17,7 +17,7 @@ faqs:
 
 A check engine light on a Binghamton morning does not tell you the job. It tells you the car stored a fault. The light on Route 17, at a light in downtown Binghamton, or in a Vestal parking lot is the same lamp. The cause is not.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been scanning and explaining engine faults for local drivers since 2004. [Engine diagnostics](/services/diagnostics) here means a computer scan and a plain-English explanation of what it found before anything gets touched.
+Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been scanning and explaining engine faults for local drivers since 2004. [Engine diagnostics](/services/diagnostics/) here means a computer scan and a plain-English explanation of what it found before anything gets touched.
 
 ## What the light is trying to say
 
@@ -45,7 +45,7 @@ These are common, not a complete catalog. Your car may not match the internet's 
 
 **Thermostat, coolant temp, or running rich or lean.** A car that never reaches temperature on a two-mile hop from Binghamton to Johnson City can store mixture codes. So can a thermostat stuck open or closed. Overheating is a "call us" problem, not a "clear the code" problem.
 
-**Wiring and connectors.** Salt, potholes, and engine heat crack insulation and loosen plugs. Electrical faults rarely fix themselves. We [test instead of throwing parts at a maybe](/services/electrical-systems).
+**Wiring and connectors.** Salt, potholes, and engine heat crack insulation and loosen plugs. Electrical faults rarely fix themselves. We [test instead of throwing parts at a maybe](/services/electrical-systems/).
 
 A parts-store printout with a code number is a starting point. It is not a repair order. We scan, look at live data, and explain what it means for this vehicle before we quote the fix.
 
@@ -61,7 +61,7 @@ Send:
 - What the car is doing: rough idle, loss of power, using more fuel, nothing obvious
 - Any code a scanner already gave you
 
-[Request Service Online](/quote/diagnostics) or [text (607) 323-0236](sms:+16073230236). A couple of sentences is enough. During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually reply within the hour. Saturday is by appointment.
+[Request Service Online](/quote/diagnostics/) or [text (607) 323-0236](sms:+16073230236). A couple of sentences is enough. During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually reply within the hour. Saturday is by appointment.
 
 If you already have a dealer estimate that lists sensors, a converter, and a "while we are in there" list, photograph the paperwork. We will look at the line items against Mitchell 1 labor times and tell you what looks necessary.
 
@@ -85,7 +85,7 @@ Typical patterns from Binghamton and the rest of the Tri-Cities.
 
 ## After the scan
 
-You get an explanation, then a quote for the repair if one is needed. You can drop the car overnight if that is easier. Repair customers can use a rental for $35 a day, up to 100 miles included. See the [rental page](/rental) or ask when we call back.
+You get an explanation, then a quote for the repair if one is needed. You can drop the car overnight if that is easier. Repair customers can use a rental for $35 a day, up to 100 miles included. See the [rental page](/rental/) or ask when we call back.
 
 Warranty is on parts and labor for the work we do. Ask us for the terms on your job.
 
@@ -99,4 +99,4 @@ Do not ignore a flashing lamp. A solid lamp can wait for a scheduled scan in man
 
 ## Ready when you are
 
-[Get a diagnostic quote](/quote/diagnostics), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the dash photo. We will explain the light before we sell the parts.
+[Get a diagnostic quote](/quote/diagnostics/), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the dash photo. We will explain the light before we sell the parts.

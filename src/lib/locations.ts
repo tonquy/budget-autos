@@ -16,6 +16,9 @@ export type Location = {
   tier: LocationTier;
   driveNote: string;
   landmarks: string;
+  /** Overrides the default `Auto Repair in <name>, <state>` title. Johnson City
+   *  needs one because the homepage already targets that exact phrase. */
+  seoTitle?: string;
   seoDescription: string;
   intro: string;
   highlights: string[];
@@ -32,6 +35,7 @@ export const locations: Location[] = [
     tier: 'core',
     driveNote: 'Our shop is right here on Airport Rd - usually a few minutes from anywhere in the village.',
     landmarks: 'Airport Rd / Bristol Highway corridor, near the heart of the Tri-Cities',
+    seoTitle: 'Auto Repair Shop on Airport Rd, Johnson City',
     seoDescription: 'Auto repair for Johnson City, NY drivers. Family-owned Budget Auto Repair on Airport Rd in Johnson City - free photo quote, brakes, diagnostics, and more.',
     intro: 'Looking for auto repair in Johnson City? You\'re in the right place - Budget Auto Repair is family-owned on Airport Rd, right here in the village. Bring the car in or send a photo for a free quote. We handle diagnostics, brakes, alignments, electrical work, and general repairs with clear Mitchell 1-based estimates.',
     highlights: [
@@ -1177,6 +1181,19 @@ export const locations: Location[] = [
     nearbySlugs: ['great-bend', 'hallstead', 'marathon', 'greene', 'waverly'],
   },
 ];
+
+/**
+ * Which tiers get their own indexable page. The physical shop is in Johnson
+ * City; the outer "nearby" towns (25-45 minutes away, incl. PA) still get a page
+ * for visitors, but it is noindex and left out of the sitemap so Google's crawl
+ * budget on this new domain goes to pages that can actually rank. Flip a tier
+ * here when the site has the authority to carry more city pages.
+ */
+export const INDEXABLE_TIERS: LocationTier[] = ['core', 'broome'];
+
+export function isIndexableLocation(location: Location) {
+  return INDEXABLE_TIERS.includes(location.tier);
+}
 
 export function getLocationBySlug(slug: string) {
   return locations.find((location) => location.slug === slug);

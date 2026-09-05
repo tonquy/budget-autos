@@ -1,65 +1,23 @@
 import { defineMiddleware } from 'astro:middleware';
+import { canonicalTarget } from '../scripts/canonical-redirect.mjs';
 
-const CANONICAL_HOST = 'budgetautosrepair.com';
-
-function requestHostname(request: Request, url: URL): string {
+function requestUrl(request: Request, url: URL): URL {
+  // Behind a proxy the public host arrives in x-forwarded-host.
   const forwarded = request.headers.get('x-forwarded-host');
-  const hostHeader = request.headers.get('host');
-  const raw = forwarded ?? hostHeader ?? url.host;
-  return raw.split(',')[0].trim().split(':')[0].toLowerCase();
+  if (!forwarded) return url;
+  const publicUrl = new URL(url);
+  publicUrl.host = forwarded.split(',')[0].trim();
+  return publicUrl;
 }
 
-export const onRequest = defineMiddleware(({ request, url }, next) => {
-  const host = requestHostname(request, url);
-  const isPreview =
-    host === 'localhost' ||
-    host === '127.0.0.1' ||
-    host.endsWith('.localhost') ||
-    host.endsWith('.workers.dev') ||
-    host.endsWith('.trycloudflare.com');
-
-  if (isPreview) return next();
-
-  const nextUrl = new URL(url);
-  let redirect = false;
-
-  if (host === `www.${CANONICAL_HOST}`) {
-    nextUrl.hostname = CANONICAL_HOST;
-    redirect = true;
-  }
-
-  if (url.protocol === 'http:') {
-    nextUrl.protocol = 'https:';
-    redirect = true;
-  }
-
-  const legacy = url.pathname.replace(/\/+$/, '') || '/';
-  if (legacy === '/book-online') {
-    nextUrl.hostname = CANONICAL_HOST;
-    nextUrl.pathname = '/book';
-    redirect = true;
-  }
-
-  // Keep in sync with scripts/canonical-worker-entry.mjs, which owns the same
-  // normalisation for prerendered pages. Page routes are canonical with a
-  // trailing slash; API routes and files with an extension are left alone.
-  const current = nextUrl.pathname;
-  if (!current.startsWith('/api/') && current !== '/') {
-    if (current.endsWith('/index.html')) {
-      nextUrl.pathname = current.slice(0, -'index.html'.length);
-      redirect = true;
-    } else if (/\/{2,}$/.test(current)) {
-      nextUrl.pathname = current.replace(/\/+$/, '/');
-      redirect = true;
-    } else if (!/\.[^/]+$/.test(current) && !current.endsWith('/')) {
-      nextUrl.pathname = current + '/';
-      redirect = true;
-    }
-  }
-
-  if (redirect) {
-    return Response.redirect(nextUrl.toString(), 301);
-  }
-
+/**
+ * In production the Worker entry (scripts/canonical-worker-entry.mjs) applies
+ * these same rules before Astro sees the request, so this only matters for the
+ * dev server and as a safety net for on-demand routes. Rules live in
+ * scripts/canonical-redirect.mjs - edit them there, not here.
+ */
+export const onRequest = defineMiddleware(async ({ request, url }, next) => {
+  const target = await canonicalTarget(requestUrl(request, url));
+  if (target) return Response.redirect(target, 301);
   return next();
 });

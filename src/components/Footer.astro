@@ -50,13 +50,13 @@ const areaLinks = featuredLocations(5);
       <ul class="mt-4 space-y-2 text-sm">
         {areaLinks.map((place) => (
           <li>
-            <a href={`/locations/${place.slug}`} class="transition-colors hover:text-accent">
+            <a href={`/locations/${place.slug}/`} class="transition-colors hover:text-accent">
               {place.name}
             </a>
           </li>
         ))}
         <li>
-          <a href="/locations" class="font-semibold text-accent transition-colors hover:text-white">
+          <a href="/locations/" class="font-semibold text-accent transition-colors hover:text-white">
             All service areas
           </a>
         </li>
@@ -126,9 +126,9 @@ const areaLinks = featuredLocations(5);
       <p>{business.laborGuide}</p>
     </div>
     <div class="flex gap-5">
-      <a href="/blog" class="hover:text-steel-100">Questions</a>
-      <a href="/privacy" class="hover:text-steel-100">Privacy Policy</a>
-      <a href="/terms" class="hover:text-steel-100">Terms of Service</a>
+      <a href="/blog/" class="hover:text-steel-100">Questions</a>
+      <a href="/privacy/" class="hover:text-steel-100">Privacy Policy</a>
+      <a href="/terms/" class="hover:text-steel-100">Terms of Service</a>
     </div>
   </div>
 </footer>

@@ -39,13 +39,13 @@ You can reach us three ways. Same shop, same number, same people.
 
 **Call (607) 323-0236.** Use this when the car is unsafe, it will not start, or you need an answer right now. For urgent issues, call. Do not wait on a form.
 
-**[Request Service Online](/quote).** Two steps, no account, no app. Pick the situation that matches you, add a couple of sentences and photos, and we call or text you back.
+**[Request Service Online](/quote/).** Two steps, no account, no app. Pick the situation that matches you, add a couple of sentences and photos, and we call or text you back.
 
 Shop hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday is by appointment. Sunday we are closed.
 
 ## How the online form actually works
 
-Open [Request Service](/quote) on your phone. The first screen asks which sounds like you.
+Open [Request Service](/quote/) on your phone. The first screen asks which sounds like you.
 
 **I know what needs repair.** You already know it is front pads, a battery, or a hose. Tell us what needs to be done. Example: "Front brake pads and rotors need replacing."
 
@@ -106,7 +106,7 @@ None of those start with you knowing the part name. They start with you showing 
 
 Once you have a number you are comfortable with, you do not have to sit in a waiting room.
 
-There is room to leave the car overnight if that is easier. Repair customers can use a rental for $35 a day, with up to 100 miles included per day. Request that on the [rental page](/rental) or ask when we call you back.
+There is room to leave the car overnight if that is easier. Repair customers can use a rental for $35 a day, with up to 100 miles included per day. Request that on the [rental page](/rental/) or ask when we call you back.
 
 The shop is right on Airport Rd in Johnson City, with easy in and out from Binghamton. If you can get here, we can usually help. If the car will not move, say so in the text or the form so we are not planning a driveway drop-off that cannot happen.
 
@@ -126,4 +126,4 @@ And do not wait for a perfect explanation. A couple of sentences is enough. We w
 
 ## Ready when you are
 
-[Send the photo](/quote), [text (607) 323-0236](sms:+16073230236), or call the same number. We will look at what you sent and come back with the next step.
+[Send the photo](/quote/), [text (607) 323-0236](sms:+16073230236), or call the same number. We will look at what you sent and come back with the next step.

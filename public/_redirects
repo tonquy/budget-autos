@@ -1,3 +1,5 @@
-# Legacy URL from the previous site.
-/book-online /book 301
-/book-online/ /book 301
+# Legacy URLs from the previous (Wix) site. The Worker entry handles these first;
+# this is a fallback for the static asset layer. Targets use the canonical
+# trailing-slash form so there is never a second hop.
+/book-online /book/ 301
+/book-online/ /book/ 301

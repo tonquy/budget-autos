@@ -1,62 +1,49 @@
-import { access, rename, writeFile } from 'node:fs/promises';
+import { access, copyFile, rename, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-
-const CANONICAL_HOST = 'budgetautosrepair.com';
+import { fileURLToPath } from 'node:url';
 
 const WRAPPER = `import astro from './astro-entry.mjs';
+import {
+  CANONICAL_HOST,
+  ON_DEMAND_PAGES,
+  canonicalTarget,
+  isPreviewHost,
+} from './canonical-redirect.mjs';
 
-const CANONICAL_HOST = '${CANONICAL_HOST}';
-
-function canonicalRedirect(request) {
-  const url = new URL(request.url);
-  const host = url.hostname.toLowerCase();
-  let redirect = false;
-
-  if (host === \`www.\${CANONICAL_HOST}\`) {
-    url.hostname = CANONICAL_HOST;
-    redirect = true;
-  }
-
-  if (url.protocol === 'http:') {
-    url.protocol = 'https:';
-    redirect = true;
-  }
-
-  const legacy = url.pathname.replace(/\\/+$/, '') || '/';
-  if (legacy === '/book-online') {
-    url.hostname = CANONICAL_HOST;
-    url.pathname = '/book';
-    redirect = true;
-  }
-
-  // Page routes are canonical with a trailing slash - that is the form the
-  // sitemap lists, the form the canonical tags emit, and the form the static
-  // build writes to disk. Without this, /privacy and /privacy/ both return
-  // 200 and Google is free to index whichever one it happens to find first.
-  // API routes are left alone, and so is anything with a file extension.
-  const current = url.pathname;
-  if (!current.startsWith('/api/') && current !== '/') {
-    if (current.endsWith('/index.html')) {
-      url.pathname = current.slice(0, -'index.html'.length);
-      redirect = true;
-    } else if (/\\/{2,}$/.test(current)) {
-      url.pathname = current.replace(/\\/+$/, '/');
-      redirect = true;
-    } else if (!/\\.[^/]+$/.test(current) && !current.endsWith('/')) {
-      url.pathname = current + '/';
-      redirect = true;
-    }
-  }
-
-  if (!redirect) return null;
-  return Response.redirect(url.toString(), 301);
+// A path "exists" if it is an on-demand route or the asset bundle has a file
+// for it (HEAD against the ASSETS binding is a cheap local lookup). Unknown
+// paths are left alone so they 404 straight away instead of 301 → 404.
+async function pageExists(pathWithSlash, request, env) {
+  if (ON_DEMAND_PAGES.has(pathWithSlash)) return true;
+  if (!env?.ASSETS) return true;
+  const probe = new URL(pathWithSlash, request.url);
+  const response = await env.ASSETS.fetch(new Request(probe, { method: 'HEAD' }));
+  return response.ok;
 }
 
 export default {
-  fetch(request, env, ctx) {
-    const redirected = canonicalRedirect(request);
-    if (redirected) return redirected;
-    return astro.fetch(request, env, ctx);
+  async fetch(request, env, ctx) {
+    const target = await canonicalTarget(request.url, {
+      pageExists: (pathWithSlash) => pageExists(pathWithSlash, request, env),
+    });
+    if (target) return Response.redirect(target, 301);
+
+    const response = await astro.fetch(request, env, ctx);
+
+    // The *.workers.dev hostname (and any other non-canonical host that reaches
+    // this Worker) must never be indexed as a copy of the site.
+    const host = new URL(request.url).hostname.toLowerCase();
+    if (host !== CANONICAL_HOST && isPreviewHost(host)) {
+      const headers = new Headers(response.headers);
+      headers.set('X-Robots-Tag', 'noindex, nofollow');
+      return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers,
+      });
+    }
+
+    return response;
   },
 };
 `;
@@ -64,8 +51,9 @@ export default {
 /**
  * Astro's Cloudflare adapter serves prerendered HTML as static assets before
  * middleware runs. This wraps the generated Worker entry so the canonical-URL
- * 301s - www to apex, http to https, and the trailing-slash form - happen on
- * every request, including those static pages.
+ * 301s - www to apex, http to https, legacy Wix URLs, and the trailing-slash
+ * form - happen on every request, including those static pages. The rules
+ * themselves live in canonical-redirect.mjs, shared with src/middleware.ts.
  */
 export function canonicalHostWorkerEntry() {
   return {
@@ -75,8 +63,10 @@ export function canonicalHostWorkerEntry() {
         const serverDir = path.join(process.cwd(), 'dist/server');
         const entryPath = path.join(serverDir, 'entry.mjs');
         const innerPath = path.join(serverDir, 'astro-entry.mjs');
+        const rulesSource = fileURLToPath(new URL('./canonical-redirect.mjs', import.meta.url));
         await access(entryPath);
         await rename(entryPath, innerPath);
+        await copyFile(rulesSource, path.join(serverDir, 'canonical-redirect.mjs'));
         await writeFile(entryPath, WRAPPER);
       },
     },

@@ -4,17 +4,18 @@ import Icon from './Icon.astro';
 import { business } from '../lib/business';
 import logo from '../assets/images/logo.png';
 
+// Page links always use the canonical trailing-slash form. Anything else is
+// a 301 on every click and every crawl.
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/services', label: 'Services' },
-  { href: '/locations', label: 'Service Areas' },
-  { href: '/blog', label: 'Questions' },
-  { href: '/book', label: 'Schedule' },
+  { href: '/services/', label: 'Services' },
+  { href: '/locations/', label: 'Service Areas' },
+  { href: '/blog/', label: 'Questions' },
+  { href: '/book/', label: 'Schedule' },
 ];
 
-const currentPath = Astro.url.pathname;
-const isNavActive = (href: string) =>
-  href === '/' ? currentPath === '/' : currentPath === href || currentPath.startsWith(`${href}/`);
+const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
+const isNavActive = (href: string) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
 ---
 
 <header class="sticky top-0 z-40 border-b border-black/5 bg-paper/90 backdrop-blur-md">

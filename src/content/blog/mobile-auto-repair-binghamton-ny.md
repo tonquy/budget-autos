@@ -33,17 +33,17 @@ We would rather tell you "drive it over," "leave it overnight," or "do not drive
 
 **Call the same number** if it will not crank, the pedal is soft, the engine is hot, or you need a human right now.
 
-**[Request Service Online](/quote)** from your phone. Two steps, no account. You know the repair, you are not sure, or you already have someone else's estimate.
+**[Request Service Online](/quote/)** from your phone. Two steps, no account. You know the repair, you are not sure, or you already have someone else's estimate.
 
 That is the mobile part: the quote travels. The repair stays in the bay, on purpose.
 
-Read the longer walkthrough in [how to get a car repair quote online in Binghamton](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny).
+Read the longer walkthrough in [how to get a car repair quote online in Binghamton](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/).
 
 ## How you keep moving without a mechanic at your house
 
 Drop the car on Airport Rd when it works for you. There is room overnight.
 
-Repair customers can request a [rental for $35 a day](/rental), up to 100 miles included. For a lot of Binghamton commuters, that replaces the fantasy of a mobile tech who also happens to have a lift.
+Repair customers can request a [rental for $35 a day](/rental/), up to 100 miles included. For a lot of Binghamton commuters, that replaces the fantasy of a mobile tech who also happens to have a lift.
 
 Same-day work is common when parts are on hand. Alignments still need the rack and an appointment. Diagnostics still need a scan, not a guess from a blurry light.
 
@@ -73,4 +73,4 @@ Do not wait on a form if the car is unsafe. Call.
 
 ## Ready when you are
 
-[Send the photo](/quote), [text (607) 323-0236](sms:+16073230236), or call. If you searched mobile auto repair in Binghamton, start with the picture. Bring the car when we tell you it is time.
+[Send the photo](/quote/), [text (607) 323-0236](sms:+16073230236), or call. If you searched mobile auto repair in Binghamton, start with the picture. Bring the car when we tell you it is time.

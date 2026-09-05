@@ -36,8 +36,8 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Services', path: '/services' },
-      { name: 'Schedule an Appointment', path: '/book' },
+      { name: 'Services', path: '/services/' },
+      { name: 'Schedule an Appointment', path: '/book/' },
     ]),
   ]}
 >

@@ -23,9 +23,9 @@ We are licensed and insured. We quote labor on the Mitchell 1 Labor Structure. W
 
 ## What "best" looks like when you are the one paying
 
-**Diagnosis before the shopping list.** Check engine light? We [scan and explain](/services/diagnostics) before we recommend a repair. No scare tactics. No replace-everything list.
+**Diagnosis before the shopping list.** Check engine light? We [scan and explain](/services/diagnostics/) before we recommend a repair. No scare tactics. No replace-everything list.
 
-**A quote you can approve.** This site does not list prices. You get an estimate from photos and details, then a confirmation after inspection. No work starts without your approval. [How the online quote works](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny) is written for Binghamton drivers who are tired of performing on the phone.
+**A quote you can approve.** This site does not list prices. You get an estimate from photos and details, then a confirmation after inspection. No work starts without your approval. [How the online quote works](/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/) is written for Binghamton drivers who are tired of performing on the phone.
 
 **Only the axle that is worn.** Best is not the biggest ticket. If the fronts need brakes and the rears do not, we say that. Same idea on struts versus a simple alignment.
 
@@ -37,11 +37,11 @@ We are licensed and insured. We quote labor on the Mitchell 1 Labor Structure. W
 
 Read Google this month, not a testimonial from 2011. Ask whether the estimate used a labor guide. Ask what happens if the photo quote changes on the lift (it can, and we will tell you before we start). Ask whether you can drop the car overnight and keep a rental at $35 a day.
 
-Then look at the work they actually advertise: [brakes](/services/brake-services), [engine repair](/services/engine-maintenance), [suspension and alignment](/services/suspension-alignment), [electrical](/services/electrical-systems), [presale inspections](/services/presale-inspection), general repairs. If your car is not on that list, send a photo anyway. We will tell you if we can help.
+Then look at the work they actually advertise: [brakes](/services/brake-services/), [engine repair](/services/engine-maintenance/), [suspension and alignment](/services/suspension-alignment/), [electrical](/services/electrical-systems/), [presale inspections](/services/presale-inspection/), general repairs. If your car is not on that list, send a photo anyway. We will tell you if we can help.
 
 ## How to reach the shop
 
-Text is usually fastest: **(607) 323-0236**. Call the same number if it is unsafe to drive. Or [request service online](/quote). Hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday by appointment. Sunday closed.
+Text is usually fastest: **(607) 323-0236**. Call the same number if it is unsafe to drive. Or [request service online](/quote/). Hours are Monday through Friday, 9:00 AM to 5:00 PM. Saturday by appointment. Sunday closed.
 
 We usually reply within the hour during shop hours.
 
@@ -63,4 +63,4 @@ Do not confuse nicest waiting room with best repair. We would rather you drop th
 
 ## Ready when you are
 
-[Get a quote](/quote), [text (607) 323-0236](sms:+16073230236), or call. If you want the best auto repair in Binghamton to mean a straight answer from Airport Rd, start with the photo.
+[Get a quote](/quote/), [text (607) 323-0236](sms:+16073230236), or call. If you want the best auto repair in Binghamton to mean a straight answer from Airport Rd, start with the photo.

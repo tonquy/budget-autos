@@ -22,7 +22,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Services', path: '/services' },
+      { name: 'Services', path: '/services/' },
     ]),
   ]}
 >
@@ -36,7 +36,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
   >
     <a
       slot="actions"
-      href="/book"
+      href="/book/"
       data-contact-action="schedule"
       data-contact-location="services-hero"
       class="btn btn-primary"
@@ -50,7 +50,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     <div class="container-shop grid gap-4 sm:grid-cols-2">
       {services.map((service) => (
         <a
-          href={`/services/${service.slug}`}
+          href={`/services/${service.slug}/`}
           id={service.slug}
           class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted transition-transform hover:-translate-y-0.5 sm:min-h-72 sm:p-7"
         >

@@ -29,13 +29,13 @@ That process is slower than a magic "$99 anything" ad. It is also how Binghamton
 
 ## How to actually spend less
 
-**Send a photo before you take a day off.** A cracked hose, a brake grind, a dash light, or another shop's estimate is enough to start. [Request Service Online](/quote) or [text (607) 323-0236](sms:+16073230236). During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually call or text back within the hour with a real number. Saturday is by appointment.
+**Send a photo before you take a day off.** A cracked hose, a brake grind, a dash light, or another shop's estimate is enough to start. [Request Service Online](/quote/) or [text (607) 323-0236](sms:+16073230236). During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually call or text back within the hour with a real number. Saturday is by appointment.
 
 **Ask what can wait.** If only the front pads are done, we will not push a four-corner job without a reason. If a dealer packet lists struts, an alignment, and a page of "while we are in there," photograph it. A second look is one of the reasons the form exists.
 
 **Do not skip the diagnosis to save a diagnostic fee.** Guessing at a check engine light is how people buy an oxygen sensor twice. We scan, explain the code in plain English, then quote. Diagnostic fees vary by vehicle and concern. Send the photo or the code and we can often tell you what to expect before you drive over from Binghamton.
 
-**Use drop-off and the rental instead of missing work.** Overnight parking is available on Airport Rd. Repair customers can use a rental for $35 a day, up to 100 miles included. That is often cheaper than a day of lost wages. See the [rental page](/rental).
+**Use drop-off and the rental instead of missing work.** Overnight parking is available on Airport Rd. Repair customers can use a rental for $35 a day, up to 100 miles included. That is often cheaper than a day of lost wages. See the [rental page](/rental/).
 
 **Compare line items, not vibes.** "Brakes run $300 to $800" is not a Binghamton quote. It is a national average. Ask what is on the ticket: pads, rotors, hardware, fluid, labor time.
 
@@ -65,4 +65,4 @@ Do not drive an unsafe car to save a towing fee. Soft pedal, flashing check engi
 
 ## Ready when you are
 
-[Send the photo](/quote), [text (607) 323-0236](sms:+16073230236), or call the same number. If you want cheap auto repair in Binghamton that still has a real number attached, that is the door.
+[Send the photo](/quote/), [text (607) 323-0236](sms:+16073230236), or call the same number. If you want cheap auto repair in Binghamton that still has a real number attached, that is the door.

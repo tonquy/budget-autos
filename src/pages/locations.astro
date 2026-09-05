@@ -27,7 +27,7 @@ const groups = [
   jsonLd={[
     breadcrumbJsonLd(siteUrl, [
       { name: 'Home', path: '/' },
-      { name: 'Service Areas', path: '/locations' },
+      { name: 'Service Areas', path: '/locations/' },
     ]),
   ]}
 >
@@ -42,7 +42,7 @@ const groups = [
   >
     <a
       slot="actions"
-      href="/book"
+      href="/book/"
       data-contact-action="schedule"
       data-contact-location="locations-hero"
       class="btn btn-primary"
@@ -60,7 +60,7 @@ const groups = [
           {group.places.map((place) => (
             <li>
               <a
-                href={`/locations/${place.slug}`}
+                href={`/locations/${place.slug}/`}
                 class="group flex items-center justify-between gap-3 rounded-card border border-black/5 bg-surface px-4 py-4 transition-colors hover:border-accent/40"
               >
                 <span>

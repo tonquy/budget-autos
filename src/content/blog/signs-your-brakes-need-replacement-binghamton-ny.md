@@ -17,7 +17,7 @@ faqs:
 
 If a Binghamton commute suddenly takes longer to stop, or you hear a squeal on the way into Johnson City, that is the car talking. Brakes do not always fail in one dramatic moment. They usually warn you first.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been doing brake inspection and replacement for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. You do not need the right part name. A photo or a short video is enough to start a [brake quote](/quote/brake-services).
+Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been doing brake inspection and replacement for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. You do not need the right part name. A photo or a short video is enough to start a [brake quote](/quote/brake-services/).
 
 ## The signs that actually matter
 
@@ -43,7 +43,7 @@ If none of those sound exact, send what you have anyway. We would rather look at
 
 This is not a generic "city driving" paragraph. Winter salt, freeze-thaw, and Broome County potholes chew hardware. Short trips around Binghamton and Johnson City never get the rotors hot enough to dry, so rust on the rotor face is common after a wet week. Hills and stop-and-go on Route 17 or I-81 heat the fronts more than the rears.
 
-That is why we inspect pads, rotors, calipers, hardware, and fluid, then [show you what is worn](/services/brake-services) before we recommend a job. Fronts and rears do not wear at the same rate. Quote both axles only when both axles need work.
+That is why we inspect pads, rotors, calipers, hardware, and fluid, then [show you what is worn](/services/brake-services/) before we recommend a job. Fronts and rears do not wear at the same rate. Quote both axles only when both axles need work.
 
 ## What to photograph before you drive over
 
@@ -58,7 +58,7 @@ Send:
 
 You do not need to pull a wheel at home. If you cannot see the pad, describe the noise and when it happens: all the time, only when cold, only going downhill.
 
-[Request Service Online](/quote) or [text (607) 323-0236](sms:+16073230236). During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually call or text back within the hour. Saturday is by appointment.
+[Request Service Online](/quote/) or [text (607) 323-0236](sms:+16073230236). During shop hours, Monday through Friday 9:00 AM to 5:00 PM, we usually call or text back within the hour. Saturday is by appointment.
 
 ## What a photo can tell us, and what it cannot
 
@@ -78,7 +78,7 @@ These are typical Binghamton-area patterns, not named customer files.
 
 ## After you have a number
 
-You can drop the car on Airport Rd and keep moving. Overnight parking is available. Repair customers can use a rental for $35 a day, up to 100 miles included. Ask when we call you back, or use the [rental page](/rental).
+You can drop the car on Airport Rd and keep moving. Overnight parking is available. Repair customers can use a rental for $35 a day, up to 100 miles included. Ask when we call you back, or use the [rental page](/rental/).
 
 Warranty is on parts and labor. Ask us for the coverage that applies to your job.
 
@@ -92,4 +92,4 @@ If the pedal is soft or the light is on and the car feels unsafe, call. A quote 
 
 ## Ready when you are
 
-[Get a brake quote](/quote/brake-services), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the noise, the light, or the other shop's paperwork. We will tell you the next step.
+[Get a brake quote](/quote/brake-services/), [text (607) 323-0236](sms:+16073230236), or call the same number. Send the noise, the light, or the other shop's paperwork. We will tell you the next step.

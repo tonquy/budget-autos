@@ -1,17 +1,30 @@
 ---
-import { homeFaqs } from '../../lib/seo';
+import { homeFaqs, type FaqItem } from '../../lib/seo';
+
+interface Props {
+  /** Defaults to the homepage FAQ. City pages pass their own town-specific set. */
+  faqs?: FaqItem[];
+  title?: string;
+  intro?: string;
+}
+
+const {
+  faqs = homeFaqs,
+  title = 'Questions before you come in.',
+  intro = 'Straight answers about location, quotes, and what we fix.',
+} = Astro.props;
 ---
 
 <section class="border-t border-black/5 bg-surface py-20 sm:py-28">
   <div data-reveal class="container-shop max-w-3xl">
     <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-      Questions before you come in.
+      {title}
     </h2>
     <p class="mt-3 text-steel-700">
-      Straight answers about location, quotes, and what we fix.
+      {intro}
     </p>
     <dl class="mt-10 divide-y divide-black/5">
-      {homeFaqs.map((faq) => (
+      {faqs.map((faq) => (
         <div class="py-5 first:pt-0 last:pb-0">
           <dt class="font-display text-lg font-semibold text-ink">{faq.question}</dt>
           <dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd>

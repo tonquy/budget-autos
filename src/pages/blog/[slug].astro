@@ -26,7 +26,7 @@ interface Props {
 const { post } = Astro.props;
 const { Content } = await render(post);
 const siteUrl = Astro.site?.origin ?? Astro.url.origin;
-const path = `/blog/${post.id}`;
+const path = `/blog/${post.id}/`;
 const heroImage = blogHeroImages[post.data.hero];
 const published = post.data.updatedDate ?? post.data.pubDate;
 
@@ -48,7 +48,7 @@ const howToSteps = [
 const jsonLd = [
   breadcrumbJsonLd(siteUrl, [
     { name: 'Home', path: '/' },
-    { name: 'Questions', path: '/blog' },
+    { name: 'Questions', path: '/blog/' },
     { name: post.data.title, path },
   ]),
   articleJsonLd(siteUrl, {
@@ -90,7 +90,7 @@ const jsonLd = [
         </li>
         <li aria-hidden="true">/</li>
         <li>
-          <a href="/blog" class="hover:text-white">Questions</a>
+          <a href="/blog/" class="hover:text-white">Questions</a>
         </li>
         <li aria-hidden="true">/</li>
         <li class="font-medium text-white" aria-current="page">Article</li>
@@ -98,7 +98,7 @@ const jsonLd = [
     </nav>
     <a
       slot="actions"
-      href="/book"
+      href="/book/"
       data-contact-action="schedule"
       data-contact-location="blog-hero"
       class="btn btn-primary"
@@ -200,7 +200,7 @@ const jsonLd = [
     </p>
     <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <a
-        href="/book"
+        href="/book/"
         data-contact-action="schedule"
         data-contact-location="blog-band"
         class="btn btn-primary"

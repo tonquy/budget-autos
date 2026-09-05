@@ -15,6 +15,18 @@ export type FaqItem = {
 
 const SITE_NAME = business.name;
 
+/**
+ * Page routes are canonical with a trailing slash (that is what the sitemap
+ * lists, what <link rel=canonical> emits, and what the Worker 301s to). Files
+ * and API routes are left alone.
+ */
+export function canonicalPath(path: string) {
+  if (path === '/' || path.endsWith('/') || path.startsWith('/api/') || /\.[^/]+$/.test(path)) {
+    return path;
+  }
+  return `${path}/`;
+}
+
 /** Prefer 1200×630 social share assets; current og-default is 1536×1024. */
 export const OG_IMAGE = {
   path: '/og-default.jpg',
@@ -89,7 +101,7 @@ export function breadcrumbJsonLd(
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: new URL(item.path, siteUrl).toString(),
+      item: new URL(canonicalPath(item.path), siteUrl).toString(),
     })),
   };
 }
@@ -104,7 +116,7 @@ export function articleJsonLd(
     dateModified?: Date;
   },
 ) {
-  const pageUrl = new URL(opts.path, siteUrl).toString();
+  const pageUrl = new URL(canonicalPath(opts.path), siteUrl).toString();
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
@@ -142,7 +154,7 @@ export function howToJsonLd(
     '@type': 'HowTo',
     name: opts.name,
     description: opts.description,
-    url: new URL(opts.path, siteUrl).toString(),
+    url: new URL(canonicalPath(opts.path), siteUrl).toString(),
     step: opts.steps.map((step, index) => ({
       '@type': 'HowToStep',
       position: index + 1,
@@ -173,7 +185,7 @@ export function serviceJsonLd(siteUrl: string, service: Service) {
     '@type': 'Service',
     name: service.name,
     description: service.seoDescription ?? service.description,
-    url: `${siteUrl}/services/${service.slug}`,
+    url: `${siteUrl}/services/${service.slug}/`,
     provider: {
       '@type': 'AutoRepair',
       '@id': `${siteUrl}/#business`,

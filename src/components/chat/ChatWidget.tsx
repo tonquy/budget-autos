@@ -703,7 +703,7 @@ export default function ChatWidget() {
                 <span class="hidden md:inline">Drag &amp; drop a photo, or browse files.</span>
                 {' '}
                 Lots of files?{' '}
-                <a href="/quote" class="font-semibold text-accent hover:text-accent-dark">
+                <a href="/quote/" class="font-semibold text-accent hover:text-accent-dark">
                   Request service online
                 </a>
                 .

@@ -29,8 +29,8 @@ const otherServices = services.filter((s) => s.slug !== service.slug).slice(0, 4
 const jsonLd = [
   breadcrumbJsonLd(siteUrl, [
     { name: 'Home', path: '/' },
-    { name: 'Services', path: '/services' },
-    { name: service.name, path: `/services/${service.slug}` },
+    { name: 'Services', path: '/services/' },
+    { name: service.name, path: `/services/${service.slug}/` },
   ]),
   serviceJsonLd(siteUrl, service),
   faqJsonLd(service.faqs),
@@ -57,7 +57,7 @@ const jsonLd = [
         </li>
         <li aria-hidden="true">/</li>
         <li>
-          <a href="/services" class="hover:text-white">Services</a>
+          <a href="/services/" class="hover:text-white">Services</a>
         </li>
         <li aria-hidden="true">/</li>
         <li class="font-medium text-white" aria-current="page">{service.name}</li>
@@ -65,7 +65,7 @@ const jsonLd = [
     </nav>
     <a
       slot="actions"
-      href={`/book?service=${service.slug}`}
+      href={`/book/?service=${service.slug}`}
       data-contact-action="schedule"
       data-contact-location="service-hero"
       class="btn btn-primary"
@@ -120,7 +120,7 @@ const jsonLd = [
       <div class="mt-8 grid gap-3 sm:grid-cols-2">
         {otherServices.map((s) => (
           <a
-            href={`/services/${s.slug}`}
+            href={`/services/${s.slug}/`}
             class="group flex items-start gap-4 rounded-card border border-black/5 bg-surface p-5 transition-colors hover:border-accent/40"
           >
             <span class="grid size-10 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
@@ -136,7 +136,7 @@ const jsonLd = [
         ))}
       </div>
       <p class="mt-8">
-        <a href="/services" class="text-sm font-semibold text-accent hover:text-accent-dark">
+        <a href="/services/" class="text-sm font-semibold text-accent hover:text-accent-dark">
           View all services
         </a>
       </p>
@@ -153,7 +153,7 @@ const jsonLd = [
     </p>
     <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
       <a
-        href={`/book?service=${service.slug}`}
+        href={`/book/?service=${service.slug}`}
         data-contact-action="schedule"
         data-contact-location="service-band"
         class="btn btn-primary"

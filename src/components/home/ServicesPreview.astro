@@ -24,7 +24,7 @@ import { serviceImages } from '../../lib/serviceImages';
         </p>
       </div>
       <a
-        href="/services"
+        href="/services/"
         class="group inline-flex items-center gap-1.5 text-sm font-semibold text-accent hover:text-accent-dark"
       >
         View all services
@@ -39,7 +39,7 @@ import { serviceImages } from '../../lib/serviceImages';
       {
         services.map((service, i) => (
           <a
-            href={`/services/${service.slug}`}
+            href={`/services/${service.slug}/`}
             class:list={[
               'group relative overflow-hidden rounded-card bg-ink shadow-card transition-shadow duration-500 hover:shadow-lifted',
               i === 0 && 'sm:col-span-2',
