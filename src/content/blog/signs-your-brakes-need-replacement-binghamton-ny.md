@@ -3,7 +3,7 @@ title: Signs your brakes need replacement in Binghamton, NY
 description: Squeal, grind, a soft pedal, or extra stopping distance on Binghamton roads. How to tell if you need brake work, what to photograph, and how to get a quote from Airport Rd.
 pubDate: 2026-08-18
 hero: brakes
-heroAlt: Brake rotor and caliper inspection at Budget Auto Repair in Johnson City
+heroAlt: Brake rotor and caliper inspection at Budget Autos Repair in Johnson City
 faqs:
   - question: How do I know if I need brakes in Binghamton?
     answer: "Common signs are squealing, grinding, longer stopping distance, vibration when you brake, a soft pedal, or a dashboard brake light. Send a photo or a short video through the quote form if you are not sure."
@@ -11,13 +11,13 @@ faqs:
     answer: "A photo of the wheel, a shot of the dash light, or a video of the noise is enough to start. The number we send is an estimate. We confirm pads, rotors, calipers, hardware, and fluid on the car in Johnson City before any work begins."
   - question: Do you replace brakes on one axle only?
     answer: "We recommend what is actually needed. If only the fronts are worn, we will not push a full four-corner job without a reason."
-  - question: Are brake jobs same day at Budget Auto Repair?
+  - question: Are brake jobs same day at Budget Autos Repair?
     answer: "Most of what we handle finishes the same day when parts are on hand. Safety work gets priority scheduling when we can fit you in. Text (607) 323-0236 or use the quote form and we will tell you what to expect."
 ---
 
 If a Binghamton commute suddenly takes longer to stop, or you hear a squeal on the way into Johnson City, that is the car talking. Brakes do not always fail in one dramatic moment. They usually warn you first.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been doing brake inspection and replacement for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. You do not need the right part name. A photo or a short video is enough to start a [brake quote](/quote/brake-services/).
+Budget Autos Repair is at 2344 Airport Rd in Johnson City. We have been doing brake inspection and replacement for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. You do not need the right part name. A photo or a short video is enough to start a [brake quote](/quote/brake-services/).
 
 ## The signs that actually matter
 

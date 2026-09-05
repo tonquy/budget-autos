@@ -5,7 +5,7 @@
 // On-site testimonial quotes were removed - link to Google reviews instead.
 
 export const business = {
-  name: 'Budget Auto Repair',
+  name: 'Budget Autos Repair',
   shortName: 'Budget Auto',
   tagline: 'Affordable repairs for your vehicle, done right the first time.',
   foundedYear: 2004,
@@ -94,7 +94,7 @@ export const services: Service[] = [
     longDescription:
       'Check-engine light on? Rough idle, misfire, or a code reader that just spit out a number you don’t understand? We plug in, pull the codes, and - more important - explain what they mean for your car before recommending repairs. No scare tactics, no “replace everything” laundry lists.',
     seoDescription:
-      'Engine diagnostics in Johnson City, NY. Computer scan, clear explanation, and a free quote before any work starts at Budget Auto Repair.',
+      'Engine diagnostics in Johnson City, NY. Computer scan, clear explanation, and a free quote before any work starts at Budget Autos Repair.',
     highlights: [
       'OBD-II computer scan and live data checks',
       'Plain-English explanation of findings',
@@ -122,7 +122,7 @@ export const services: Service[] = [
     longDescription:
       'From oil leaks and timing issues to overheating and worn mounts, we handle engine maintenance and repair for daily drivers in the Johnson City and Broome County area. Work is quoted against Mitchell 1 labor times so you know the estimate is grounded in a standard guide - not a guess.',
     seoDescription:
-      'Engine maintenance and repair in Johnson City, NY. Leaks, overheating, mounts, and more - free photo quote from Budget Auto Repair.',
+      'Engine maintenance and repair in Johnson City, NY. Leaks, overheating, mounts, and more - free photo quote from Budget Autos Repair.',
     highlights: [
       'Maintenance and repair, not just oil changes',
       'Mitchell 1 labor guide for transparent quoting',
@@ -150,7 +150,7 @@ export const services: Service[] = [
     longDescription:
       'Squeal, grind, soft pedal, or a brake warning light? We inspect pads, rotors, calipers, hardware, and fluid, then show you what’s worn before recommending a job. Safety work gets priority scheduling when we can fit you in.',
     seoDescription:
-      'Brake repair and inspection in Johnson City, NY. Pads, rotors, calipers, and fluid - get a free quote from Budget Auto Repair.',
+      'Brake repair and inspection in Johnson City, NY. Pads, rotors, calipers, and fluid - get a free quote from Budget Autos Repair.',
     highlights: [
       'Full brake system inspection',
       'Pads, rotors, calipers, and hardware',
@@ -178,7 +178,7 @@ export const services: Service[] = [
     longDescription:
       'Pothole bounce, pulling to one side, or tires wearing unevenly? We inspect struts, shocks, bushings, and ball joints, then align when the suspension is sound so the alignment actually holds.',
     seoDescription:
-      'Suspension repair and wheel alignment in Johnson City, NY. Struts, shocks, and pull fixes at Budget Auto Repair.',
+      'Suspension repair and wheel alignment in Johnson City, NY. Struts, shocks, and pull fixes at Budget Autos Repair.',
     highlights: [
       'Struts, shocks, and related hardware',
       'Wheel alignment after suspension work when needed',
@@ -206,7 +206,7 @@ export const services: Service[] = [
     longDescription:
       'Dead batteries, charging issues, parasitic drains, lighting, and wiring faults - electrical problems rarely fix themselves. We test the system properly instead of throwing parts at a “maybe.”',
     seoDescription:
-      'Auto electrical repair in Johnson City, NY. Batteries, alternators, wiring, and lighting diagnostics at Budget Auto Repair.',
+      'Auto electrical repair in Johnson City, NY. Batteries, alternators, wiring, and lighting diagnostics at Budget Autos Repair.',
     highlights: [
       'Battery and charging system testing',
       'Alternator and starter diagnosis',
@@ -235,7 +235,7 @@ export const services: Service[] = [
     longDescription:
       'Thinking about buying a used car in the Tri-Cities area, or selling one and want fewer surprises at the closing table? We inspect the vehicle, document findings with photos, and can pull Carfax history so negotiations start from facts - not hopes.',
     seoDescription:
-      'Presale vehicle inspections in Johnson City, NY. Photo documentation and Carfax-ready checks from Budget Auto Repair.',
+      'Presale vehicle inspections in Johnson City, NY. Photo documentation and Carfax-ready checks from Budget Autos Repair.',
     highlights: [
       'Full walk-around mechanical inspection',
       'Photo documentation of findings',
@@ -263,7 +263,7 @@ export const services: Service[] = [
     longDescription:
       'Not every repair fits a neat category. Belts, hoses, exhaust leaks, sensors, door hardware, cooling system jobs - if it’s broken and safe for us to work on, we’ll take a look and quote it straight.',
     seoDescription:
-      'General auto repair in Johnson City, NY. Belts, hoses, exhaust, sensors, and more - free quote from Budget Auto Repair.',
+      'General auto repair in Johnson City, NY. Belts, hoses, exhaust, sensors, and more - free quote from Budget Autos Repair.',
     highlights: [
       'Belts, hoses, and cooling system work',
       'Exhaust and sensor repairs',

@@ -1,6 +1,6 @@
 ---
 title: How to get a car repair quote online in Binghamton, NY
-description: Send a photo from your driveway and get a real repair number from Budget Auto Repair on Airport Rd. No account, no app, no price range.
+description: Send a photo from your driveway and get a real repair number from Budget Autos Repair on Airport Rd. No account, no app, no price range.
 pubDate: 2026-08-19
 hero: quote-photo
 heroAlt: Customer photographing a car part on a phone to send for a repair quote
@@ -17,7 +17,7 @@ faqs:
 
 If you are sitting in Binghamton with a warning light, a grind, or a puddle under the car, you do not need the right part name and you do not need to drive to a counter just to find out what it might cost.
 
-Budget Auto Repair is a family-owned shop at 2344 Airport Rd in Johnson City. We have been fixing cars for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. Online quoting here is simple: you show us the problem, we look at the same thing you are looking at, and we come back with a real number, not a range.
+Budget Autos Repair is a family-owned shop at 2344 Airport Rd in Johnson City. We have been fixing cars for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. Online quoting here is simple: you show us the problem, we look at the same thing you are looking at, and we come back with a real number, not a range.
 
 ## What an online quote actually is here
 

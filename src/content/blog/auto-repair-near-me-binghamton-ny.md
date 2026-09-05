@@ -1,12 +1,12 @@
 ---
 title: Auto repair near me in Binghamton, NY
-description: Looking for auto repair near you in Binghamton? Budget Auto Repair is at 2344 Airport Rd in Johnson City, a short drive from downtown, with photo quotes, easy drop-off, and hours listed below.
+description: Looking for auto repair near you in Binghamton? Budget Autos Repair is at 2344 Airport Rd in Johnson City, a short drive from downtown, with photo quotes, easy drop-off, and hours listed below.
 pubDate: 2026-08-15
 hero: locations
 heroAlt: Independent auto repair shop on Airport Rd in Johnson City, near Binghamton
 faqs:
   - question: Where is the nearest auto repair for Binghamton, NY?
-    answer: "Budget Auto Repair is at 2344 Airport Rd, Johnson City, NY 13790. It is an easy in-and-out from Binghamton, Endicott, Vestal, and Endwell. Open Monday through Friday 9:00 AM to 5:00 PM, Saturday by appointment, Sunday closed."
+    answer: "Budget Autos Repair is at 2344 Airport Rd, Johnson City, NY 13790. It is an easy in-and-out from Binghamton, Endicott, Vestal, and Endwell. Open Monday through Friday 9:00 AM to 5:00 PM, Saturday by appointment, Sunday closed."
   - question: I searched auto repair near me. Do I have to be in Johnson City?
     answer: "No. The shop is in Johnson City. We regularly help Binghamton drivers, plus Endicott, Vestal, Endwell, and 30-plus nearby towns. If you can get to Airport Rd, we can usually help."
   - question: How do I get a quote if I am near Binghamton right now?
@@ -17,7 +17,7 @@ faqs:
 
 "Auto repair near me" in Binghamton usually means this: the light is on, the grind started on the way home, and Maps is about to send you to whoever paid for the pin. Before you tap the first ad, here is a fixed address.
 
-Budget Auto Repair is at **2344 Airport Rd, Johnson City, NY 13790**. Johnson City sits against Binghamton. The shop is built for easy in-and-out from Binghamton, Endicott, Vestal, and Endwell. Family-owned since 2004.
+Budget Autos Repair is at **2344 Airport Rd, Johnson City, NY 13790**. Johnson City sits against Binghamton. The shop is built for easy in-and-out from Binghamton, Endicott, Vestal, and Endwell. Family-owned since 2004.
 
 If you can get to Airport Rd, we can usually help. If you do not see your town on the [service areas](/locations/) list, send a photo anyway.
 

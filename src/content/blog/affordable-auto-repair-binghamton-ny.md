@@ -1,12 +1,12 @@
 ---
 title: Affordable auto repair in Binghamton, NY
-description: Affordable auto repair in Binghamton from Budget Auto Repair in Johnson City. Photo quotes, Mitchell 1 labor times, no-surprise bills, and a $35/day rental so the repair does not cost you a day of work.
+description: Affordable auto repair in Binghamton from Budget Autos Repair in Johnson City. Photo quotes, Mitchell 1 labor times, no-surprise bills, and a $35/day rental so the repair does not cost you a day of work.
 pubDate: 2026-08-10
 hero: quote
-heroAlt: Auto repair service at Budget Auto Repair, an affordable shop serving Binghamton
+heroAlt: Auto repair service at Budget Autos Repair, an affordable shop serving Binghamton
 faqs:
   - question: Where can I find affordable auto repair in Binghamton, NY?
-    answer: "Budget Auto Repair at 2344 Airport Rd in Johnson City has served Binghamton drivers since 2004. We quote a real number from a photo, use Mitchell 1 labor times, and only recommend the work that is worn. Free quotes, no pressure."
+    answer: "Budget Autos Repair at 2344 Airport Rd in Johnson City has served Binghamton drivers since 2004. We quote a real number from a photo, use Mitchell 1 labor times, and only recommend the work that is worn. Free quotes, no pressure."
   - question: How do you keep a repair affordable?
     answer: "We inspect before we sell, show you the worn parts when we can, and skip add-ons that are not needed. You approve the job before we start. Overnight drop-off and a $35/day rental keep the hidden cost of missing work off the bill."
   - question: Is affordable the same as cheapest?

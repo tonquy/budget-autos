@@ -3,7 +3,7 @@ title: Wheel alignment versus suspension repair in Binghamton, NY
 description: Why a pull, a bounce, or uneven tire wear in Binghamton might be an alignment, worn struts, or both, and how we inspect before we put your car on the rack in Johnson City.
 pubDate: 2026-08-06
 hero: suspension
-heroAlt: Suspension and wheel alignment work at Budget Auto Repair in Johnson City
+heroAlt: Suspension and wheel alignment work at Budget Autos Repair in Johnson City
 faqs:
   - question: Will an alignment fix a pull by itself?
     answer: "Sometimes. If a worn tire, a seized brake, or a bad suspension part is causing the pull, alignment alone will not stick. We check those first at our Johnson City shop."
@@ -17,7 +17,7 @@ faqs:
 
 If your car pulls toward the curb on a Binghamton street, or the tires are bald on one edge after one winter, people say "it needs an alignment." Sometimes that is true. Sometimes the alignment is the last step, not the first, because a worn strut or bushing will not hold the angles you just paid to set.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We handle [suspension and alignment](/services/suspension-alignment/) for Binghamton, Endicott, Vestal, and Endwell drivers, and we have been doing it since 2004. We inspect struts, shocks, bushings, and ball joints, then align when the suspension is sound so the alignment actually holds.
+Budget Autos Repair is at 2344 Airport Rd in Johnson City. We handle [suspension and alignment](/services/suspension-alignment/) for Binghamton, Endicott, Vestal, and Endwell drivers, and we have been doing it since 2004. We inspect struts, shocks, bushings, and ball joints, then align when the suspension is sound so the alignment actually holds.
 
 ## What an alignment is
 
