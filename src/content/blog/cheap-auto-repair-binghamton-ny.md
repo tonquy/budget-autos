@@ -1,12 +1,12 @@
 ---
 title: Cheap auto repair in Binghamton, NY
-description: How to get cheap auto repair in Binghamton without buying a bad job. Fair quotes from Budget Auto Repair on Airport Rd, Mitchell 1 labor, and what lowball estimates usually hide.
+description: How to get cheap auto repair in Binghamton without buying a bad job. Fair quotes from Budget Autos Repair on Airport Rd, Mitchell 1 labor, and what lowball estimates usually hide.
 pubDate: 2026-08-17
 hero: bay
-heroAlt: Repair bay at Budget Auto Repair in Johnson City, serving Binghamton drivers
+heroAlt: Repair bay at Budget Autos Repair in Johnson City, serving Binghamton drivers
 faqs:
   - question: Who does cheap auto repair in Binghamton, NY?
-    answer: "Budget Auto Repair at 2344 Airport Rd in Johnson City quotes work against the Mitchell 1 Labor Structure, replaces only what is worn, and sends a real number from a photo. Cheap should mean a fair bill, not the lowest bid that grows once the car is on the lift."
+    answer: "Budget Autos Repair at 2344 Airport Rd in Johnson City quotes work against the Mitchell 1 Labor Structure, replaces only what is worn, and sends a real number from a photo. Cheap should mean a fair bill, not the lowest bid that grows once the car is on the lift."
   - question: Is the cheapest quote the one I should take?
     answer: "Not if it is a range, a bait price, or a four-corner job when only one axle is worn. Ask for a number tied to your car, then expect it to be confirmed on inspection. No work starts without your approval."
   - question: Can I get a cheap brake or engine quote without driving over first?
@@ -17,7 +17,7 @@ faqs:
 
 People searching cheap auto repair in Binghamton, NY are not looking for a lecture. They are looking for a bill they can live with. That is fair. A cheap job that fails on I-81 next month is not cheap. It is a second invoice.
 
-Budget Auto Repair is a family-owned shop at 2344 Airport Rd in Johnson City. We have been quoting and fixing cars for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. The name on the building is Budget. The habit in the bay is to show you what is worn, quote what is needed, and skip the laundry list.
+Budget Autos Repair is a family-owned shop at 2344 Airport Rd in Johnson City. We have been quoting and fixing cars for Binghamton, Endicott, Vestal, and Endwell drivers since 2004. The name on the building is Budget. The habit in the bay is to show you what is worn, quote what is needed, and skip the laundry list.
 
 ## What cheap should mean in Binghamton
 

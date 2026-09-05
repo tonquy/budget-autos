@@ -17,7 +17,7 @@ faqs:
 
 If you typed mobile auto repair Binghamton, New York, you probably want the wrench to come to you. The car is in a lot. You are at work. You do not want a waiting room.
 
-Here is the honest version from this shop: Budget Auto Repair is not a van that rebuilds brakes on your street. The work happens at 2344 Airport Rd in Johnson City, where we have the lift, the alignment rack, and the scan tools. What we did build for Binghamton drivers is the next best thing. You show us the problem from wherever you are standing. We quote it. You drop the car on your schedule.
+Here is the honest version from this shop: Budget Autos Repair is not a van that rebuilds brakes on your street. The work happens at 2344 Airport Rd in Johnson City, where we have the lift, the alignment rack, and the scan tools. What we did build for Binghamton drivers is the next best thing. You show us the problem from wherever you are standing. We quote it. You drop the car on your schedule.
 
 Family-owned since 2004. Binghamton, Endicott, Vestal, Endwell, and the rest of the Tri-Cities.
 

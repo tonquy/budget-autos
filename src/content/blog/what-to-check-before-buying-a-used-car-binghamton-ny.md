@@ -3,7 +3,7 @@ title: What to check before buying a used car in Binghamton, NY
 description: A practical pre-purchase checklist for Binghamton private sales and dealer lots, plus how a presale inspection on Airport Rd and a Carfax report keep surprises off the closing table.
 pubDate: 2026-08-14
 hero: presale
-heroAlt: Technician documenting a used car inspection with photos at Budget Auto Repair
+heroAlt: Technician documenting a used car inspection with photos at Budget Autos Repair
 faqs:
   - question: Should I get an inspection before buying a used car privately in Binghamton?
     answer: "Yes. A few hundred dollars of inspection is cheap insurance against a multi-thousand-dollar surprise. Bring the car, or have the seller bring it, to 2344 Airport Rd in Johnson City before money changes hands."
@@ -17,7 +17,7 @@ faqs:
 
 Buying a used car in Binghamton is easy to rush. Facebook Marketplace, a driveway in Endicott, a lot off Vestal Parkway. The seller is friendly. The price is "for a quick sale." Then you find the rust, the misfire, or the salvage history after the title is in your name.
 
-Budget Auto Repair is a family-owned shop at 2344 Airport Rd in Johnson City. Since 2004 we have been the stop Binghamton, Endicott, Vestal, and Endwell drivers use when they want facts before money moves. A [presale inspection](/services/presale-inspection) is how you get those facts on paper, with photos.
+Budget Autos Repair is a family-owned shop at 2344 Airport Rd in Johnson City. Since 2004 we have been the stop Binghamton, Endicott, Vestal, and Endwell drivers use when they want facts before money moves. A [presale inspection](/services/presale-inspection) is how you get those facts on paper, with photos.
 
 ## Check this before you fall in love with the listing
 

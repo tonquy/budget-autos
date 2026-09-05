@@ -3,7 +3,7 @@ title: Common causes of the check engine light in Binghamton, NY
 description: What a check engine light usually means for Binghamton drivers, what a photo of the dash can start, and why a real scan in Johnson City beats a parts-store code printout.
 pubDate: 2026-08-11
 hero: diagnostics
-heroAlt: Engine diagnostic scan and inspection at Budget Auto Repair in Johnson City
+heroAlt: Engine diagnostic scan and inspection at Budget Autos Repair in Johnson City
 faqs:
   - question: Do you charge for a diagnostic scan?
     answer: "Ask when you book. Diagnostic fees vary by vehicle and concern. If you send a photo or a code through our quote form, we can often tell you what to expect before you bring the car in from Binghamton."
@@ -17,7 +17,7 @@ faqs:
 
 A check engine light on a Binghamton morning does not tell you the job. It tells you the car stored a fault. The light on Route 17, at a light in downtown Binghamton, or in a Vestal parking lot is the same lamp. The cause is not.
 
-Budget Auto Repair is at 2344 Airport Rd in Johnson City. We have been scanning and explaining engine faults for local drivers since 2004. [Engine diagnostics](/services/diagnostics) here means a computer scan and a plain-English explanation of what it found before anything gets touched.
+Budget Autos Repair is at 2344 Airport Rd in Johnson City. We have been scanning and explaining engine faults for local drivers since 2004. [Engine diagnostics](/services/diagnostics) here means a computer scan and a plain-English explanation of what it found before anything gets touched.
 
 ## What the light is trying to say
 
