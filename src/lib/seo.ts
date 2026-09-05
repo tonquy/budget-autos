@@ -51,7 +51,11 @@ function openingHoursFromBusiness() {
 }
 
 export function localBusinessJsonLd(siteUrl: string) {
-  const sameAs = [business.socials.facebook, business.socials.google].filter(Boolean);
+  // `sameAs` asserts "these profiles are this same business", so it lists only
+  // this shop's own profiles. The Facebook page belongs to the dealership next
+  // door (same address, same family, different entity); claiming it here would
+  // push Google toward merging the two listings.
+  const sameAs = [business.socials.google].filter(Boolean);
 
   return {
     '@context': 'https://schema.org',

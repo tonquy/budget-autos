@@ -43,8 +43,24 @@ export const business = {
     count: 87,
   },
   socials: {
+    // The dealership's page (Budget Autos, budgetautony.com). Same family, but a
+    // different business at this address - so it is linked for visitors and
+    // deliberately kept OUT of the schema `sameAs`, which asserts identity.
     facebook: 'https://www.facebook.com/budgetautosny',
-    google: 'https://share.google/0sYU3Xlnrk6zdFhTO',
+    /**
+     * This shop's own Google Business Profile - "Budget Autos Repair",
+     * place_id ChIJ20Q29jfx2okRAS4Ck3LBrAQ, the listing whose website field
+     * already points here.
+     *
+     * The previous share.google link resolved to kgmid /g/11ghq_vcjg, which is
+     * the DEALERSHIP's Google entity (Budget Autos, 4.0/49 reviews). Every
+     * "Read Google reviews" click therefore landed on the wrong listing, and
+     * schema `sameAs` was telling Google this site belongs to that other
+     * business - at the same address, where a merge is already a live risk.
+     */
+    google: 'https://www.google.com/maps/place/?q=place_id:ChIJ20Q29jfx2okRAS4Ck3LBrAQ',
+    /** Opens the review composer on the shop's own profile. */
+    googleReview: 'https://search.google.com/local/writereview?placeid=ChIJ20Q29jfx2okRAS4Ck3LBrAQ',
   },
 } as const;
 

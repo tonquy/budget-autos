@@ -19,7 +19,7 @@ faqs:
 
 For us it means this: a computer scan and a real explanation before parts get touched, a number instead of a range, and a family shop on Airport Rd that has been here since 2004. Budget Auto Repair is at 2344 Airport Rd in Johnson City, a short hop from Binghamton, Endicott, Vestal, and Endwell.
 
-We are licensed and insured. We quote labor on the Mitchell 1 Labor Structure. We do not put fake star blocks on this site. We send you to [Google](https://share.google/0sYU3Xlnrk6zdFhTO) for recent, verified reviews.
+We are licensed and insured. We quote labor on the Mitchell 1 Labor Structure. We do not put fake star blocks on this site. We send you to [Google](https://www.google.com/maps/place/?q=place_id:ChIJ20Q29jfx2okRAS4Ck3LBrAQ) for recent, verified reviews.
 
 ## What "best" looks like when you are the one paying
 
