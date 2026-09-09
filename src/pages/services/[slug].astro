@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import PageHero from '../../components/PageHero.astro';
@@ -27,6 +28,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 const image = serviceImages[service.slug];
 const otherServices = services.filter((s) => s.slug !== service.slug).slice(0, 4);
 // GBP service names that fall under this landing page, if any.
+const repairGuides = (await getCollection('blog')).filter(post => post.data.service === service.slug);
 const catalogGroup = catalogGroupForService(service.slug);
 
 const jsonLd = [
@@ -85,6 +87,14 @@ const jsonLd = [
       Chat with us
     </button>
   </PageHero>
+
+  {repairGuides.length > 0 && <section class="border-b border-black/10 bg-surface py-10">
+    <div class="container-shop max-w-3xl">
+      <h2 class="font-display text-2xl font-bold">Questions about {service.name.toLowerCase()}</h2>
+      <ul class="mt-4 divide-y divide-black/10">{repairGuides.map(post => <li><a href={`/blog/${post.id}/`} class="block py-3 font-medium text-accent-dark hover:underline">{post.data.title}</a></li>)}</ul>
+      <a href="/second-opinion/" class="mt-4 inline-flex min-h-11 items-center font-semibold text-accent-dark hover:underline">Already have an estimate? Get a second opinion.</a>
+    </div>
+  </section>}
 
   <section class="bg-paper py-16 sm:py-20">
     <div class="container-shop max-w-3xl">

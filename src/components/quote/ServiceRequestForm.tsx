@@ -41,7 +41,8 @@ type SubmitState = 'idle' | 'submitting' | 'error';
  * Single-screen quote intake. Same details the booking flow asks for at the
  * end, plus photos, posted to /api/quote so the shop still gets the email.
  */
-export default function ServiceRequestForm() {
+export default function ServiceRequestForm({ estimateReview = false }: { estimateReview?: boolean }) {
+  const Heading = estimateReview ? 'h2' : 'h1';
   const idBase = useId();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -104,11 +105,11 @@ export default function ServiceRequestForm() {
       return;
     }
 
-    const notes = message.trim() || 'Quote request from the website.';
+    const notes = message.trim() || (estimateReview ? 'Please review my repair estimate and explain the recommended work.' : 'Quote request from the website.');
 
     const fd = new FormData();
     const scalars: Record<string, string> = {
-      flow: 'unknown-intake',
+      flow: estimateReview ? 'estimate-review' : 'unknown-intake',
       name,
       phone,
       email,
@@ -170,10 +171,11 @@ export default function ServiceRequestForm() {
 
       <div class="space-y-5">
         <div>
-          <h1 class="font-display text-2xl font-bold text-ink sm:text-3xl">Get a quote</h1>
+          <Heading class="font-display text-2xl font-bold text-ink sm:text-3xl">{estimateReview ? 'Send your estimate for review' : 'Get a quote'}</Heading>
           <p class="mt-2 text-sm leading-relaxed text-steel-700 sm:text-base">
-            Name, how to reach you, and a photo if you have one. We&rsquo;ll get back to you with a
-            number.
+            {estimateReview
+              ? 'Upload clear photos of the estimate and tell us what you want to understand. We will follow up with questions or the next step; an inspection may be needed.'
+              : 'Tell us what is happening and add a photo if you have one. We will get back to you with the next step.'}
           </p>
         </div>
 
@@ -231,7 +233,7 @@ export default function ServiceRequestForm() {
         </div>
 
         <Field
-          label="Anything we should know?"
+          label={estimateReview ? "What would you like us to review?" : "Anything we should know?"}
           hint="(optional)"
           htmlFor={`${idBase}-message`}
           error={fieldErrors.message?.[0]}
@@ -241,15 +243,16 @@ export default function ServiceRequestForm() {
             value={message}
             onValue={setMessage}
             rows={3}
-            placeholder="e.g. Grinding noise from the front when I brake, started this week."
+            placeholder={estimateReview ? "Vehicle make, model, mileage, symptoms, and your questions about the recommended work." : "e.g. Grinding noise from the front when I brake, started this week."}
           />
         </Field>
 
         <div>
           <p class="mb-2 block text-sm font-medium text-ink-soft">
-            Add photos or video{' '}
-            <span class="font-normal text-steel-500">(optional, but it helps us quote faster)</span>
+            {estimateReview ? 'Add photos of your estimate' : 'Add photos or video'}{' '}
+            <span class="font-normal text-steel-500">(optional)</span>
           </p>
+          {estimateReview && <p class="mb-3 text-sm leading-relaxed text-steel-700">Include every page, with parts, labor, and diagnostic notes readable. Use photos or screenshots; PDF uploads are not supported. Cover payment details or other information unrelated to the repair.</p>}
           <MediaUploader
             media={media}
             mediaNotice={mediaNotice}
@@ -274,7 +277,7 @@ export default function ServiceRequestForm() {
             ) : (
               <>
                 <Icon name="send" class="size-[18px]" />
-                Send my request
+                {estimateReview ? 'Request a second opinion' : 'Send my request'}
               </>
             )}
           </PrimaryButton>

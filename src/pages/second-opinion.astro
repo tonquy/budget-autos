@@ -1,0 +1,64 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import ServiceRequestForm from '../components/quote/ServiceRequestForm';
+import { business } from '../lib/business';
+import { breadcrumbJsonLd, faqJsonLd } from '../lib/seo';
+import hero from '../assets/images/quote-photo-upload.jpg';
+
+export const prerender = true;
+const siteUrl = Astro.site?.origin ?? Astro.url.origin;
+const faqs = [
+  { question: 'Can you review an estimate from another shop?', answer: 'Yes. Send clear photos of the estimate, including parts, labor, and any diagnostic notes. Tell us what the vehicle is doing and what you want to understand. We may need to inspect it before confirming which repairs are necessary.' },
+  { question: 'Can you guarantee a lower price?', answer: 'No. A useful second opinion checks the recommended work and its scope. A lower total is only meaningful when the parts, labor, and repair approach are comparable.' },
+  { question: 'Is an estimate review the same as a diagnosis?', answer: 'No. Paperwork can clarify a recommendation, but it cannot confirm a vehicle’s condition. Ask about the scope and charges for any inspection or diagnostic work before booking.' },
+];
+---
+<BaseLayout title="Car repair estimate second opinions in Johnson City, NY" description="Unsure about a repair estimate? Send Budget Autos Repair the paperwork. Understand the recommended work, compare the scope, and discuss what needs attention first." jsonLd={[breadcrumbJsonLd(siteUrl, [{ name: 'Home', path: '/' }, { name: 'Repair Help', path: '/blog/' }, { name: 'Repair estimate second opinions', path: '/second-opinion/' }]), faqJsonLd(faqs)]}>
+  <PageHero image={hero} alt="Photographing a vehicle component to share with the repair shop" title="Understand the estimate before you approve the repair." description="A second look at the recommended work, what supports it, and what needs attention first. Budget Autos Repair, Johnson City, NY." priority>
+    <nav slot="breadcrumb" aria-label="Breadcrumb" class="mb-4 text-sm text-steel-200"><a href="/blog/" class="hover:underline">Repair Help</a><span aria-hidden="true"> / </span><span aria-current="page">Second opinions</span></nav>
+    <a slot="actions" href="#estimate-review" class="btn btn-primary" data-contact-action="quote" data-contact-location="second-opinion-hero">Send your estimate</a>
+    <a slot="actions" href={business.phoneHref} class="btn btn-on-dark" data-contact-action="call" data-contact-location="second-opinion-hero">Call {business.phoneDisplay}</a>
+  </PageHero>
+
+  <section class="bg-paper py-14 sm:py-20">
+    <div class="container-shop grid gap-12 lg:grid-cols-[minmax(0,1fr)_20rem] lg:gap-16">
+      <div class="blog-prose max-w-[70ch]">
+        <p>You can ask for a second opinion before authorizing a repair. Send us the written estimate and your questions. We can help you understand what is being recommended and explain when an in-person inspection is needed to check it.</p>
+        <h2 id="necessary-repairs">Do I really need everything on my repair estimate?</h2>
+        <p>Not every line necessarily addresses the problem that brought you in. An estimate can include a diagnosed repair, scheduled maintenance, and optional work. Ask what finding supports each item: a measurement, test result, visible damage, or the vehicle manufacturer’s maintenance schedule.</p>
+        <p>A photo of the paperwork can start that conversation. It cannot prove how much pad material is left, where a leak begins, or whether a component has failed. We will distinguish what the estimate tells us from what still needs checking.</p>
+        <h2 id="compare-estimates">Is my repair estimate too high?</h2>
+        <p>Compare the scope before comparing totals. Are both estimates using comparable parts? Do they include the same labor, diagnostics, related procedures, and applicable charges? What repair terms apply? Missing work can make one total look lower without solving the same problem.</p>
+        <p>{business.laborGuide} Labor-guide time helps explain a quote; it does not establish by itself that a repair is needed. We do not promise to beat another shop’s price.</p>
+        <h2 id="repair-priorities">Which repairs need to be done now, and which can wait?</h2>
+        <p>Ask the technician to separate immediate safety or damage-prevention concerns from maintenance due by time or mileage and work that can be monitored. For anything deferred, ask what to watch for and when it should be checked again.</p>
+        <p>There is no safe universal waiting period for brakes, tires, overheating, or warning lights. Priority depends on the actual condition and how the vehicle is used. An estimate review is not clearance to drive a vehicle with unresolved safety symptoms.</p>
+        <h2>Making a bigger decision?</h2>
+        <p>If the repair changes whether you want to keep the vehicle, read <a href="/blog/is-my-car-worth-fixing/">is my car worth fixing?</a> or <a href="/blog/repair-before-selling-or-trading/">should I repair before selling or trading?</a> The repair assessment is useful whichever option you choose.</p>
+      </div>
+      <aside class="self-start rounded-card bg-surface p-6 lg:sticky lg:top-24" aria-labelledby="bring-title">
+        <h2 id="bring-title" class="font-display text-xl font-semibold text-ink">What to send</h2>
+        <ul class="mt-4 list-disc space-y-3 pl-5 leading-relaxed text-steel-700">
+          <li>Clear photos of every estimate page.</li>
+          <li>Year, make, model, and mileage.</li>
+          <li>Symptoms and recent repair history.</li>
+          <li>The question you most want answered.</li>
+        </ul>
+        <p class="mt-5 text-sm leading-relaxed text-steel-700">If the repair was already done, contact that shop about follow-up coverage and include the invoice in your request.</p>
+        <a href="#estimate-review" class="btn btn-primary mt-6 w-full">Start your review request</a>
+      </aside>
+    </div>
+  </section>
+
+  <section id="estimate-review" class="scroll-mt-24 border-y border-black/10 bg-surface py-14 sm:py-20" aria-label="Estimate review request">
+    <div class="container-shop max-w-2xl"><ServiceRequestForm estimateReview client:load /></div>
+  </section>
+  <section class="bg-paper py-14 sm:py-20">
+    <div class="container-shop max-w-3xl">
+      <h2 class="font-display text-2xl font-bold sm:text-3xl">Before you send it</h2>
+      <dl class="mt-8 divide-y divide-black/10">{faqs.map((faq) => <div class="py-5"><dt class="font-display text-lg font-semibold">{faq.question}</dt><dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd></div>)}</dl>
+      <p class="mt-8 leading-relaxed text-steel-700">{business.name} · {business.address.line1}, {business.address.city}, {business.address.state} {business.address.zip}. Need transportation during the repair? <a href="/blog/rental-car-during-repairs/" class="font-semibold text-accent-dark underline underline-offset-4">Read about rental requests.</a></p>
+    </div>
+  </section>
+</BaseLayout>

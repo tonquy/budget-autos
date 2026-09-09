@@ -8,6 +8,7 @@ import DropOffBand from '../components/home/DropOffBand.astro';
 import ReviewsCta from '../components/home/ReviewsCta.astro';
 import LocationBlock from '../components/home/LocationBlock.astro';
 import HomeFaq from '../components/home/HomeFaq.astro';
+import RepairHelp from '../components/home/RepairHelp.astro';
 import { business } from '../lib/business';
 import { faqJsonLd, homeFaqs } from '../lib/seo';
 
@@ -16,12 +17,13 @@ export const prerender = true;
 
 <BaseLayout
   title={`Auto Repair in ${business.address.city}, ${business.address.state}`}
-  description={`Family-owned auto repair on ${business.address.line1} in ${business.address.city} since ${business.foundedYear}. Brakes, diagnostics, alignments & more - send a photo for a free quote.`}
+  description={`Family-owned auto repair on ${business.address.line1} in ${business.address.city} since ${business.foundedYear}. Repair-estimate second opinions, check-engine diagnostics, brakes, and alignment help.`}
   jsonLd={[faqJsonLd(homeFaqs)]}
   withServiceCatalog
 >
   <Hero />
   <TrustBar />
+  <RepairHelp />
   <ServicesPreview />
   <QuoteCallout />
   <DropOffBand />

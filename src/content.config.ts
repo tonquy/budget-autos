@@ -8,6 +8,12 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     pubDate: z.coerce.date(),
+    category: z.enum(['engine', 'handling', 'decisions', 'transport']).optional(),
+    service: z.enum(['diagnostics', 'engine-maintenance', 'brake-services', 'suspension-alignment', 'electrical-systems', 'presale-inspection', 'general-repairs']).optional(),
+    cta: z.object({
+      label: z.string(),
+      href: z.string().regex(/^\/(?!\/)/),
+    }).optional(),
     updatedDate: z.coerce.date().optional(),
     hero: z.enum([
       'quote-photo',

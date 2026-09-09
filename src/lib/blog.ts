@@ -28,6 +28,7 @@ export function formatBlogDate(date: Date) {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
-    timeZone: 'America/New_York',
+    // Frontmatter dates are calendar dates parsed at UTC midnight.
+    timeZone: 'UTC',
   }).format(date);
 }

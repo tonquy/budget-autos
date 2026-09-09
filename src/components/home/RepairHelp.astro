@@ -1,0 +1,23 @@
+---
+import Icon from '../Icon.astro';
+const questions = [
+  { label: 'Do I need everything on this repair estimate?', href: '/second-opinion/' },
+  { label: 'Check-engine light on — can I still drive?', href: '/blog/common-causes-of-the-check-engine-light-binghamton-ny/' },
+  { label: 'Why is my car pulling after an alignment?', href: '/blog/wheel-alignment-versus-suspension-repair-binghamton-ny/' },
+  { label: 'Is my car worth fixing?', href: '/blog/is-my-car-worth-fixing/' },
+];
+---
+<section class="border-b border-black/10 bg-paper py-14 sm:py-20" aria-labelledby="repair-help-title">
+  <div class="container-shop grid gap-8 lg:grid-cols-[1fr_1.2fr] lg:gap-16">
+    <div>
+      <h2 id="repair-help-title" class="max-w-md font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">A car problem.<br />A clearer next step.</h2>
+      <p class="mt-4 max-w-md leading-relaxed text-steel-700">Something feels wrong, or the repair list feels long. Start with your question, then talk to Budget Autos Repair in Johnson City about what needs checking.</p>
+      <a href="/blog/" class="mt-6 inline-flex min-h-11 items-center gap-2 font-semibold text-accent-dark hover:underline">Explore repair questions <Icon name="arrow-up-right" class="size-4" /></a>
+    </div>
+    <ul class="divide-y divide-black/10 border-y border-black/10">
+      {questions.map((item) => (
+        <li><a href={item.href} class="group flex min-h-16 items-center justify-between gap-5 py-5 font-display text-lg font-semibold text-ink hover:text-accent-dark"><span>{item.label}</span><Icon name="arrow-up-right" class="size-5 shrink-0" /></a></li>
+      ))}
+    </ul>
+  </div>
+</section>
