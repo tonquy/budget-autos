@@ -1,4 +1,9 @@
 ---
+import { Image } from 'astro:assets';
+import before from '../../assets/images/jobs/before.webp';
+import after from '../../assets/images/jobs/after.webp';
+import caliper from '../../assets/images/jobs/caliper-detail.webp';
+import brake from '../../assets/images/jobs/brake-detail.webp';
 const media = '/jobs/electric-brake';
 ---
 
@@ -18,13 +23,13 @@ const media = '/jobs/electric-brake';
         <figure>
           <figcaption><span>Before</span><strong>396.9°F</strong></figcaption>
           <a href={`${media}/before.webp`} target="_blank" rel="noopener" aria-label="Open before photo: thermal camera reading 396.9 degrees Fahrenheit (new tab)">
-            <img src={`${media}/before.webp`} alt="Before repair: thermal camera at the wheel reads 396.9°F." width="1200" height="1600" loading="lazy" decoding="async" />
+            <Image src={before} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Before repair: thermal camera at the wheel reads 396.9°F." width="1200" height="1600" loading="lazy" decoding="async" />
           </a>
         </figure>
         <figure class="after-photo">
           <figcaption><span>After</span><strong>119.8°F</strong></figcaption>
           <a href={`${media}/after.webp`} target="_blank" rel="noopener" aria-label="Open after photo: thermal camera reading 119.8 degrees Fahrenheit (new tab)">
-            <img src={`${media}/after.webp`} alt="After repair: thermal camera at the wheel reads 119.8°F." width="1200" height="1600" loading="lazy" decoding="async" />
+            <Image src={after} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="After repair: thermal camera at the wheel reads 119.8°F." width="1200" height="1600" loading="lazy" decoding="async" />
           </a>
         </figure>
         <p class="photo-note">Actual readings photographed during this job.</p>
@@ -35,13 +40,13 @@ const media = '/jobs/electric-brake';
         <div class="inspection-grid">
           <figure>
             <a href={`${media}/caliper-detail.webp`} target="_blank" rel="noopener" aria-label="Open brake caliper close-up (new tab)">
-              <img src={`${media}/caliper-detail.webp`} alt="Close-up of the brake caliper and pads during the electric brake malfunction job." width="1200" height="1600" loading="lazy" decoding="async" />
+              <Image src={caliper} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Close-up of the brake caliper and pads during the electric brake malfunction job." width="1200" height="1600" loading="lazy" decoding="async" />
             </a>
             <figcaption>Brake caliper close-up</figcaption>
           </figure>
           <figure>
             <a href={`${media}/brake-detail.webp`} target="_blank" rel="noopener" aria-label="Open second brake assembly close-up (new tab)">
-              <img src={`${media}/brake-detail.webp`} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
+              <Image src={brake} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
             </a>
             <figcaption>A second look at the assembly</figcaption>
           </figure>

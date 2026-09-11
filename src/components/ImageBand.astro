@@ -14,6 +14,7 @@ const { image, alt, objectPosition = 'center 50%' } = Astro.props;
 <section class="relative overflow-hidden bg-ink py-16 text-white sm:py-20">
   <div class="absolute inset-0">
     <Image
+      quality={65}
       src={image}
       alt={alt}
       widths={[640, 960, 1440, 1920]}

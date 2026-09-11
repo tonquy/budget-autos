@@ -96,7 +96,7 @@ export async function canonicalTarget(requestUrl, options = {}) {
     }
   }
 
-  if (!path.startsWith('/api/') && path !== '/') {
+  if (!path.startsWith('/api/') && path !== '/_image' && path !== '/_image/' && path !== '/') {
     if (path.endsWith('/index.html')) {
       path = path.slice(0, -'index.html'.length);
       changed = true;

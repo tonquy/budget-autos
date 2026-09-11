@@ -54,7 +54,8 @@ export default defineConfig({
     ],
   },
 
-  adapter: cloudflare(),
+  // Prebuild responsive images so visitors fetch cached files, not runtime transforms.
+  adapter: cloudflare({ imageService: { build: 'compile', runtime: 'cloudflare-binding' } }),
   integrations: [
     canonicalHostWorkerEntry(),
     preact(),
