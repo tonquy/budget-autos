@@ -1,0 +1,98 @@
+---
+const media = '/jobs/electric-brake';
+---
+
+<section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
+  <div class="container-shop">
+    <div class="jobs-heading">
+      <h2 id="recent-jobs-title" class="font-display text-3xl font-bold sm:text-4xl">Recent work.</h2>
+    </div>
+
+    <article class="job-study" aria-labelledby="brake-job-title">
+      <div class="job-story">
+        <h3 id="brake-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Electric brake malfunction</h3>
+        <p class="job-intro">The repair, in pictures.</p>
+      </div>
+
+      <div class="temperature-pair">
+        <figure>
+          <figcaption><span>Before</span><strong>396.9°F</strong></figcaption>
+          <a href={`${media}/before.webp`} target="_blank" rel="noopener" aria-label="Open before photo: thermal camera reading 396.9 degrees Fahrenheit (new tab)">
+            <img src={`${media}/before.webp`} alt="Before repair: thermal camera at the wheel reads 396.9°F." width="1200" height="1600" loading="lazy" decoding="async" />
+          </a>
+        </figure>
+        <figure class="after-photo">
+          <figcaption><span>After</span><strong>119.8°F</strong></figcaption>
+          <a href={`${media}/after.webp`} target="_blank" rel="noopener" aria-label="Open after photo: thermal camera reading 119.8 degrees Fahrenheit (new tab)">
+            <img src={`${media}/after.webp`} alt="After repair: thermal camera at the wheel reads 119.8°F." width="1200" height="1600" loading="lazy" decoding="async" />
+          </a>
+        </figure>
+        <p class="photo-note">Actual readings photographed during this job.</p>
+      </div>
+
+      <details class="job-details">
+        <summary>View photos &amp; video <span aria-hidden="true">+</span></summary>
+        <div class="inspection-grid">
+          <figure>
+            <a href={`${media}/caliper-detail.webp`} target="_blank" rel="noopener" aria-label="Open brake caliper close-up (new tab)">
+              <img src={`${media}/caliper-detail.webp`} alt="Close-up of the brake caliper and pads during the electric brake malfunction job." width="1200" height="1600" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>Brake caliper close-up</figcaption>
+          </figure>
+          <figure>
+            <a href={`${media}/brake-detail.webp`} target="_blank" rel="noopener" aria-label="Open second brake assembly close-up (new tab)">
+              <img src={`${media}/brake-detail.webp`} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
+            </a>
+            <figcaption>A second look at the assembly</figcaption>
+          </figure>
+          <figure>
+            <video controls muted playsinline preload="none" poster={`${media}/video-poster.webp`} aria-label="Electric brake inspection video">
+              <source src={`${media}/inspection.mp4`} type="video/mp4" />
+              <a href={`${media}/inspection.mp4`}>Download the inspection video</a>.
+            </video>
+            <figcaption>Inspection footage · <a href={`${media}/inspection.mp4`} download>Download MP4</a></figcaption>
+          </figure>
+        </div>
+      </details>
+    </article>
+  </div>
+</section>
+
+<style>
+  .recent-work { padding-block: clamp(3.5rem, 7vw, 6rem); }
+  .jobs-heading { text-align: center; }
+  .jobs-heading h2 { font-size: clamp(2.25rem, 4vw, 3rem); line-height: 1.1; }
+  .job-study { width: 100%; max-width: 48rem; margin: 1.5rem auto 0; }
+  .job-story { text-align: center; }
+  .job-story h3 { font-size: clamp(1.125rem, 2.5vw, 1.375rem); font-weight: 500; letter-spacing: -.02em; }
+  .job-intro { margin-top: .5rem; color: var(--color-steel-700); font-size: 1rem; line-height: 1.6; }
+  .temperature-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .temperature-pair figure { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--color-paper); }
+  .temperature-pair figure > a { display: block; overflow: hidden; }
+  .temperature-pair figcaption { order: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: 1.25rem; }
+  .temperature-pair figcaption span { color: var(--color-steel-700); font-size: .875rem; font-weight: 500; }
+  .temperature-pair figcaption strong { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.03em; line-height: 1.2; }
+  .temperature-pair figure:not(.after-photo) figcaption strong { color: #b42318; }
+  .after-photo figcaption strong { color: var(--color-success); }
+  img { display: block; width: 100%; height: auto; }
+  .temperature-pair img { transition: transform .35s var(--ease-out-expo); }
+  .temperature-pair a:hover img { transform: scale(1.025); }
+  .photo-note { grid-column: 1 / -1; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
+  .job-details { margin-top: 1.25rem; }
+  summary { width: fit-content; margin-inline: auto; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); font-size: .875rem; font-weight: 600; list-style: none; transition: background-color .2s, border-color .2s; }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { background: var(--color-paper); border-color: var(--color-steel-700); }
+  summary span { font-size: 1.25rem; font-weight: 400; line-height: 1; }
+  details[open] summary span { transform: rotate(45deg); }
+  .inspection-grid { display: grid; gap: 1.5rem; padding-top: 2rem; }
+  .inspection-grid img, video { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); }
+  video { display: block; aspect-ratio: 9 / 16; height: auto; object-fit: contain; background: var(--color-ink); }
+  .inspection-grid figcaption { margin-top: .75rem; font-size: .875rem; color: var(--color-steel-700); }
+  .inspection-grid figcaption a { color: var(--color-accent-dark); text-decoration: underline; text-underline-offset: .2em; }
+  @media (min-width: 640px) { .inspection-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 479px) {
+    .temperature-pair { gap: .75rem; }
+    .temperature-pair figcaption { flex-direction: column; align-items: flex-start; padding: .875rem; }
+  }
+  @media (prefers-reduced-motion: reduce) { .temperature-pair img { transition: none; } .temperature-pair a:hover img { transform: none; } }
+</style>

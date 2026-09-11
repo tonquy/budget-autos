@@ -4,8 +4,6 @@ import Hero from '../../components/home/Hero.astro';
 import TrustBar from '../../components/home/TrustBar.astro';
 import LocationIntro from '../../components/locations/LocationIntro.astro';
 import ServicesPreview from '../../components/home/ServicesPreview.astro';
-import QuoteCallout from '../../components/home/QuoteCallout.astro';
-import ReviewsCta from '../../components/home/ReviewsCta.astro';
 import LocationBlock from '../../components/home/LocationBlock.astro';
 import HomeFaq from '../../components/home/HomeFaq.astro';
 import { business } from '../../lib/business';
@@ -58,8 +56,6 @@ const regionLabel = location.state === 'PA' ? 'PA' : 'NY';
   <TrustBar />
   <LocationIntro location={location} />
   <ServicesPreview />
-  <QuoteCallout />
-  <ReviewsCta />
   <LocationBlock />
   <HomeFaq
     faqs={location.faqs}

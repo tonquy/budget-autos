@@ -35,8 +35,8 @@ const groups = [
     image={heroLocations}
     alt={`Independent auto repair shop exterior near ${business.address.city}, NY`}
     eyebrow="Service areas"
-    title="One shop. Drivers from all over the Tri-Cities."
-    description={`Our only shop is on ${business.address.line1} in ${business.address.city}, and drivers come to us from Binghamton, Endicott, Vestal, Endwell, and towns across Broome County and nearby.`}
+    title="Serving the Tri-Cities."
+    description={`Find us at ${business.address.line1}, ${business.address.city}.`}
     objectPosition="center 55%"
     priority
   >
@@ -55,7 +55,7 @@ const groups = [
   {groups.map((group, index) => (
     <section class:list={['bg-paper pb-14 sm:pb-16', index === 0 ? 'pt-14 sm:pt-16' : 'border-t border-black/5']}>
       <div class="container-shop">
-        <h2 class="font-display text-2xl font-bold tracking-tight text-ink sm:text-3xl">{group.title}</h2>
+        <details open={index === 0}><summary class="cursor-pointer py-4 font-display text-2xl font-semibold">{group.title}</summary>
         <ul class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {group.places.map((place) => (
             <li>
@@ -79,6 +79,7 @@ const groups = [
             </li>
           ))}
         </ul>
+        </details>
       </div>
     </section>
   ))}
