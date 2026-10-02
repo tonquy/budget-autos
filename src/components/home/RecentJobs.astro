@@ -4,7 +4,19 @@ import before from '../../assets/images/jobs/before.webp';
 import after from '../../assets/images/jobs/after.webp';
 import caliper from '../../assets/images/jobs/caliper-detail.webp';
 import brake from '../../assets/images/jobs/brake-detail.webp';
+import engines from '../../assets/images/jobs/workshop/img-3187.webp';
+import engineBay from '../../assets/images/jobs/workshop/img-3188.webp';
+import exposedBrake from '../../assets/images/jobs/workshop/img-2923.webp';
 const media = '/jobs/electric-brake';
+const workshopPhotos = [
+  { image: engines, caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
+  { image: engineBay, caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
+  { image: exposedBrake, caption: 'A closer look at the brakes', alt: 'Brake caliper and rotor exposed with the wheel removed.' },
+];
+const workshopVideos = [
+  { file: 'img-3189', caption: 'Engine bay walkthrough' },
+  { file: 'img-2918', caption: 'Brake assembly close-up' },
+];
 ---
 
 <section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
@@ -15,8 +27,8 @@ const media = '/jobs/electric-brake';
 
     <article class="job-study" aria-labelledby="brake-job-title">
       <div class="job-story">
-        <h3 id="brake-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Electric brake malfunction</h3>
-        <p class="job-intro">The repair, in pictures.</p>
+        <h3 id="brake-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Brake drag &amp; overheating</h3>
+        <p class="job-intro">A brake inspection traced uneven temperatures to seized calipers.</p>
       </div>
 
       <div class="temperature-pair">
@@ -36,22 +48,33 @@ const media = '/jobs/electric-brake';
       </div>
 
       <details class="job-details">
-        <summary>View photos &amp; video <span aria-hidden="true">+</span></summary>
+        <summary>Inspection notes &amp; footage <span aria-hidden="true">+</span></summary>
+        <div class="technician-notes">
+          <h4>What we found</h4>
+          <p>The customer reported shaking, possible brake overheating and one instance of stalling. We scanned the vehicle, cleared stored parking-brake codes linked to earlier low voltage, and road-tested it. The test did not reproduce the stalling or excessive shaking, and no warning lights were active.</p>
+          <p>Front and rear brake readings were <strong>316–327°F on the driver side</strong> and <strong>396–416°F on the passenger side</strong>, where seized calipers were causing brake drag.</p>
+          <h4>Recommended service</h4>
+          <ul>
+            <li><strong>Required:</strong> Replace both front calipers to correct binding.</li>
+            <li><strong>Recommended:</strong> Replace pads and rotors at all four wheels to address pulsation and promote even wear.</li>
+            <li><strong>Recommended:</strong> Clean and inspect the rear calipers; replacement was advised because they showed signs of drag.</li>
+          </ul>
+        </div>
         <div class="inspection-grid">
           <figure>
             <a href={`${media}/caliper-detail.webp`} target="_blank" rel="noopener" aria-label="Open brake caliper close-up (new tab)">
-              <Image src={caliper} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Close-up of the brake caliper and pads during the electric brake malfunction job." width="1200" height="1600" loading="lazy" decoding="async" />
+              <Image src={caliper} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 240px, (min-width: 640px) 30vw, 90vw" quality={75} alt="Close-up of the brake caliper and pads during the brake inspection." width="1200" height="1600" loading="lazy" decoding="async" />
             </a>
             <figcaption>Brake caliper close-up</figcaption>
           </figure>
           <figure>
             <a href={`${media}/brake-detail.webp`} target="_blank" rel="noopener" aria-label="Open second brake assembly close-up (new tab)">
-              <Image src={brake} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
+              <Image src={brake} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 240px, (min-width: 640px) 30vw, 90vw" quality={75} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
             </a>
             <figcaption>A second look at the assembly</figcaption>
           </figure>
           <figure>
-            <video controls muted playsinline preload="none" poster={`${media}/video-poster.webp`} aria-label="Electric brake inspection video">
+            <video controls muted playsinline preload="none" width="720" height="1280" poster={`${media}/video-poster.webp`} aria-label="Brake inspection video, no audio">
               <source src={`${media}/inspection.mp4`} type="video/mp4" />
               <a href={`${media}/inspection.mp4`}>Download the inspection video</a>.
             </video>
@@ -60,6 +83,36 @@ const media = '/jobs/electric-brake';
         </div>
       </details>
     </article>
+
+    <div class="workshop-gallery" aria-labelledby="workshop-title">
+      <div class="job-story">
+        <h3 id="workshop-title" class="font-display">Inside the workshop</h3>
+      </div>
+      <div class="workshop-photos">
+        {workshopPhotos.map((photo) => (
+          <figure>
+            <a href={photo.image.src} target="_blank" rel="noopener" aria-label={`Open ${photo.caption.toLowerCase()} photo (new tab)`}>
+              <Image src={photo.image} widths={[180, 320, 480, 640]} sizes="(min-width: 840px) 244px, 30vw" quality={72} alt={photo.alt} loading="lazy" decoding="async" />
+            </a>
+            <figcaption>{photo.caption}</figcaption>
+          </figure>
+        ))}
+      </div>
+      <details class="job-details">
+        <summary>Watch workshop videos <span aria-hidden="true">+</span></summary>
+        <div class="inspection-grid workshop-videos">
+          {workshopVideos.map((video) => (
+            <figure>
+              <video controls muted playsinline preload="none" width="720" height="1280" poster={`/jobs/workshop/${video.file}-poster.webp`} aria-label={`${video.caption}, no audio`}>
+                <source src={`/jobs/workshop/${video.file}-silent.mp4`} type="video/mp4" />
+                <a href={`/jobs/workshop/${video.file}-silent.mp4`}>Download the video</a>.
+              </video>
+              <figcaption>{video.caption} · <a href={`/jobs/workshop/${video.file}-silent.mp4`} download>Download MP4</a></figcaption>
+            </figure>
+          ))}
+        </div>
+      </details>
+    </div>
   </div>
 </section>
 
@@ -84,6 +137,17 @@ const media = '/jobs/electric-brake';
   .temperature-pair a:hover img { transform: scale(1.025); }
   .photo-note { grid-column: 1 / -1; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
   .job-details { margin-top: 1.25rem; }
+  .technician-notes { margin-top: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--radius-card); background: var(--color-paper); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
+  .technician-notes h4 { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
+  .technician-notes h4:not(:first-child) { margin-top: 1.5rem; }
+  .technician-notes p { margin-top: .75rem; }
+  .technician-notes ul { margin-top: .75rem; padding-left: 1.25rem; list-style: disc; }
+  .technician-notes li + li { margin-top: .5rem; }
+  .workshop-gallery { max-width: 48rem; margin: 3rem auto 0; padding-top: 2.5rem; border-top: 1px solid var(--color-steel-300); }
+  .workshop-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .workshop-photos a { display: block; }
+  .workshop-photos img { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); }
+  .workshop-photos figcaption { margin-top: .65rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.5; }
   summary { width: fit-content; margin-inline: auto; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); font-size: .875rem; font-weight: 600; list-style: none; transition: background-color .2s, border-color .2s; }
   summary::-webkit-details-marker { display: none; }
   summary:hover { background: var(--color-paper); border-color: var(--color-steel-700); }
@@ -94,10 +158,14 @@ const media = '/jobs/electric-brake';
   video { display: block; aspect-ratio: 9 / 16; height: auto; object-fit: contain; background: var(--color-ink); }
   .inspection-grid figcaption { margin-top: .75rem; font-size: .875rem; color: var(--color-steel-700); }
   .inspection-grid figcaption a { color: var(--color-accent-dark); text-decoration: underline; text-underline-offset: .2em; }
-  @media (min-width: 640px) { .inspection-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (min-width: 640px) {
+    .inspection-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .workshop-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
   @media (max-width: 479px) {
     .temperature-pair { gap: .75rem; }
     .temperature-pair figcaption { flex-direction: column; align-items: flex-start; padding: .875rem; }
+    .workshop-photos { gap: .65rem; }
   }
   @media (prefers-reduced-motion: reduce) { .temperature-pair img { transition: none; } .temperature-pair a:hover img { transform: none; } }
 </style>
