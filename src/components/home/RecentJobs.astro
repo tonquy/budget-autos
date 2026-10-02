@@ -9,9 +9,9 @@ import engineBay from '../../assets/images/jobs/workshop/img-3188.webp';
 import exposedBrake from '../../assets/images/jobs/workshop/img-2923.webp';
 const media = '/jobs/electric-brake';
 const workshopPhotos = [
-  { image: engines, caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
-  { image: engineBay, caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
-  { image: exposedBrake, caption: 'A closer look at the brakes', alt: 'Brake caliper and rotor exposed with the wheel removed.' },
+  { image: engines, file: 'img-3187', caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
+  { image: engineBay, file: 'img-3188', caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
+  { image: exposedBrake, file: 'img-2923', caption: 'A closer look at the brakes', alt: 'Brake caliper and rotor exposed with the wheel removed.' },
 ];
 const workshopVideos = [
   { file: 'img-3189', caption: 'Engine bay walkthrough' },
@@ -91,7 +91,7 @@ const workshopVideos = [
       <div class="workshop-photos">
         {workshopPhotos.map((photo) => (
           <figure>
-            <a href={photo.image.src} target="_blank" rel="noopener" aria-label={`Open ${photo.caption.toLowerCase()} photo (new tab)`}>
+            <a href={`/jobs/workshop/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.caption.toLowerCase()} photo (new tab)`}>
               <Image src={photo.image} widths={[180, 320, 480, 640]} sizes="(min-width: 840px) 244px, 30vw" quality={72} alt={photo.alt} loading="lazy" decoding="async" />
             </a>
             <figcaption>{photo.caption}</figcaption>
