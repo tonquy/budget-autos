@@ -150,8 +150,6 @@ export default function BookingFlow({ services, initialService, timeZone, timeZo
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [vehicleYear, setVehicleYear] = useState('');
-  const [vehicleMake, setVehicleMake] = useState('');
-  const [vehicleModel, setVehicleModel] = useState('');
   const [mileage, setMileage] = useState('');
   const [notes, setNotes] = useState('');
 
@@ -280,8 +278,6 @@ export default function BookingFlow({ services, initialService, timeZone, timeZo
       phone,
       email,
       vehicleYear,
-      vehicleMake,
-      vehicleModel,
       mileage,
       notes,
     };
@@ -689,34 +685,15 @@ export default function BookingFlow({ services, initialService, timeZone, timeZo
           />
         </Field>
 
-        <div class="grid gap-4 sm:grid-cols-4">
-          <Field label="Year" htmlFor={`${idBase}-year`} error={fieldErrors.vehicleYear?.[0]}>
+        <div class="grid gap-4 sm:grid-cols-[2fr_1fr]">
+          <Field label="Year / Make / Model" hint="(optional)" htmlFor={`${idBase}-year`} error={fieldErrors.vehicleYear?.[0]}>
             <TextInput
               id={`${idBase}-year`}
               value={vehicleYear}
               onValue={setVehicleYear}
               type="text"
-              inputMode="numeric"
-              maxLength={4}
-              placeholder="2018"
-            />
-          </Field>
-          <Field label="Make" htmlFor={`${idBase}-make`} error={fieldErrors.vehicleMake?.[0]}>
-            <TextInput
-              id={`${idBase}-make`}
-              value={vehicleMake}
-              onValue={setVehicleMake}
-              type="text"
-              placeholder="Toyota"
-            />
-          </Field>
-          <Field label="Model" htmlFor={`${idBase}-model`} error={fieldErrors.vehicleModel?.[0]}>
-            <TextInput
-              id={`${idBase}-model`}
-              value={vehicleModel}
-              onValue={setVehicleModel}
-              type="text"
-              placeholder="Camry"
+              maxLength={120}
+              placeholder="e.g. 2018 Toyota Camry"
             />
           </Field>
           <Field label="Mileage" htmlFor={`${idBase}-mileage`} error={fieldErrors.mileage?.[0]}>

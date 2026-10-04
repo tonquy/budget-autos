@@ -133,9 +133,9 @@ export const intakeSchema = z
       }),
     contactPreference: z.enum(contactPreferences),
 
-    // Vehicle - year is free text like make/model (no 4-digit gate; that was
-    // rejecting real submissions over invisible/autofill characters).
-    vehicleYear: optionalText(10),
+    // The simplified quote form sends year / make / model together in this
+    // free-text field; detailed forms still send the three fields separately.
+    vehicleYear: optionalText(120),
     vehicleMake: optionalText(50),
     vehicleModel: optionalText(60),
     vin: z

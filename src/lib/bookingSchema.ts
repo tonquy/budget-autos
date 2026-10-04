@@ -42,7 +42,8 @@ export const bookingSchema = z.object({
       message: 'Enter a valid email address.',
     }),
 
-  vehicleYear: optionalText(10),
+  // The booking form sends year / make / model together using this existing key.
+  vehicleYear: optionalText(120),
   vehicleMake: optionalText(50),
   vehicleModel: optionalText(60),
   mileage: z

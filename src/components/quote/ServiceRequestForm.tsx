@@ -215,7 +215,7 @@ export default function ServiceRequestForm({ estimateReview = false }: { estimat
             />
           </Field>
           <Field
-            label="Year"
+            label="Year / Make / Model"
             hint="(optional)"
             htmlFor={`${idBase}-year`}
             error={fieldErrors.vehicleYear?.[0]}
@@ -225,9 +225,8 @@ export default function ServiceRequestForm({ estimateReview = false }: { estimat
               value={vehicleYear}
               onValue={setVehicleYear}
               type="text"
-              inputMode="numeric"
-              maxLength={4}
-              placeholder="2018"
+              maxLength={120}
+              placeholder="e.g. 2018 Toyota Camry"
             />
           </Field>
         </div>
