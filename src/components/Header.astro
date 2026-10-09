@@ -18,7 +18,7 @@ const currentPath = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${A
 const isNavActive = (href: string) => (href === '/' ? currentPath === '/' : currentPath.startsWith(href));
 ---
 
-<header class="sticky top-0 z-40 border-b border-black/5 bg-paper/90 backdrop-blur-md">
+<header class:list={["sticky top-0 z-40 border-b border-black/5 bg-paper/90 backdrop-blur-md", { "home-header": currentPath === "/" }]}>
   <div class="container-shop flex items-center justify-between gap-4 py-3">
     <a href="/" class="flex shrink-0 items-center" aria-label={business.name}>
       <Image
@@ -178,6 +178,12 @@ const isNavActive = (href: string) => (href === '/' ? currentPath === '/' : curr
   </div>
 
 <style>
+  .home-header { position: absolute; width: 100%; background: transparent; border-color: #ffffff18; backdrop-filter: none; color: white; }
+  .home-header nav a { color: white; }
+  .home-header nav a:hover, .home-header nav a[aria-current="page"] { background: #ffffff18; }
+  .home-header .btn-secondary { color: white; border-color: #ffffff50; }
+  .home-header .btn-secondary:hover { background: #ffffff18; }
+
   .hamburger {
     position: relative;
     display: block;

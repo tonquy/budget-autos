@@ -4,13 +4,13 @@ import { services } from '../../lib/business';
 ---
 <section class="bg-paper py-12 sm:py-16" aria-labelledby="home-services-title">
   <div class="container-shop">
-    <div class="flex flex-wrap items-center justify-between gap-4">
+    <div data-reveal class="flex flex-wrap items-center justify-between gap-4">
       <h2 id="home-services-title" class="font-display text-3xl font-bold sm:text-4xl">How we can help.</h2>
       <a href="/services/" class="font-semibold text-accent-dark hover:underline">All services</a>
     </div>
     <div class="mt-6 grid gap-x-10 sm:grid-cols-2">
       {services.map(service => (
-        <a href={`/services/${service.slug}/`} class="flex min-h-16 items-center justify-between gap-4 border-b border-steel-300 py-4 font-display text-lg font-medium hover:text-accent-dark">
+        <a data-reveal href={`/services/${service.slug}/`} class="flex min-h-16 items-center justify-between gap-4 border-b border-steel-300 py-4 font-display text-lg font-medium hover:text-accent-dark">
           <span>{service.name}</span><Icon name="arrow-up-right" class="size-5 shrink-0" />
         </a>
       ))}

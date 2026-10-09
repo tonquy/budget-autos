@@ -21,17 +21,17 @@ const workshopVideos = [
 
 <section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
   <div class="container-shop">
-    <div class="jobs-heading">
+    <div data-reveal class="jobs-heading">
       <h2 id="recent-jobs-title" class="font-display text-3xl font-bold sm:text-4xl">Recent work.</h2>
     </div>
 
     <article class="job-study" aria-labelledby="brake-job-title">
-      <div class="job-story">
+      <div data-reveal class="job-story">
         <h3 id="brake-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Brake drag &amp; overheating</h3>
         <p class="job-intro">A brake inspection traced uneven temperatures to seized calipers.</p>
       </div>
 
-      <div class="temperature-pair">
+      <div data-reveal="stagger" class="temperature-pair">
         <figure>
           <figcaption><span>Before</span><strong>396.9°F</strong></figcaption>
           <a href={`${media}/before.webp`} target="_blank" rel="noopener" aria-label="Open before photo: thermal camera reading 396.9 degrees Fahrenheit (new tab)">
@@ -85,10 +85,10 @@ const workshopVideos = [
     </article>
 
     <div class="workshop-gallery" aria-labelledby="workshop-title">
-      <div class="job-story">
+      <div data-reveal class="job-story">
         <h3 id="workshop-title" class="font-display">Inside the workshop</h3>
       </div>
-      <div class="workshop-photos">
+      <div data-reveal="stagger" class="workshop-photos">
         {workshopPhotos.map((photo) => (
           <figure>
             <a href={`/jobs/workshop/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.caption.toLowerCase()} photo (new tab)`}>

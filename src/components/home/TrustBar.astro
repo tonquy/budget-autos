@@ -10,14 +10,9 @@ const stats = [
 ];
 ---
 
-{/*
-  Sits directly under the hero. Pulled up with a negative margin so it overlaps
-  the hero edge, which gives the top of the page a sense of layering instead of
-  four stacked full-width bands butting against each other.
-*/}
-<section class="relative z-10 -mt-8 sm:-mt-10">
+<section class="relative z-10 pt-8 sm:pt-10">
   <div class="container-shop">
-    <div
+    <div data-reveal="stagger"
       class="grid grid-cols-2 gap-x-5 gap-y-5 rounded-card border border-black/5 bg-surface p-5 shadow-lifted sm:grid-cols-4 sm:gap-4 sm:p-6"
     >
       {stats.map((stat) => (
