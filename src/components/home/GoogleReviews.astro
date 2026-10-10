@@ -1,0 +1,86 @@
+---
+const googleUrl = 'https://share.google/Srb6pTOP2ZLgoOVK6';
+// Short verbatim excerpts checked against the Google Business Profile on 2026-10-10.
+const reviews = [
+  { name: 'Josh Johnson', initials: 'JJ', quote: 'Great service. Great Prices.' },
+  { name: 'Alex', initials: 'A', quote: 'The staff was friendly and helpful' },
+  { name: 'Mike Milton', initials: 'MM', quote: '10,000 miles since the repair with no issues.' },
+  { name: 'Tony Karnauch', initials: 'TK', quote: 'fixed in 3 hours' },
+];
+---
+<section class="google-reviews" aria-labelledby="reviews-heading">
+  <div class="reviews-heading container-shop">
+    <div>
+      <p class="eyebrow">Real customers. In their words.</p>
+      <h2 id="reviews-heading">Good work.<br /><span>Word gets around.</span></h2>
+    </div>
+    <a class="rating" href={googleUrl} target="_blank" rel="noopener noreferrer" aria-label="5 out of 5 on Google. Read reviews on Google">
+      <span class="rating-number">5.0<span class="rating-stars" aria-hidden="true">★★★★★</span></span>
+      <span class="rating-label">Google <span aria-hidden="true">↗</span></span>
+    </a>
+  </div>
+  <div class="review-marquee" aria-label="Customer review excerpts">
+    <div class="review-track">
+      {[0, 1].map((copy) => (
+        <div class="review-group" aria-hidden={copy === 1 ? 'true' : undefined}>
+          {reviews.map((review) => (
+            <article class="review-card">
+              <div class="card-top"><span aria-label="5 out of 5 stars">★★★★★</span><span class="google-label">Google</span></div>
+              <blockquote>“{review.quote}”</blockquote>
+              <div class="review-author"><span class="review-avatar" aria-hidden="true">{review.initials}</span><div><p>{review.name}</p><span>Google review excerpt</span></div><span class="quote-mark" aria-hidden="true">”</span></div>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+  </div>
+  <div class="reviews-footer container-shop">
+    <a href={googleUrl} target="_blank" rel="noopener noreferrer">Read the full reviews on Google <span aria-hidden="true">↗</span></a>
+  </div>
+</section>
+
+<style>
+  .google-reviews { padding-block: 2.5rem 1rem; overflow: hidden; background: #191b1d; color: #f8f6f2; border-top: 3px solid var(--color-accent); }
+  .reviews-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 1.5rem; }
+  .eyebrow { color: #c9c6bd; font-size: .6875rem; text-transform: uppercase; letter-spacing: .16em; font-weight: 600; margin-bottom: 1rem; }
+  h2 { font-size: clamp(2.2rem, 4.5vw, 3.75rem); line-height: 1.02; font-weight: 600; letter-spacing: -.045em; }
+  h2 span { color: #ef9459; }
+  .rating { flex-shrink: 0; padding-bottom: .25rem; }
+  .rating-number { display: flex; align-items: center; gap: 1rem; font-family: var(--font-display); font-size: 3.5rem; letter-spacing: -.06em; line-height: 1; }
+  .rating-stars { font-size: 1rem; letter-spacing: .12em; color: #ef9459; }
+  .rating-label { display: flex; justify-content: space-between; gap: 2rem; font-size: .8125rem; color: #c9c6bd; margin-top: .8rem; }
+  .review-marquee { overflow: hidden; }
+  .review-track { display: flex; width: max-content; animation: review-drift 8s linear infinite; }
+  .review-group { display: flex; gap: 1rem; padding-right: 1rem; }
+  .review-card { display: flex; flex-direction: column; width: 23rem; min-height: 12.5rem; padding: 1.25rem; border-radius: 1rem; background: #272a2c; border: 1px solid #ffffff0d; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; font-size: .875rem; letter-spacing: .12em; color: #ef9459; }
+  .google-label { font-family: var(--font-body); font-size: .8125rem; letter-spacing: -.02em; color: #d7d4ce; }
+  blockquote { font-family: var(--font-display); font-size: 1.5rem; font-weight: 500; line-height: 1.2; letter-spacing: -.035em; margin-block: 1rem 1.25rem; max-width: 19ch; text-wrap: pretty; }
+  .review-author { display: flex; align-items: center; gap: .75rem; margin-top: auto; }
+  .review-avatar { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; background: #ffffff10; border-radius: 50%; font-size: .6875rem; font-weight: 600; }
+  .review-author p { font-size: .8125rem; font-weight: 600; }
+  .review-author div > span { font-size: .6875rem; color: #bcb9b3; }
+  .quote-mark { font-family: Georgia, serif; font-size: 3.5rem; line-height: .5; margin-left: auto; color: #ffffff30; }
+  .reviews-footer { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding-top: .5rem; font-size: .75rem; color: #c9c6bd; }
+  .reviews-footer a { display: inline-flex; align-items: center; gap: .75rem; min-height: 44px; }
+  .reviews-footer a:hover { color: white; }
+  .google-reviews:hover .review-track, .google-reviews:focus-within .review-track { animation-play-state: paused; }
+  @keyframes review-drift { to { transform: translateX(-50%); } }
+  @media (max-width: 639px) {
+    .google-reviews { padding-top: 2rem; }
+    .reviews-heading { align-items: flex-start; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem; }
+    .rating { display: flex; align-items: center; gap: 1rem; }
+    .rating-number { font-size: 2rem; gap: .6rem; }
+    .rating-stars { font-size: .8rem; }
+    .rating-label { margin: 0; gap: .5rem; font-size: .75rem; }
+    .review-card { width: 19rem; min-height: 12rem; padding: 1.25rem; }
+    blockquote { font-size: 1.4rem; }
+    .reviews-footer { font-size: .6875rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .review-track { animation: none; width: auto; }
+    .review-marquee { overflow-x: auto; }
+    .review-group { padding-inline: 1.25rem; }
+    .review-group[aria-hidden='true'] { display: none; }
+  }
+</style>

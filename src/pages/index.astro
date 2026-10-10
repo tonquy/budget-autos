@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/home/VideoHero.astro';
 import TrustBar from '../components/home/TrustBar.astro';
+import GoogleReviews from '../components/home/GoogleReviews.astro';
 import RecentJobs from '../components/home/RecentJobs.astro';
 import DropOffBand from '../components/home/DropOffBand.astro';
 import ServicesPreview from '../components/home/ServicesPreview.astro';
@@ -17,6 +18,7 @@ export const prerender = true;
   withServiceCatalog
 >
   <Hero />
+  <GoogleReviews />
   <TrustBar />
   <ServicesPreview />
   <DropOffBand />

@@ -13,8 +13,9 @@ import { business } from '../../lib/business';
   </div>
   <div class="hero-veil" aria-hidden="true"></div>
   <div class="hero-content container-shop">
-    <img class="hero-logo" src="/logo.png" alt={business.name} width="640" height="212" fetchpriority="high" />
-    <h1 id="home-heading" class="sr-only">Auto repair in Johnson City, NY — {business.name}</h1>
+    <p class="hero-eyebrow">Family-owned. Since {business.foundedYear}.</p>
+    <h1 id="home-heading">Best auto repair in<br />Johnson City, NY.</h1>
+    <p class="hero-description">From check-engine lights to brakes and everyday maintenance, we help you understand what your car needs—and what it will cost before the work begins.</p>
     <div class="hero-actions" data-hero-actions>
       <a href="/quote/" class="btn btn-primary btn-lg" data-contact-action="quote" data-contact-location="home-hero">Get a Quote <Icon name="arrow-up-right" class="size-4" /></a>
       <a href="/book/" class="btn btn-on-dark btn-lg" data-contact-action="schedule" data-contact-location="home-hero">Schedule Appointment <Icon name="calendar-check" class="size-4" /></a>
@@ -28,16 +29,19 @@ import { business } from '../../lib/business';
   .hero-media img, .hero-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
   .hero-media video { opacity: 0; transition: opacity .5s ease; }
   .hero-media video.is-playing { opacity: 1; }
-  .hero-veil { background: linear-gradient(180deg, rgb(12 18 22 / 30%), rgb(12 18 22 / 53%) 50%, rgb(12 18 22 / 78%)); }
-  .hero-content { display: flex; flex-direction: column; align-items: center; padding-block: 7rem 5rem; text-align: center; }
-  .hero-logo { width: min(25rem, 70vw); height: auto; margin-block: 1.25rem; filter: drop-shadow(0 4px 20px #0004); }
-  .hero-actions { display: flex; justify-content: center; gap: .625rem; margin-top: 1.25rem; }
+  .hero-veil { background: linear-gradient(180deg, rgb(12 18 22 / 55%), rgb(12 18 22 / 62%) 50%, rgb(12 18 22 / 78%)); }
+  .hero-content { display: flex; flex-direction: column; align-items: center; padding-block: 8rem 6rem; text-align: center; }
+  .hero-eyebrow { margin-bottom: 1.25rem; font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #eee5db; }
+  h1 { max-width: 18ch; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -.045em; }
+  .hero-description { max-width: 33rem; margin-top: 1.5rem; font-size: 1.0625rem; line-height: 1.65; color: #e8e5e1; }
+  .hero-actions { display: flex; justify-content: center; gap: .625rem; margin-top: 1.75rem; }
   .hero-actions .btn { min-height: 3rem; padding-inline: 1.25rem; font-size: .875rem; }
   @media (max-width: 767px) {
     .video-hero { min-height: max(40rem, 100dvh); }
-    .hero-content { padding-block: 6rem 4rem; }
-    .hero-logo { margin-block: 1rem; width: min(17rem, 70vw); }
-    .hero-actions { flex-direction: column; width: min(100%, 17rem); margin-top: 1.25rem; }
+    .hero-content { padding-block: 7rem 4rem; }
+    h1 { font-size: clamp(2rem, 8.5vw, 2.75rem); }
+    .hero-description { font-size: .9375rem; max-width: 34ch; }
+    .hero-actions { flex-direction: column; width: min(100%, 17rem); margin-top: 1.75rem; }
   }
   @media (prefers-reduced-motion: reduce) { .hero-media video { transition: none; } }
 </style>
@@ -47,20 +51,27 @@ import { business } from '../../lib/business';
   if (video) {
     const mobile = window.matchMedia('(max-width: 767px)');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    let pageReady = document.readyState === 'complete';
     function setSource() {
-      if (!video) return;
+      if (!video || !pageReady) return;
+      if (reducedMotion.matches || connection?.saveData || ['slow-2g', '2g', '3g'].includes(connection?.effectiveType ?? '')) {
+        video.pause();
+        video.removeAttribute('src');
+        video.load();
+        video.classList.remove('is-playing');
+        return;
+      }
       video.classList.remove('is-playing');
       video.src = `/videos/budget-autos-hero-${mobile.matches ? 'mobile' : 'desktop'}.mp4`;
       video.load();
-      if (!reducedMotion.matches) void video.play().catch(() => {});
+      void video.play().catch(() => {});
     }
     video.addEventListener('playing', () => video.classList.add('is-playing'));
     video.addEventListener('error', () => video.classList.remove('is-playing'));
     mobile.addEventListener('change', setSource);
-    reducedMotion.addEventListener('change', () => {
-      if (reducedMotion.matches) video.pause();
-      else void video.play().catch(() => {});
-    });
-    setSource();
+    reducedMotion.addEventListener('change', setSource);
+    if (pageReady) setSource();
+    else window.addEventListener('load', () => { pageReady = true; setSource(); }, { once: true });
   }
 </script>
