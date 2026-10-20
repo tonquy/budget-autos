@@ -82,6 +82,19 @@ export async function canonicalTarget(requestUrl, options = {}) {
 
   let path = url.pathname;
 
+  // Google still requests this retired logo build and its old image transform.
+  // The transform errors when its source is missing; send both URLs directly
+  // to the stable logo instead, without retaining obsolete transform options.
+  const legacyLogo = '/_astro/logo.yEmBVuHu.png';
+  if (
+    path === legacyLogo ||
+    ((path === '/_image' || path === '/_image/') && url.searchParams.get('href') === legacyLogo)
+  ) {
+    path = '/logo.png';
+    url.search = '';
+    changed = true;
+  }
+
   const legacyKey = path.replace(/\/+$/, '') || '/';
   if (LEGACY_REDIRECTS.exact[legacyKey]) {
     path = LEGACY_REDIRECTS.exact[legacyKey];
