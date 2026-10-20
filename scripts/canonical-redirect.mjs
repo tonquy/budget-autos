@@ -24,6 +24,8 @@ export const LEGACY_REDIRECTS = {
   exact: {
     '/book-online': '/book/',
     '/bookings-checkout': '/book/',
+    // Previously advertised favicon: keep old crawls on the current raster icon.
+    '/favicon.svg': '/favicon-192.png',
   },
   prefix: [
     ['/book-online/', '/book/'],

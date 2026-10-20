@@ -3,3 +3,6 @@
 # trailing-slash form so there is never a second hop.
 /book-online /book/ 301
 /book-online/ /book/ 301
+
+# Retired favicon URL, also handled by the Worker before static assets.
+/favicon.svg /favicon-192.png 301
