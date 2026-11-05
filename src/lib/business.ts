@@ -111,7 +111,7 @@ export const services: Service[] = [
       'OBD-II computer scan and live data checks',
       'Plain-English explanation of findings',
       'Quote before any parts are ordered',
-      'Same-day turnaround on most diagnostic appointments',
+      'Testing tailored to the symptom and vehicle',
     ],
     faqs: [
       {
@@ -138,7 +138,7 @@ export const services: Service[] = [
     highlights: [
       'Maintenance and repair, not just oil changes',
       'Mitchell 1 labor guide for transparent quoting',
-      'Parts and labor warranty - ask us for current terms',
+      'Repair options explained before work is authorized',
       'Photo quotes so you can start from your driveway',
     ],
     faqs: [
@@ -150,7 +150,7 @@ export const services: Service[] = [
       {
         question: 'How fast can engine work get done?',
         answer:
-          'Simple jobs often finish same day. Bigger repairs depend on parts availability - we’ll give you a realistic timeline with the quote.',
+          'Timing depends on the diagnosis, access to the affected parts, and parts availability. Ask us to confirm a timeline once the repair scope is clear.',
       },
     ],
     icon: 'wrench',
@@ -195,7 +195,7 @@ export const services: Service[] = [
       'Struts, shocks, and related hardware',
       'Wheel alignment after suspension work when needed',
       'Uneven tire wear diagnosis',
-      'Same-day help on many alignment-only visits',
+      'Steering and suspension checks before alignment',
     ],
     faqs: [
       {
@@ -290,7 +290,7 @@ export const services: Service[] = [
       },
       {
         question: 'Do you guarantee every repair?',
-        answer: `${business.warranty}. Ask us for the exact coverage that applies to your job.`,
+        answer: 'Ask us for the written parts and labor terms that apply to your specific repair before authorizing work. Coverage can depend on the part and the work being performed.',
       },
     ],
     icon: 'car',

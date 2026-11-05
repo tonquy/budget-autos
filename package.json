@@ -12,7 +12,8 @@
     "astro": "astro",
     "generate-types": "wrangler types",
     "setup:cal": "node scripts/setup-cal.mjs",
-    "verify:booking": "node scripts/verify-booking-rules.mjs"
+    "verify:booking": "node scripts/verify-booking-rules.mjs",
+    "verify:services": "node scripts/verify-service-pages.mjs"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.2.3",

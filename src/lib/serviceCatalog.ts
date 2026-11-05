@@ -4,11 +4,11 @@
 // service picker produces, e.g. "Brakes" / "Auto brake repair") rather than
 // tidied up. Only the names are mirrored; the GBP descriptions are not.
 //
-// Items are grouped for display. Groups that map onto one of the seven
-// service landing pages carry that page's slug so the group heading can link
-// there; the rest link to the general quote form.
+// Each category links to its own service guide. Booking event types remain
+// separate: a service page does not imply a configured calendar event.
 
-import { services, type Service } from './business';
+import type { Service } from './business';
+import { landingServices } from './serviceDefinitions';
 
 export type ServiceGroup = {
   /** Stable key, also used for anchor links on /services/. */
@@ -62,6 +62,7 @@ export const serviceGroups: ServiceGroup[] = [
     key: 'tires',
     name: 'Tires',
     icon: 'circle-dot',
+    serviceSlug: 'tires',
     items: ['Tires', 'Auto tire replacement', 'Tire rotations'],
   },
   {
@@ -82,24 +83,28 @@ export const serviceGroups: ServiceGroup[] = [
     key: 'air-conditioning',
     name: 'Air conditioning',
     icon: 'snowflake',
+    serviceSlug: 'air-conditioning',
     items: ['Air conditioning', 'A/C installation & repair', 'Auto A/C recharge', 'Auto A/C replacement'],
   },
   {
     key: 'transmission',
     name: 'Transmission',
     icon: 'cog',
+    serviceSlug: 'transmission',
     items: ['Transmission', 'Transmission repair', 'Transmission replacement'],
   },
   {
     key: 'exhaust',
     name: 'Exhaust',
     icon: 'wind',
+    serviceSlug: 'exhaust',
     items: ['Exhaust', 'Auto exhaust system repair', 'Auto exhaust system replacement'],
   },
   {
     key: 'glass',
     name: 'Glass, windows & mirrors',
     icon: 'app-window',
+    serviceSlug: 'glass',
     items: [
       'Auto glass repair',
       'Auto glass replacement',
@@ -115,12 +120,14 @@ export const serviceGroups: ServiceGroup[] = [
     key: 'body-trim',
     name: 'Body & trim',
     icon: 'car-front',
+    serviceSlug: 'body-trim',
     items: ['Body & Trim', 'Auto body & trim repair', 'Auto body & trim replacement', 'Auto water leak repair'],
   },
   {
     key: 'detailing',
     name: 'Detailing',
     icon: 'sparkles',
+    serviceSlug: 'detailing',
     items: ['Auto detailing', 'Auto interior vacuuming', 'Car waxing'],
   },
   {
@@ -154,7 +161,7 @@ export function groupHref(group: ServiceGroup) {
 
 // Every serviceSlug must point at a real landing page - fail the build if not.
 for (const group of serviceGroups) {
-  if (group.serviceSlug && !services.some((service) => service.slug === group.serviceSlug)) {
+  if (group.serviceSlug && !landingServices.some((service) => service.slug === group.serviceSlug)) {
     throw new Error(`serviceCatalog: unknown service slug "${group.serviceSlug}" in group "${group.key}"`);
   }
 }

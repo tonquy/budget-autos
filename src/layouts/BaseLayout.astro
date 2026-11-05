@@ -11,6 +11,9 @@ interface Props {
   title: string;
   description: string;
   image?: string;
+  imageWidth?: number;
+  imageHeight?: number;
+  imageAlt?: string;
   /** e.g. "noindex, nofollow" for thank-you and other non-indexable pages */
   robots?: string;
   ogType?: 'website' | 'article';
@@ -25,6 +28,9 @@ const {
   title,
   description,
   image = OG_IMAGE.path,
+  imageWidth = OG_IMAGE.width,
+  imageHeight = OG_IMAGE.height,
+  imageAlt,
   robots,
   ogType = 'website',
   publishedTime,
@@ -77,14 +83,16 @@ const jsonLdBlocks = [localBusinessJsonLd(siteUrl, { withServiceCatalog }), ...e
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
     <meta property="og:image" content={ogImageUrl} />
-    <meta property="og:image:width" content={String(OG_IMAGE.width)} />
-    <meta property="og:image:height" content={String(OG_IMAGE.height)} />
+    <meta property="og:image:width" content={String(imageWidth)} />
+    <meta property="og:image:height" content={String(imageHeight)} />
+    {imageAlt && <meta property="og:image:alt" content={imageAlt} />}
     <meta property="og:site_name" content={business.name} />
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle(title)} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    {imageAlt && <meta name="twitter:image:alt" content={imageAlt} />}
 
     <meta name="theme-color" content="#17181c" />
 

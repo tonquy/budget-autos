@@ -2,7 +2,8 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import ServiceQuoteForm from '../../components/quote/ServiceQuoteForm';
-import { business, services } from '../../lib/business';
+import { business } from '../../lib/business';
+import { landingServices } from '../../lib/serviceDefinitions';
 import { breadcrumbJsonLd } from '../../lib/seo';
 import heroQuote from '../../assets/images/hero-quote.jpg';
 
@@ -10,7 +11,7 @@ import heroQuote from '../../assets/images/hero-quote.jpg';
 // they click a specific service (e.g. Brake Services), so we show a slim form
 // with the service already prefilled instead of the general request form.
 export function getStaticPaths() {
-  return services.map((service) => ({
+  return landingServices.map((service) => ({
     params: { service: service.slug },
     props: { service },
   }));
@@ -39,7 +40,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     alt={`Photographing a vehicle issue for a ${service.name.toLowerCase()} quote`}
     eyebrow={service.name}
     title={`Get a quote for your ${service.name.toLowerCase()}.`}
-    description={`Tell us your name, your vehicle, and what's going on - we'll get back to you with a real price. No account, no obligation.`}
+    description={`Tell us about your vehicle and what's going on. We’ll review the details and explain the next step, including whether an inspection is needed for an estimate. No account required.`}
     size="compact"
     objectPosition="center 40%"
     priority

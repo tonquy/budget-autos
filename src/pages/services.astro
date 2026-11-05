@@ -5,8 +5,9 @@ import Icon from '../components/Icon.astro';
 import PageHero from '../components/PageHero.astro';
 import ImageBand from '../components/ImageBand.astro';
 import ContactActions from '../components/ContactActions.astro';
-import { business, services } from '../lib/business';
-import { serviceImages } from '../lib/serviceImages';
+import { business } from '../lib/business';
+import { landingServices } from '../lib/serviceDefinitions';
+import { serviceMedia } from '../lib/serviceMedia';
 import { breadcrumbJsonLd } from '../lib/seo';
 import { serviceGroups, groupHref } from '../lib/serviceCatalog';
 import heroServices from '../assets/images/hero-services.jpg';
@@ -30,10 +31,10 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
 >
   <PageHero
     image={heroServices}
-    alt={`Service bays and alignment work at ${business.name}`}
+    alt="Vehicles in an automotive workshop"
     eyebrow={`${business.address.city}, ${business.address.state}`}
     title={`Auto repair services in ${business.address.city}`}
-    description={`Family-owned shop on ${business.address.line1}. Pick a service below, or book a time and tell us what is going on.`}
+    description={`Explore all 14 service categories at our shop on ${business.address.line1}. Get answers about symptoms, repair options, and what to expect before your visit.`}
     priority
   >
     <a
@@ -49,18 +50,21 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
   </PageHero>
 
   <section class="bg-paper py-16 sm:py-20">
-    <div class="container-shop grid gap-4 sm:grid-cols-2">
-      {services.map((service) => (
+    <div class="container-shop">
+      <div class="mb-9 max-w-2xl"><p class="mb-3 text-xs font-semibold tracking-[.15em] text-accent-dark uppercase">Find the right place to start</p><h2 class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">Care for the whole vehicle.</h2><p class="mt-4 leading-relaxed text-steel-700">Choose a service for a full guide to the work. If the problem is hard to describe, send us a photo or tell us what changed.</p></div>
+      <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {landingServices.map((service) => (
         <a
           href={`/services/${service.slug}/`}
           id={service.slug}
-          class="group relative isolate flex min-h-44 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted transition-transform hover:-translate-y-0.5 sm:min-h-48 sm:p-7"
+          class="group relative isolate flex min-h-64 scroll-mt-24 flex-col justify-end overflow-hidden rounded-card p-6 text-white shadow-lifted transition-transform hover:-translate-y-0.5 sm:min-h-72 sm:p-7"
         >
           <Image
-            src={serviceImages[service.slug]}
-            alt={`${service.name} in ${business.address.city}, ${business.address.state}`}
+            src={serviceMedia[service.slug].hero}
+            alt={serviceMedia[service.slug].heroAlt}
             widths={[480, 768, 1024]}
-            sizes="(min-width: 640px) 50vw, 100vw"
+            sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+            loading="lazy"
             class="absolute inset-0 -z-10 size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
           <div class="absolute inset-0 -z-10 bg-linear-to-t from-ink/95 via-ink/55 to-ink/15"></div>
@@ -77,21 +81,21 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
           <p class="mt-2 max-w-md text-sm leading-relaxed text-steel-200">{service.description}</p>
         </a>
       ))}
+      </div>
     </div>
   </section>
 
   {/*
     The complete service list, matching the Google Business Profile name for
-    name. The seven tiles above are the landing pages; this is everything else
-    the shop does, grouped so a visitor can scan it and Google can match it to
-    the listing.
+    name. Every category above has a full service guide; this is the detailed
+    service-label index for visitors who want a quick list.
   */}
   <section id="all-services" class="scroll-mt-24 border-t border-black/5 bg-surface py-16 sm:py-20">
     <div class="container-shop">
-      <details><summary class="cursor-pointer py-3 font-display text-xl font-semibold">See the full service list</summary>
-      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-reveal="stagger">
+      <details><summary class="cursor-pointer py-3 font-display text-xl font-semibold">Browse individual services by category</summary>
+      <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {serviceGroups.map((group) => (
-          <div id={`all-${group.key}`} class="flex scroll-mt-24 flex-col rounded-card border border-black/5 bg-paper p-5 shadow-card">
+          <div id={`all-${group.key}`} data-reveal class="flex scroll-mt-24 flex-col rounded-card border border-black/5 bg-paper p-5 shadow-card">
             <a
               href={groupHref(group)}
               class="group flex items-center gap-3 font-display text-lg font-semibold text-ink hover:text-accent-dark"
