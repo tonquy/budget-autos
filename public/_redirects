@@ -6,3 +6,6 @@
 
 # Retired favicon URL, also handled by the Worker before static assets.
 /favicon.svg /favicon-192.png 301
+
+# Retired homepage hero video and poster files.
+/videos/* / 301

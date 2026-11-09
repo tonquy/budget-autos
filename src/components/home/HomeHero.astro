@@ -1,0 +1,54 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import heroImage from '../../assets/images/hero-home.jpg';
+import { business } from '../../lib/business';
+---
+
+{/*
+  Full-height homepage hero over the shop photo. The same image serves mobile
+  and desktop; object-fit keeps the bay centred at every width.
+*/}
+<section class="hero home-hero" aria-labelledby="home-heading">
+  <div class="hero-media" aria-hidden="true">
+    <Image
+      src={heroImage}
+      alt=""
+      widths={[640, 960, 1440, 1920]}
+      sizes="100vw"
+      quality={65}
+      loading="eager"
+      fetchpriority="high"
+    />
+  </div>
+  <div class="hero-veil" aria-hidden="true"></div>
+  <div class="hero-content container-shop">
+    <p class="hero-eyebrow">Family-owned. Since {business.foundedYear}.</p>
+    <h1 id="home-heading">Best auto repair in<br />Johnson City, NY.</h1>
+    <p class="hero-description">From check-engine lights to brakes and everyday maintenance, we help you understand what your car needs—and what it will cost before the work begins.</p>
+    <div class="hero-actions" data-hero-actions>
+      <a href="/quote/" class="btn btn-primary btn-lg" data-contact-action="quote" data-contact-location="home-hero">Get a Quote <Icon name="arrow-up-right" class="size-4" /></a>
+      <a href="/book/" class="btn btn-on-dark btn-lg" data-contact-action="schedule" data-contact-location="home-hero">Schedule Appointment <Icon name="calendar-check" class="size-4" /></a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .home-hero { position: relative; isolation: isolate; display: grid; place-items: center; min-height: max(42rem, 100dvh); overflow: hidden; background: #17181c; color: white; }
+  .hero-media, .hero-veil { position: absolute; inset: 0; z-index: -1; }
+  .hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 45%; }
+  .hero-veil { background: linear-gradient(180deg, rgb(12 18 22 / 55%), rgb(12 18 22 / 62%) 50%, rgb(12 18 22 / 78%)); }
+  .hero-content { display: flex; flex-direction: column; align-items: center; padding-block: 8rem 6rem; text-align: center; }
+  .hero-eyebrow { margin-bottom: 1.25rem; font-size: .75rem; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: #eee5db; }
+  h1 { max-width: 18ch; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 700; line-height: 1.05; letter-spacing: -.045em; }
+  .hero-description { max-width: 33rem; margin-top: 1.5rem; font-size: 1.0625rem; line-height: 1.65; color: #e8e5e1; }
+  .hero-actions { display: flex; justify-content: center; gap: .625rem; margin-top: 1.75rem; }
+  .hero-actions .btn { min-height: 3rem; padding-inline: 1.25rem; font-size: .875rem; }
+  @media (max-width: 767px) {
+    .home-hero { min-height: max(40rem, 100dvh); }
+    .hero-content { padding-block: 7rem 4rem; }
+    h1 { font-size: clamp(2rem, 8.5vw, 2.75rem); }
+    .hero-description { font-size: .9375rem; max-width: 34ch; }
+    .hero-actions { flex-direction: column; width: min(100%, 17rem); margin-top: 1.75rem; }
+  }
+</style>

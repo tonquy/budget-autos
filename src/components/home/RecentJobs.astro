@@ -7,7 +7,19 @@ import brake from '../../assets/images/jobs/brake-detail.webp';
 import engines from '../../assets/images/jobs/workshop/img-3187.webp';
 import engineBay from '../../assets/images/jobs/workshop/img-3188.webp';
 import exposedBrake from '../../assets/images/jobs/workshop/img-2923.webp';
+import hoodFront from '../../assets/images/jobs/hood-dent/front.webp';
+import hoodHeadOn from '../../assets/images/jobs/hood-dent/head-on.webp';
+import hoodTop from '../../assets/images/jobs/hood-dent/hood-top.webp';
+import hoodEdge from '../../assets/images/jobs/hood-dent/hood-edge.webp';
 const media = '/jobs/electric-brake';
+const hoodMedia = '/jobs/hood-dent';
+// Finished-repair photos of a red Mazda CX-5 hood that came in dented.
+const hoodPhotos = [
+  { image: hoodFront, file: 'front', landscape: true, caption: 'Hood and front end after repair', alt: 'Red Mazda CX-5 photographed from the front corner after the hood dent repair, with a smooth, even hood.' },
+  { image: hoodHeadOn, file: 'head-on', landscape: true, caption: 'Straight-on view of the finished hood', alt: 'Red Mazda CX-5 photographed head-on after the hood dent repair.' },
+  { image: hoodTop, file: 'hood-top', landscape: false, caption: 'Repaired area from above', alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.' },
+  { image: hoodEdge, file: 'hood-edge', landscape: false, caption: 'Hood edge and fender gap', alt: 'Close view of the repaired hood edge where it meets the fender, showing an even panel and gap.' },
+];
 const workshopPhotos = [
   { image: engines, file: 'img-3187', caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
   { image: engineBay, file: 'img-3188', caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
@@ -84,6 +96,25 @@ const workshopVideos = [
       </details>
     </article>
 
+    <article class="job-study hood-study" aria-labelledby="hood-job-title">
+      <div data-reveal class="job-story">
+        <h3 id="hood-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Hood dent repair</h3>
+        <p class="job-intro">A Mazda CX-5 came in with a dented hood. These are the finished-repair photos, taken as the car left the shop.</p>
+      </div>
+
+      <div data-reveal="stagger" class="hood-gallery">
+        {hoodPhotos.map((photo) => (
+          <figure class:list={[photo.landscape ? 'is-landscape' : 'is-portrait']}>
+            <a href={`${hoodMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open photo: ${photo.caption.toLowerCase()} (new tab)`}>
+              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} loading="lazy" decoding="async" />
+            </a>
+            <figcaption><span>After</span>{photo.caption}</figcaption>
+          </figure>
+        ))}
+        <p class="photo-note">Photographed in our lot after the repair was completed.</p>
+      </div>
+    </article>
+
     <div class="workshop-gallery" aria-labelledby="workshop-title">
       <div data-reveal class="job-story">
         <h3 id="workshop-title" class="font-display">Inside the workshop</h3>
@@ -136,6 +167,15 @@ const workshopVideos = [
   .temperature-pair img { transition: transform .35s var(--ease-out-expo); }
   .temperature-pair a:hover img { transform: scale(1.025); }
   .photo-note { grid-column: 1 / -1; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
+  .hood-study { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--color-steel-300); }
+  .hood-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+  .hood-gallery figure { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--color-paper); }
+  .hood-gallery figure > a { display: block; overflow: hidden; }
+  .hood-gallery img { aspect-ratio: 4 / 3; object-fit: cover; transition: transform .35s var(--ease-out-expo); }
+  .hood-gallery .is-portrait img { object-position: center 60%; }
+  .hood-gallery a:hover img { transform: scale(1.025); }
+  .hood-gallery figcaption { display: flex; align-items: center; gap: .625rem; padding: .875rem 1rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.5; }
+  .hood-gallery figcaption span { flex-shrink: 0; padding: .125rem .5rem; border-radius: 999px; background: color-mix(in srgb, var(--color-success) 14%, transparent); color: var(--color-success); font-size: .6875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
   .job-details { margin-top: 1.25rem; }
   .technician-notes { margin-top: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--radius-card); background: var(--color-paper); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
   .technician-notes h4 { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
@@ -165,7 +205,9 @@ const workshopVideos = [
   @media (max-width: 479px) {
     .temperature-pair { gap: .75rem; }
     .temperature-pair figcaption { flex-direction: column; align-items: flex-start; padding: .875rem; }
+    .hood-gallery { gap: .75rem; }
+    .hood-gallery figcaption { flex-direction: column; align-items: flex-start; gap: .375rem; padding: .75rem; }
     .workshop-photos { gap: .65rem; }
   }
-  @media (prefers-reduced-motion: reduce) { .temperature-pair img { transition: none; } .temperature-pair a:hover img { transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .temperature-pair img, .hood-gallery img { transition: none; } .temperature-pair a:hover img, .hood-gallery a:hover img { transform: none; } }
 </style>

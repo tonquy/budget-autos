@@ -18,6 +18,8 @@ import exhaustImage from '../assets/images/services/exhaust.webp';
 import glassImage from '../assets/images/services/glass.webp';
 import bodyTrimImage from '../assets/images/services/body-trim.webp';
 import detailingImage from '../assets/images/services/detailing.webp';
+import hoodFrontPhoto from '../assets/images/jobs/hood-dent/front.webp';
+import hoodTopPhoto from '../assets/images/jobs/hood-dent/hood-top.webp';
 
 export interface ServiceMedia {
   hero: ImageMetadata;
@@ -149,9 +151,25 @@ export const serviceMedia: Record<string, ServiceMedia> = {
   'body-trim': {
     hero: bodyTrimImage,
     heroAlt: 'A removed interior door panel with plastic trim clips and removal tools.',
-    detail: bodyTrimImage,
-    detailAlt: 'Door trim panel resting on a padded bench beside retaining clips.',
-    caption: 'Service illustration.',
+    detail: hoodFrontPhoto,
+    detailAlt: 'Red Mazda CX-5 photographed from the front corner after a hood dent repair.',
+    caption: 'A hood dent repair photographed in our lot after the work was completed.',
+    caseStudy: {
+      title: 'A dented hood, finished',
+      text: 'A Mazda CX-5 arrived with a dented hood. These photographs were taken as the car left the shop after the repair, showing the panel, the hood edge, and the reflections across the finished paint.',
+      images: [
+        {
+          src: hoodFrontPhoto,
+          alt: 'Red Mazda CX-5 from the front corner after the hood dent repair, with an even hood and headlight line.',
+          caption: 'After: the hood and front end once the repair was complete.',
+        },
+        {
+          src: hoodTopPhoto,
+          alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.',
+          caption: 'After: the repaired area seen from above.',
+        },
+      ],
+    },
   },
   detailing: {
     hero: detailingImage,
