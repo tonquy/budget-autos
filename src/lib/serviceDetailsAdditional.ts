@@ -220,7 +220,7 @@ export const additionalServiceDetails: Record<string, ServiceDetail> = {
       { question: 'Does windshield replacement include camera calibration?', answer: 'Requirements vary by vehicle. Confirm whether calibration is needed and how it will be arranged as part of the estimate. Do not assume it is included in a glass-only price.' },
       { question: 'My window will not close. Do I need new glass?', answer: 'Not necessarily. If the glass is intact, the motor, regulator, switch, wiring, or track may be responsible. Describe what happens when you operate the switch so the appropriate system can be checked.' },
     ],
-    related: ['electrical-systems', 'body-trim', 'general-repairs'],
+    related: ['windshield-replacement', 'electrical-systems', 'body-trim'],
     articles: [{ title: 'What photos help an online repair quote?', href: '/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/' }, { title: 'Repairs to consider before selling a car', href: '/blog/repair-before-selling-or-trading/' }],
   },
   'body-trim': {
@@ -264,7 +264,7 @@ export const additionalServiceDetails: Record<string, ServiceDetail> = {
       { question: 'Is water on the floor always a windshield leak?', answer: 'No. Water can enter or collect for several reasons and travel away from the source. Tell us when it happens and where it first appears so the investigation starts with useful evidence.' },
       { question: 'Can you quote damage from photos?', answer: 'Photos can help confirm the service scope and identify likely parts. Hidden damage, attachment condition, and leak diagnosis may still require an in-person inspection before a complete estimate is possible.' },
     ],
-    related: ['glass', 'electrical-systems', 'general-repairs'],
+    related: ['paintless-dent-repair', 'glass', 'electrical-systems'],
     articles: [{ title: 'How to get a repair quote online', href: '/blog/how-to-get-a-car-repair-quote-online-binghamton-ny/' }, { title: 'Repair before selling or trading?', href: '/blog/repair-before-selling-or-trading/' }],
   },
   detailing: {

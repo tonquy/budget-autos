@@ -56,9 +56,11 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
   const idBase = useId();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
   const [vehicleYear, setVehicleYear] = useState('');
   const [vehicleMake, setVehicleMake] = useState('');
   const [vehicleModel, setVehicleModel] = useState('');
+  const [vin, setVin] = useState('');
   const [message, setMessage] = useState('');
 
   const [submitState, setSubmitState] = useState<SubmitState>('idle');
@@ -122,10 +124,12 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
       flow: 'known-repair',
       name,
       phone,
+      email,
       contactPreference: 'call',
       vehicleYear,
       vehicleMake,
       vehicleModel,
+      vin,
       message,
       // Prefilled from the service the visitor clicked - this is why we can skip
       // the wizard's diagnostic questions.
@@ -211,6 +215,17 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
           </Field>
         </div>
 
+        <Field label="Email" hint="(optional)" htmlFor={`${idBase}-email`} error={fieldErrors.email?.[0]}>
+          <TextInput
+            id={`${idBase}-email`}
+            value={email}
+            onValue={setEmail}
+            type="email"
+            autoComplete="email"
+            placeholder="you@example.com"
+          />
+        </Field>
+
         <div class="grid gap-4 sm:grid-cols-3">
           <Field label="Year" hint="(optional)" htmlFor={`${idBase}-year`} error={fieldErrors.vehicleYear?.[0]}>
             <TextInput
@@ -244,6 +259,23 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
         </div>
 
         <Field
+          label="VIN"
+          hint="(optional, helps us match parts, keys, and glass)"
+          htmlFor={`${idBase}-vin`}
+          error={fieldErrors.vin?.[0]}
+        >
+          <TextInput
+            id={`${idBase}-vin`}
+            value={vin}
+            onValue={(value) => setVin(value.toUpperCase().replace(/\s/g, ''))}
+            type="text"
+            autoComplete="off"
+            maxLength={17}
+            placeholder="17 characters, on your registration or dashboard"
+          />
+        </Field>
+
+        <Field
           label="What's going on with your vehicle?"
           hint="(a sentence or two is plenty)"
           htmlFor={`${idBase}-message`}
@@ -261,7 +293,7 @@ export default function ServiceQuoteForm({ serviceName }: Props) {
 
         <div>
           <p class="mb-2 block text-sm font-medium text-ink-soft">
-            Add a photo <span class="font-normal text-steel-500">(optional, but it helps us quote faster)</span>
+            Add photos <span class="font-normal text-steel-500">(optional, but it helps us quote faster)</span>
           </p>
           <MediaUploader
             media={media}

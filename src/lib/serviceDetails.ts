@@ -1,11 +1,13 @@
 import { landingServices } from './serviceDefinitions';
 import { coreServiceDetails } from './serviceDetailsCore';
 import { additionalServiceDetails } from './serviceDetailsAdditional';
+import { specialtyServiceDetails } from './serviceDetailsSpecialty';
 import type { ServiceDetail } from './servicePageTypes';
 
 export const serviceDetails: Record<string, ServiceDetail> = {
   ...coreServiceDetails,
   ...additionalServiceDetails,
+  ...specialtyServiceDetails,
 };
 
 // A catalog link must never silently become an empty marketing page.

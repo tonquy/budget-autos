@@ -5,7 +5,7 @@ import { resolve } from 'node:path';
 
 const root = resolve('dist/client');
 const core = ['diagnostics', 'engine-maintenance', 'brake-services', 'suspension-alignment', 'electrical-systems', 'presale-inspection', 'general-repairs'];
-const added = ['tires', 'air-conditioning', 'transmission', 'exhaust', 'glass', 'body-trim', 'detailing'];
+const added = ['tires', 'air-conditioning', 'transmission', 'exhaust', 'glass', 'body-trim', 'detailing', 'paintless-dent-repair', 'car-key-replacement', 'windshield-replacement'];
 const slugs = [...core, ...added];
 const read = (path) => readFileSync(resolve(root, path), 'utf8');
 const attr = (tag, name) => tag.match(new RegExp(`(?:^|\\s)${name}="([^"]*)"`))?.[1];

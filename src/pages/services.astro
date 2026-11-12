@@ -34,7 +34,7 @@ const siteUrl = Astro.site?.origin ?? Astro.url.origin;
     alt="Vehicles in an automotive workshop"
     eyebrow={`${business.address.city}, ${business.address.state}`}
     title={`Auto repair services in ${business.address.city}`}
-    description={`Explore all 14 service categories at our shop on ${business.address.line1}. Get answers about symptoms, repair options, and what to expect before your visit.`}
+    description={`Explore all ${landingServices.length} service categories at our shop on ${business.address.line1}. Get answers about symptoms, repair options, and what to expect before your visit.`}
     priority
   >
     <a

@@ -73,6 +73,36 @@ export const additionalServices: Service[] = [
     faqs: [],
     icon: 'sparkles',
   },
+  {
+    slug: 'paintless-dent-repair',
+    name: 'Hail Damage & Paintless Dent Repair',
+    description: 'Door dings, small dents, and hail damage, with paintless dent removal where the paint and panel allow it.',
+    longDescription: 'Paintless dent repair works the metal back into shape without sanding, filler, or repainting when the paint is intact and the dent can be reached. Send photos of door dings, small dents, or hail damage to Budget Autos Repair in Johnson City and we will tell you whether PDR is a good fit.',
+    seoDescription: 'Paintless dent repair and hail damage repair in Johnson City, NY. Send photos of door dings, small dents, or hail damage to Budget Autos Repair for a free quote.',
+    highlights: ['Door dings and small dents', 'Hail damage assessment', 'Paintless dent removal', 'Photo review before scheduling'],
+    faqs: [],
+    icon: 'cloud-hail',
+  },
+  {
+    slug: 'car-key-replacement',
+    name: 'Car Key Replacement & Programming',
+    description: 'Spare keys, lost keys, key fobs, transponder keys, smart keys, and push-to-start key programming.',
+    longDescription: 'Lost your only key, or want a spare before that happens? Budget Autos Repair in Johnson City handles car key replacement and programming requests, including key fobs, transponder keys, and push-to-start smart keys. Send your year, make, model, and VIN so we can confirm the right key for your vehicle.',
+    seoDescription: 'Car key replacement and programming in Johnson City, NY. Spare keys, lost keys, key fobs, transponder and push-to-start smart keys. Request a free quote with your VIN.',
+    highlights: ['Spare and replacement keys', 'Lost-key situations', 'Key fob and remote programming', 'Transponder and push-to-start smart keys'],
+    faqs: [],
+    icon: 'key-round',
+  },
+  {
+    slug: 'windshield-replacement',
+    name: 'Windshield Replacement & Auto Glass',
+    description: 'Cracked or damaged windshields replaced, and auto glass installed with the right part for your vehicle.',
+    longDescription: 'A crack that spreads across the windshield, or glass that is broken outright, usually means replacement. Budget Autos Repair in Johnson City handles windshield replacement and auto glass installation requests. Send a photo and your VIN so we can match the glass and any camera or sensor features before your visit.',
+    seoDescription: 'Windshield replacement and auto glass installation in Johnson City, NY. Send a photo of cracked or damaged glass and your VIN to Budget Autos Repair for a free quote.',
+    highlights: ['Cracked windshield replacement', 'Damaged auto glass', 'Auto glass installation', 'Camera and sensor features confirmed'],
+    faqs: [],
+    icon: 'windshield',
+  },
 ];
 
 export const landingServices: Service[] = [...services, ...additionalServices];

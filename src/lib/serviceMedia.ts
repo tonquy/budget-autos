@@ -28,6 +28,8 @@ export interface ServiceMedia {
   detailAlt: string;
   caption: string;
   video?: { src: string; poster: string; caption: string };
+  /** Extra illustrations shown in their own strip. Never labeled as shop work. */
+  gallery?: { src: ImageMetadata; alt: string }[];
   caseStudy?: {
     title: string;
     text: string;
@@ -176,6 +178,28 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     heroAlt: 'A gloved hand wiping a dark vehicle hood with a microfiber towel.',
     detail: detailingImage,
     detailAlt: 'A folded microfiber towel being used on glossy vehicle paint.',
+    caption: 'Service illustration.',
+  },
+  // TEMP: placeholders until the generated illustrations are added.
+  'paintless-dent-repair': {
+    hero: bodyTrimImage,
+    heroAlt: 'Automotive body and trim repair tools on a workbench.',
+    detail: bodyTrimImage,
+    detailAlt: 'Body repair tools and trim clips on a padded bench.',
+    caption: 'Service illustration.',
+  },
+  'car-key-replacement': {
+    hero: electricalImage,
+    heroAlt: 'Electrical test leads near vehicle wiring.',
+    detail: electricalImage,
+    detailAlt: 'Electrical test leads used near vehicle wiring.',
+    caption: 'Service illustration.',
+  },
+  'windshield-replacement': {
+    hero: glassImage,
+    heroAlt: 'Damage in a vehicle windshield above the wiper.',
+    detail: glassImage,
+    detailAlt: 'Close view of windshield damage with the dashboard behind the glass.',
     caption: 'Service illustration.',
   },
 };

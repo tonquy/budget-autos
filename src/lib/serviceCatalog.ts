@@ -107,14 +107,27 @@ export const serviceGroups: ServiceGroup[] = [
     serviceSlug: 'glass',
     items: [
       'Auto glass repair',
-      'Auto glass replacement',
-      'Auto windshield repair',
-      'Auto windshield replacement',
       'Auto rear window replacement',
       'Auto side window replacement',
       'Auto sunroof glass replacement',
       'Side view mirror repair',
     ],
+  },
+  {
+    key: 'windshield',
+    name: 'Windshield & auto glass',
+    icon: 'windshield',
+    serviceSlug: 'windshield-replacement',
+    items: ['Auto windshield replacement', 'Auto windshield repair', 'Auto glass replacement'],
+  },
+  // Added Nov 2026 at the owner's request. Not on the GBP yet: add these service
+  // names to the profile, then copy whatever the GBP picker produces back here.
+  {
+    key: 'dent-repair',
+    name: 'Hail damage & dent repair',
+    icon: 'cloud-hail',
+    serviceSlug: 'paintless-dent-repair',
+    items: ['Paintless dent repair', 'Hail damage repair', 'Door ding removal'],
   },
   {
     key: 'body-trim',
@@ -129,6 +142,14 @@ export const serviceGroups: ServiceGroup[] = [
     icon: 'sparkles',
     serviceSlug: 'detailing',
     items: ['Auto detailing', 'Auto interior vacuuming', 'Car waxing'],
+  },
+  // Added Nov 2026 at the owner's request; not on the GBP yet (see dent-repair).
+  {
+    key: 'car-keys',
+    name: 'Car keys & programming',
+    icon: 'key-round',
+    serviceSlug: 'car-key-replacement',
+    items: ['Car key replacement', 'Key fob programming', 'Transponder key programming', 'Smart key & push-to-start programming'],
   },
   {
     key: 'inspections',
