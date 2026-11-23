@@ -20,6 +20,8 @@ import bodyTrimImage from '../assets/images/services/body-trim.webp';
 import detailingImage from '../assets/images/services/detailing.webp';
 import hoodFrontPhoto from '../assets/images/jobs/hood-dent/front.webp';
 import hoodTopPhoto from '../assets/images/jobs/hood-dent/hood-top.webp';
+import hoodBeforeFrontPhoto from '../assets/images/jobs/hood-dent/before-front.webp';
+import hoodBeforeReflectionPhoto from '../assets/images/jobs/hood-dent/before-reflection.webp';
 
 export interface ServiceMedia {
   hero: ImageMetadata;
@@ -157,18 +159,28 @@ export const serviceMedia: Record<string, ServiceMedia> = {
     detailAlt: 'Red Mazda CX-5 photographed from the front corner after a hood dent repair.',
     caption: 'A hood dent repair photographed in our lot after the work was completed.',
     caseStudy: {
-      title: 'A dented hood, finished',
-      text: 'A Mazda CX-5 arrived with a dented hood. These photographs were taken as the car left the shop after the repair, showing the panel, the hood edge, and the reflections across the finished paint.',
+      title: 'A dented hood, before and after',
+      text: 'A Mazda CX-5 arrived with a dent in the middle of its hood. The before photographs show the dent and how it bent the reflections in the paint; the after photographs show the same panel as the car left the shop.',
       images: [
+        {
+          src: hoodBeforeFrontPhoto,
+          alt: 'Red Mazda CX-5 before the repair, with a dent visible in the middle of its dusty hood.',
+          caption: 'Before: the dent in the middle of the hood.',
+        },
         {
           src: hoodFrontPhoto,
           alt: 'Red Mazda CX-5 from the front corner after the hood dent repair, with an even hood and headlight line.',
           caption: 'After: the hood and front end once the repair was complete.',
         },
         {
+          src: hoodBeforeReflectionPhoto,
+          alt: 'Before the repair: tree and sky reflections twist into a swirl around the dent in the hood.',
+          caption: 'Before: reflections bending around the dent.',
+        },
+        {
           src: hoodTopPhoto,
           alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.',
-          caption: 'After: the repaired area seen from above.',
+          caption: 'After: even reflections across the repaired panel.',
         },
       ],
     },

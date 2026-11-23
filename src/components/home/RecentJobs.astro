@@ -12,13 +12,34 @@ import hoodHeadOn from '../../assets/images/jobs/hood-dent/head-on.webp';
 import hoodTop from '../../assets/images/jobs/hood-dent/hood-top.webp';
 import hoodEdge from '../../assets/images/jobs/hood-dent/hood-edge.webp';
 const media = '/jobs/electric-brake';
+import hoodClose from '../../assets/images/jobs/hood-dent/hood-close.webp';
+import hoodBeforeFront from '../../assets/images/jobs/hood-dent/before-front.webp';
+import hoodBeforeClose from '../../assets/images/jobs/hood-dent/before-close.webp';
+import hoodBeforeReflection from '../../assets/images/jobs/hood-dent/before-reflection.webp';
+import quarterBeforeSide from '../../assets/images/jobs/quarter-dent/before-side.webp';
+import quarterBeforeRear from '../../assets/images/jobs/quarter-dent/before-rear.webp';
+import quarterAfterSide from '../../assets/images/jobs/quarter-dent/after-side.webp';
+import quarterAfterPanel from '../../assets/images/jobs/quarter-dent/after-panel.webp';
 const hoodMedia = '/jobs/hood-dent';
-// Finished-repair photos of a red Mazda CX-5 hood that came in dented.
+const quarterMedia = '/jobs/quarter-dent';
+// Red Mazda CX-5 hood dent. Each before photo sits beside the matching
+// finished view; the last two are extra finished-repair angles.
 const hoodPhotos = [
-  { image: hoodFront, file: 'front', landscape: true, caption: 'Hood and front end after repair', alt: 'Red Mazda CX-5 photographed from the front corner after the hood dent repair, with a smooth, even hood.' },
-  { image: hoodHeadOn, file: 'head-on', landscape: true, caption: 'Straight-on view of the finished hood', alt: 'Red Mazda CX-5 photographed head-on after the hood dent repair.' },
-  { image: hoodTop, file: 'hood-top', landscape: false, caption: 'Repaired area from above', alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.' },
-  { image: hoodEdge, file: 'hood-edge', landscape: false, caption: 'Hood edge and fender gap', alt: 'Close view of the repaired hood edge where it meets the fender, showing an even panel and gap.' },
+  { image: hoodBeforeFront, file: 'before-front', stage: 'Before', focus: 'center 48%', caption: 'Dent in the middle of the hood', alt: 'Red Mazda CX-5 before the repair, with a dent visible in the middle of its dusty hood.' },
+  { image: hoodFront, file: 'front', stage: 'After', focus: 'center', caption: 'Hood and front end after repair', alt: 'Red Mazda CX-5 photographed from the front corner after the hood dent repair, with a smooth, even hood.' },
+  { image: hoodBeforeReflection, file: 'before-reflection', stage: 'Before', focus: 'center 42%', caption: 'Reflection bending around the dent', alt: 'Before the repair: tree and sky reflections twist into a swirl around the dent in the hood.' },
+  { image: hoodTop, file: 'hood-top', stage: 'After', focus: 'center 60%', caption: 'Even reflections across the panel', alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.' },
+  { image: hoodBeforeClose, file: 'before-close', stage: 'Before', focus: 'center 52%', caption: 'The dent up close', alt: 'Close view of the dent in the red hood before the repair, with dust on the paint around it.' },
+  { image: hoodClose, file: 'hood-close', stage: 'After', focus: 'center 60%', caption: 'The same panel up close', alt: 'Close view of the repaired red hood, smooth with unbroken sky reflections.' },
+  { image: hoodHeadOn, file: 'head-on', stage: 'After', focus: 'center', caption: 'Straight-on view of the finished hood', alt: 'Red Mazda CX-5 photographed head-on after the hood dent repair.' },
+  { image: hoodEdge, file: 'hood-edge', stage: 'After', focus: 'center 60%', caption: 'Hood edge and fender gap', alt: 'Close view of the repaired hood edge where it meets the fender, showing an even panel and gap.' },
+];
+// White Genesis sedan rear quarter panel: damage on arrival beside the finished panel.
+const quarterPhotos = [
+  { image: quarterBeforeSide, file: 'before-side', stage: 'Before', caption: 'Dent beside the trunk lid', alt: 'White Genesis sedan before the repair, with a deep dent in the rear quarter panel beside the trunk lid and chipped paint at the corner.' },
+  { image: quarterAfterSide, file: 'after-side', stage: 'After', caption: 'Smooth panel down to the tail light', alt: 'White Genesis sedan after the repair, with a smooth rear quarter panel running past the fuel door to the tail light.' },
+  { image: quarterBeforeRear, file: 'before-rear', stage: 'Before', caption: 'Creased panel above the tail light', alt: 'White Genesis sedan before the repair, seen from behind, with the quarter panel creased above the tail light.' },
+  { image: quarterAfterPanel, file: 'after-panel', stage: 'After', caption: 'Repaired quarter panel and fuel door', alt: 'Close view of the repaired white quarter panel around the fuel door, with even paint above the rear wheel.' },
 ];
 const workshopPhotos = [
   { image: engines, file: 'img-3187', caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
@@ -99,19 +120,38 @@ const workshopVideos = [
     <article class="job-study hood-study" aria-labelledby="hood-job-title">
       <div data-reveal class="job-story">
         <h3 id="hood-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Hood dent repair</h3>
-        <p class="job-intro">A Mazda CX-5 came in with a dented hood. These are the finished-repair photos, taken as the car left the shop.</p>
+        <p class="job-intro">A Mazda CX-5 came in with a dent in the middle of its hood. The before photos sit beside the same views after the repair.</p>
       </div>
 
       <div data-reveal="stagger" class="hood-gallery">
         {hoodPhotos.map((photo) => (
-          <figure class:list={[photo.landscape ? 'is-landscape' : 'is-portrait']}>
-            <a href={`${hoodMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open photo: ${photo.caption.toLowerCase()} (new tab)`}>
-              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} loading="lazy" decoding="async" />
+          <figure>
+            <a href={`${hoodMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.stage.toLowerCase()} photo: ${photo.caption.toLowerCase()} (new tab)`}>
+              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} style={`object-position: ${photo.focus}`} loading="lazy" decoding="async" />
             </a>
-            <figcaption><span>After</span>{photo.caption}</figcaption>
+            <figcaption><span class:list={[photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>{photo.caption}</figcaption>
           </figure>
         ))}
-        <p class="photo-note">Photographed in our lot after the repair was completed.</p>
+        <p class="photo-note">Before and after photographed in our lot.</p>
+      </div>
+    </article>
+
+    <article class="job-study hood-study" aria-labelledby="quarter-job-title">
+      <div data-reveal class="job-story">
+        <h3 id="quarter-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Rear quarter panel dent</h3>
+        <p class="job-intro">A Genesis sedan came in with a dented rear quarter panel and chipped paint beside the trunk lid. The before photos sit beside the finished panel.</p>
+      </div>
+
+      <div data-reveal="stagger" class="hood-gallery is-tall">
+        {quarterPhotos.map((photo) => (
+          <figure>
+            <a href={`${quarterMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.stage.toLowerCase()} photo: ${photo.caption.toLowerCase()} (new tab)`}>
+              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} loading="lazy" decoding="async" />
+            </a>
+            <figcaption><span class:list={[photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>{photo.caption}</figcaption>
+          </figure>
+        ))}
+        <p class="photo-note">Before and after photographed in our lot.</p>
       </div>
     </article>
 
@@ -172,10 +212,11 @@ const workshopVideos = [
   .hood-gallery figure { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--color-paper); }
   .hood-gallery figure > a { display: block; overflow: hidden; }
   .hood-gallery img { aspect-ratio: 4 / 3; object-fit: cover; transition: transform .35s var(--ease-out-expo); }
-  .hood-gallery .is-portrait img { object-position: center 60%; }
+  .hood-gallery.is-tall img { aspect-ratio: 3 / 4; }
   .hood-gallery a:hover img { transform: scale(1.025); }
   .hood-gallery figcaption { display: flex; align-items: center; gap: .625rem; padding: .875rem 1rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.5; }
   .hood-gallery figcaption span { flex-shrink: 0; padding: .125rem .5rem; border-radius: 999px; background: color-mix(in srgb, var(--color-success) 14%, transparent); color: var(--color-success); font-size: .6875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .hood-gallery figcaption span.is-before { background: color-mix(in srgb, #b42318 12%, transparent); color: #b42318; }
   .job-details { margin-top: 1.25rem; }
   .technician-notes { margin-top: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--radius-card); background: var(--color-paper); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
   .technician-notes h4 { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; font-weight: 600; }

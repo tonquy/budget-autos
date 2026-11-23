@@ -19,6 +19,9 @@ The existing `src/assets/images/jobs/` photos and `/public/jobs/` photos and vid
 - Engine video: `/jobs/workshop/img-3189-silent.mp4`, 8.8 seconds, 720×1280, 2,450,679 bytes. Poster: `/jobs/workshop/img-3189-poster.webp`.
 - Brake video: `/jobs/workshop/img-2918-silent.mp4`, 14.6 seconds, 720×1280, 4,034,310 bytes. Poster: `/jobs/workshop/img-2918-poster.webp`.
 
+- Hood dent job (red Mazda CX-5): `jobs/hood-dent/`. `before-front`, `before-close` and `before-reflection` were photographed on 2026-10-26 before the repair; `front`, `head-on`, `hood-top`, `hood-edge` and `hood-close` are the finished repair.
+- Rear quarter panel dent job (white Genesis sedan): `jobs/quarter-dent/`. `before-side` and `before-rear` were photographed on 2026-10-26 before the repair; `after-side` and `after-panel` were photographed on 2026-11-19 after it.
+
 Videos have no audio. Render with a poster, explicit controls, `playsinline`, and `preload="none"`; downloading video is a visitor action. No new videos were generated.
 
 ## New service illustrations
