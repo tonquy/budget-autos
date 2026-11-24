@@ -171,10 +171,21 @@ import { business } from '../../lib/business';
     .hero-form, .hf-badge, .hf-badge-arrow, .hf-free, .hf-submit, .hf-go { animation: none; }
   }
 
+  /* Phones: a compact card so the headline, form and button all fit on one
+     screen. The intro and trust lines drop out; the hero copy covers them. */
   @media (max-width: 767px) {
-    .hero-form { padding: 1.125rem; }
-    .hf-head h2 { font-size: 1.375rem; }
-    .hf-fields { margin-top: .875rem; }
+    .hero-form { padding: 1rem .875rem .875rem; border-radius: 1rem; }
+    .hf-badge { padding: .25rem .625rem; font-size: .6875rem; }
+    .hf-head { margin-top: .25rem; }
+    .hf-head h2 { font-size: 1.125rem; }
+    .hf-head p, .hf-trust { display: none; }
+    .hf-fields { gap: .4rem; margin-top: .625rem; }
+    .hf-field { border-radius: .625rem; }
+    .hf-field label { padding: .375rem .75rem 0; font-size: .6875rem; }
+    .hf-field input { padding: 0 .75rem .375rem; line-height: 1.35; }
+    .hf-error { padding: 0 .75rem .375rem; }
+    .hf-submit { min-height: 2.75rem; margin-top: .625rem; font-size: .9375rem; }
+    .hf-note { margin-top: .5rem; font-size: .6875rem; }
   }
 </style>
 
