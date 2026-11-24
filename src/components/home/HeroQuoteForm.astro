@@ -1,0 +1,404 @@
+---
+import Icon from '../Icon.astro';
+import { business } from '../../lib/business';
+---
+
+{/*
+  Quick quote form for the homepage hero. Two required fields (name, phone) and
+  one optional line, posted to the same /api/quote endpoint as the full quote
+  page. Turnstile loads on first touch and stays invisible unless Cloudflare
+  asks for an interaction, so the visitor normally never sees a check.
+*/}
+<form class="hero-form" data-hero-form novalidate aria-labelledby="hero-form-title">
+  {/* Attention cues: they calm down as soon as the visitor starts typing. */}
+  <p class="hf-badge">
+    <svg class="hf-badge-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15m-6-6l6 6l6-6" /></svg>
+    <span>Start here. Takes 30 seconds.</span>
+    <svg class="hf-badge-arrow" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v15m-6-6l6 6l6-6" /></svg>
+  </p>
+
+  <div class="hf-head">
+    <h2 id="hero-form-title">Get an <span class="hf-free">instant</span> quote</h2>
+    <p>Leave your number and we&rsquo;ll text or call you back, usually within the hour during shop hours.</p>
+  </div>
+
+  {/* Honeypot: real visitors never see or fill this. */}
+  <input type="text" name="company" tabindex="-1" autocomplete="off" class="hf-trap" aria-hidden="true" />
+
+  <div class="hf-fields">
+    <div class="hf-field" data-field="name">
+      <label for="hf-name">Your name</label>
+      <input
+        id="hf-name"
+        name="name"
+        type="text"
+        autocomplete="name"
+        autocapitalize="words"
+        placeholder="Mike Reynolds"
+        enterkeyhint="next"
+        maxlength="100"
+        required
+        aria-describedby="hf-name-error"
+      />
+      <p class="hf-error" id="hf-name-error" hidden></p>
+    </div>
+
+    <div class="hf-field" data-field="phone">
+      <label for="hf-phone">Phone number</label>
+      <input
+        id="hf-phone"
+        name="phone"
+        type="tel"
+        inputmode="tel"
+        placeholder="(607) 555-0142"
+        autocomplete="tel"
+        enterkeyhint="next"
+        maxlength="20"
+        required
+        aria-describedby="hf-phone-error"
+      />
+      <p class="hf-error" id="hf-phone-error" hidden></p>
+    </div>
+
+    <div class="hf-field" data-field="message">
+      <label for="hf-message">What&rsquo;s going on? <span>Optional</span></label>
+      <input
+        id="hf-message"
+        name="message"
+        type="text"
+        autocomplete="off"
+        enterkeyhint="send"
+        maxlength="300"
+        placeholder="Brakes grinding on my 2018 Camry"
+      />
+    </div>
+  </div>
+
+  <div class="hf-turnstile" data-turnstile></div>
+  <p class="hf-alert" data-alert role="alert" hidden></p>
+
+  <button type="submit" class="btn btn-primary btn-lg hf-submit">
+    <span class="hf-idle">Get my instant quote <span class="hf-go"><Icon name="arrow-up-right" class="size-4" /></span></span>
+    <span class="hf-busy"><Icon name="loader-circle" class="size-4 animate-spin" /> Sending&hellip;</span>
+  </button>
+
+  <p class="hf-note">
+    <Icon name="shield-check" class="size-4 shrink-0" />
+    <span>Free, no obligation. We only use your number to reply about your car.</span>
+  </p>
+
+  <p class="hf-trust">
+    <span class="hf-stars" aria-hidden="true">★★★★★</span>
+    <span>5.0 on Google</span>
+    <span class="hf-dot" aria-hidden="true">·</span>
+    <span>Family-owned since {business.foundedYear}</span>
+  </p>
+</form>
+
+<style>
+  .hero-form { position: relative; width: 100%; padding: 1.5rem; border-radius: 1.25rem; background: var(--color-surface); color: var(--color-ink); text-align: left; box-shadow: 0 2px 4px rgb(0 0 0 / 12%), 0 28px 60px -20px rgb(0 0 0 / 55%); }
+  .hf-head h2 { font-size: 1.5rem; font-weight: 700; line-height: 1.15; letter-spacing: -.03em; }
+  .hf-head p { margin-top: .375rem; font-size: .875rem; line-height: 1.5; color: var(--color-steel-700); }
+  .hf-trap { position: absolute; left: -9999px; width: 0; height: 0; opacity: 0; }
+
+  .hf-fields { display: grid; gap: .625rem; margin-top: 1.125rem; }
+  /* Label sits inside the box, so each field is one tall tap target. */
+  .hf-field label { display: block; padding: .5rem .875rem 0; font-size: .75rem; font-weight: 600; line-height: 1.2; color: var(--color-steel-700); cursor: text; }
+  .hf-field label span { margin-left: .25rem; font-weight: 400; color: var(--color-steel-500); }
+  .hf-field { border: 1px solid var(--color-steel-300); border-radius: .75rem; background: var(--color-surface); transition: border-color .15s, box-shadow .15s; }
+  .hf-field:focus-within { border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 22%, transparent); }
+  .hf-field.is-invalid { border-color: #b42318; }
+  .hf-field.is-invalid:focus-within { box-shadow: 0 0 0 3px rgb(180 35 24 / 18%); }
+  /* 16px keeps iOS Safari from zooming the page when a field is focused. */
+  .hf-field input { display: block; width: 100%; padding: .125rem .875rem .5rem; border: 0; border-radius: .75rem; background: transparent; font-size: 1rem; line-height: 1.5; color: var(--color-ink); outline: none; }
+  .hf-field input::placeholder { color: var(--color-steel-500); }
+  .hf-error { padding: 0 .875rem .5rem; font-size: .75rem; line-height: 1.35; color: #b42318; }
+
+  .hf-turnstile.is-visible { margin-top: .75rem; }
+  .hf-alert { margin-top: .75rem; padding: .625rem .875rem; border-radius: .75rem; background: #fef3f2; font-size: .8125rem; line-height: 1.45; color: #b42318; }
+  .hf-alert.is-info { background: var(--color-steel-100); color: var(--color-ink-soft); }
+
+  .hf-submit { width: 100%; min-height: 3.25rem; margin-top: .875rem; font-size: 1rem; }
+  .hf-submit:disabled { cursor: progress; opacity: .75; }
+  .hf-idle, .hf-busy { display: inline-flex; align-items: center; gap: .5rem; }
+  .hf-busy { display: none; }
+  .hero-form[data-state='sending'] .hf-idle { display: none; }
+  .hero-form[data-state='sending'] .hf-busy { display: inline-flex; }
+
+  .hf-note { display: flex; align-items: flex-start; gap: .5rem; margin-top: .75rem; font-size: .75rem; line-height: 1.45; color: var(--color-steel-700); }
+  .hf-note :global(svg) { margin-top: .0625rem; color: var(--color-success); }
+  .hf-trust { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem .4rem; margin-top: .875rem; padding-top: .875rem; border-top: 1px solid var(--color-steel-100); font-size: .75rem; font-weight: 600; color: var(--color-ink-soft); }
+  .hf-stars { letter-spacing: .08em; color: var(--color-accent); }
+  .hf-dot { color: var(--color-steel-500); }
+
+  /* --- Motion: draws the eye to the form, then gets out of the way --- */
+  .hero-form { animation: hf-rise .7s cubic-bezier(.16, 1, .3, 1) both; }
+  .hf-badge { position: absolute; top: 0; left: 50%; display: inline-flex; align-items: center; gap: .4rem; padding: .375rem .75rem; border-radius: 999px; background: var(--color-ink); color: #fff; font-size: .75rem; font-weight: 700; letter-spacing: .01em; white-space: nowrap; box-shadow: 0 6px 16px -6px rgb(0 0 0 / 55%); transform: translate(-50%, -50%); animation: hf-hop 2.4s cubic-bezier(.3, 0, .3, 1) 1s infinite; }
+  .hf-badge-arrow { color: #ffb27d; animation: hf-arrow 1s ease-in-out infinite; }
+  .hf-badge-arrow:last-child { animation-delay: .15s; }
+  .hf-head { margin-top: .5rem; }
+  .hf-free { display: inline-block; color: var(--color-accent); animation: hf-pop 3.2s ease-in-out 1.6s infinite; }
+  .hf-submit { animation: hf-pulse 2.2s ease-out 1.2s infinite; }
+  .hf-go { display: inline-flex; animation: hf-nudge 1.1s ease-in-out infinite; }
+
+  /* Once someone is typing, stop moving things around them. */
+  .hero-form:focus-within .hf-badge,
+  .hero-form:focus-within .hf-badge-arrow,
+  .hero-form:focus-within .hf-free,
+  .hero-form[data-state='sending'] .hf-submit { animation: none; }
+
+  @keyframes hf-rise { from { opacity: 0; transform: translateY(1.25rem) scale(.98); } to { opacity: 1; transform: none; } }
+  /* Two quick hops, then a rest, so it reads as a nudge instead of a loop. */
+  @keyframes hf-hop {
+    0%, 36%, 100% { transform: translate(-50%, -50%); }
+    9% { transform: translate(-50%, calc(-50% - 9px)); }
+    18% { transform: translate(-50%, -50%); }
+    26% { transform: translate(-50%, calc(-50% - 4px)); }
+  }
+  @keyframes hf-arrow { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(3px); } }
+  @keyframes hf-pop {
+    0%, 14%, 100% { transform: none; }
+    4% { transform: translateY(-5px) rotate(-4deg) scale(1.08); }
+    9% { transform: translateY(0) rotate(2deg) scale(1.02); }
+  }
+  @keyframes hf-pulse {
+    0% { box-shadow: var(--shadow-accent), 0 0 0 0 color-mix(in srgb, var(--color-accent) 55%, transparent); }
+    70%, 100% { box-shadow: var(--shadow-accent), 0 0 0 14px transparent; }
+  }
+  @keyframes hf-nudge { 0%, 100% { transform: none; } 50% { transform: translate(3px, -3px); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-form, .hf-badge, .hf-badge-arrow, .hf-free, .hf-submit, .hf-go { animation: none; }
+  }
+
+  @media (max-width: 767px) {
+    .hero-form { padding: 1.125rem; }
+    .hf-head h2 { font-size: 1.375rem; }
+    .hf-fields { margin-top: .875rem; }
+  }
+</style>
+
+<script>
+  type TurnstileApi = {
+    render: (container: HTMLElement, options: Record<string, unknown>) => string;
+    reset: (widgetId?: string) => void;
+  };
+
+  // Public by design, with the production key as a fallback. Mirrors the quote page.
+  const SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() || '0x4AAAAAAD7eom-KB1HZ1Qex';
+  const SCRIPT_ID = 'turnstile-script';
+  const TOKEN_WAIT_MS = 15000;
+
+  const turnstileApi = () => (window as unknown as { turnstile?: TurnstileApi }).turnstile;
+
+  function digitsOf(value: string) {
+    const digits = value.replace(/\D/g, '');
+    return digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits;
+  }
+
+  function formatPhone(value: string) {
+    const d = digitsOf(value).slice(0, 10);
+    if (d.length < 4) return d;
+    if (d.length < 7) return `(${d.slice(0, 3)}) ${d.slice(3)}`;
+    return `(${d.slice(0, 3)}) ${d.slice(3, 6)}-${d.slice(6)}`;
+  }
+
+  function initHeroForm(form: HTMLFormElement) {
+    const nameInput = form.querySelector<HTMLInputElement>('#hf-name')!;
+    const phoneInput = form.querySelector<HTMLInputElement>('#hf-phone')!;
+    const messageInput = form.querySelector<HTMLInputElement>('#hf-message')!;
+    const trap = form.querySelector<HTMLInputElement>('input[name="company"]')!;
+    const submit = form.querySelector<HTMLButtonElement>('.hf-submit')!;
+    const alertBox = form.querySelector<HTMLElement>('[data-alert]')!;
+    const turnstileBox = form.querySelector<HTMLElement>('[data-turnstile]')!;
+
+    let token = '';
+    let widgetId: string | null = null;
+    let widgetStarted = false;
+    let waiters: ((value: string) => void)[] = [];
+
+    function settle(value: string) {
+      token = value;
+      const pending = waiters;
+      waiters = [];
+      pending.forEach((resolve) => resolve(value));
+    }
+
+    function showAlert(text: string, info = false) {
+      alertBox.textContent = text;
+      alertBox.classList.toggle('is-info', info);
+      alertBox.hidden = !text;
+    }
+
+    function renderWidget() {
+      const api = turnstileApi();
+      if (!api || widgetId) return;
+      widgetId = api.render(turnstileBox, {
+        sitekey: SITE_KEY,
+        action: 'turnstile-spin-v2',
+        theme: 'light',
+        size: 'flexible',
+        // Hidden unless Cloudflare decides it needs the visitor to tap.
+        appearance: 'interaction-only',
+        callback: (value: string) => {
+          if (alertBox.classList.contains('is-info')) showAlert('');
+          turnstileBox.classList.remove('is-visible');
+          settle(value);
+        },
+        'expired-callback': () => {
+          token = '';
+        },
+        'error-callback': () => settle(''),
+        'before-interactive-callback': () => {
+          turnstileBox.classList.add('is-visible');
+          if (form.dataset.state === 'sending') showAlert('One quick check, then we send it.', true);
+        },
+      });
+    }
+
+    function startWidget() {
+      if (widgetStarted) return;
+      widgetStarted = true;
+
+      if (!document.getElementById(SCRIPT_ID)) {
+        const script = document.createElement('script');
+        script.id = SCRIPT_ID;
+        script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        script.async = true;
+        script.defer = true;
+        document.head.appendChild(script);
+      }
+
+      // Another component may have added the script already, so poll for the
+      // API instead of relying on this script tag's own load event.
+      let tries = 0;
+      const timer = window.setInterval(() => {
+        tries += 1;
+        if (turnstileApi()) {
+          window.clearInterval(timer);
+          renderWidget();
+        } else if (tries > 150) {
+          window.clearInterval(timer);
+          settle('');
+        }
+      }, 100);
+    }
+
+    function waitForToken() {
+      if (token) return Promise.resolve(token);
+      startWidget();
+      return new Promise<string>((resolve) => {
+        waiters.push(resolve);
+        window.setTimeout(() => resolve(token), TOKEN_WAIT_MS);
+      });
+    }
+
+    function setFieldError(input: HTMLInputElement, text: string) {
+      const field = input.closest<HTMLElement>('.hf-field')!;
+      const error = field.querySelector<HTMLElement>('.hf-error');
+      field.classList.toggle('is-invalid', Boolean(text));
+      if (text) input.setAttribute('aria-invalid', 'true');
+      else input.removeAttribute('aria-invalid');
+      if (error) {
+        error.textContent = text;
+        error.hidden = !text;
+      }
+    }
+
+    function validate() {
+      const nameError = nameInput.value.trim().length < 2 ? 'Add your name so we know who to ask for.' : '';
+      const phoneValue = phoneInput.value.trim();
+      const phoneOk = /^[0-9()+\-.\s]+$/.test(phoneValue) && phoneValue.replace(/\D/g, '').length >= 10;
+      const phoneError = phoneOk ? '' : 'Add a 10-digit number we can reach you at.';
+      setFieldError(nameInput, nameError);
+      setFieldError(phoneInput, phoneError);
+      if (nameError) nameInput.focus();
+      else if (phoneError) phoneInput.focus();
+      return !nameError && !phoneError;
+    }
+
+    // Start the invisible check the moment the visitor shows intent, so the
+    // token is ready long before they reach the button.
+    form.addEventListener('focusin', startWidget, { once: true });
+    form.addEventListener('pointerdown', startWidget, { once: true });
+
+    nameInput.addEventListener('input', () => setFieldError(nameInput, ''));
+    phoneInput.addEventListener('input', (event) => {
+      setFieldError(phoneInput, '');
+      const value = phoneInput.value;
+      const deleting = (event as InputEvent).inputType?.startsWith('delete');
+      const caretAtEnd = phoneInput.selectionStart === value.length;
+      // Leave international numbers and mid-string edits exactly as typed.
+      if (deleting || !caretAtEnd || value.trim().startsWith('+')) return;
+      phoneInput.value = formatPhone(value);
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (form.dataset.state === 'sending') return;
+      showAlert('');
+      if (!validate()) return;
+
+      form.dataset.state = 'sending';
+      submit.disabled = true;
+
+      const fail = (text: string) => {
+        form.dataset.state = 'idle';
+        submit.disabled = false;
+        showAlert(text);
+        const api = turnstileApi();
+        if (api && widgetId) api.reset(widgetId);
+        token = '';
+      };
+
+      const turnstileToken = await waitForToken();
+      if (!turnstileToken) {
+        fail('We could not confirm the request from this browser. Please try again, or call us and we will take it from there.');
+        return;
+      }
+
+      const typed = messageInput.value.trim();
+      const message = !typed
+        ? 'Quick quote request from the homepage. No details given yet.'
+        : typed.length >= 10
+          ? typed
+          : `${typed} (sent from the homepage quick quote form)`;
+
+      const body = new FormData();
+      body.set('flow', 'unknown-intake');
+      body.set('name', nameInput.value.trim());
+      body.set('phone', phoneInput.value.trim());
+      body.set('contactPreference', 'text');
+      body.set('message', message);
+      body.set('turnstileToken', turnstileToken);
+      if (trap.value) body.set('company', trap.value);
+
+      try {
+        const response = await fetch('/api/quote', { method: 'POST', body });
+        const result = (await response.json()) as {
+          ok: boolean;
+          error?: string;
+          fieldErrors?: Record<string, string[]>;
+        };
+
+        if (!response.ok || !result.ok) {
+          fail(result.error ?? 'Something went wrong. Please try again, or call us.');
+          if (result.fieldErrors?.name?.[0]) setFieldError(nameInput, result.fieldErrors.name[0]);
+          if (result.fieldErrors?.phone?.[0]) setFieldError(phoneInput, result.fieldErrors.phone[0]);
+          return;
+        }
+
+        try {
+          sessionStorage.setItem('budgetauto-quote-submitted', '1');
+        } catch {
+          /* private mode: the thank-you page still loads, only the Lead event is skipped */
+        }
+        window.location.assign('/thank-you');
+      } catch {
+        fail('Something went wrong sending your request. Please try again, or call us.');
+      }
+    });
+  }
+
+  document.querySelectorAll<HTMLFormElement>('[data-hero-form]').forEach(initHeroForm);
+</script>
