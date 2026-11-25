@@ -153,7 +153,7 @@ const workshopVideos = [
 
 const tabThumb = (job: Job) => (job.pair ? job.pair[1] : job.more[0]);
 const openLabel = (photo: Photo) =>
-  `Open ${photo.stage ? `${photo.stage.toLowerCase()} photo: ` : ''}${photo.caption.toLowerCase()} (new tab)`;
+  `View larger: ${photo.stage ? `${photo.stage.toLowerCase()}, ` : ''}${photo.caption.toLowerCase()}`;
 ---
 
 <section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
@@ -198,7 +198,7 @@ const openLabel = (photo: Photo) =>
             <div class="job-pair">
               {job.pair.map((photo) => (
                 <figure>
-                  <a href={photo.href} target="_blank" rel="noopener" aria-label={openLabel(photo)}>
+                  <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)}>
                     <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 900px) 420px, 46vw" quality={75} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
                     <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>
                   </a>
@@ -219,7 +219,7 @@ const openLabel = (photo: Photo) =>
               <ul>
                 {job.more.map((photo) => (
                   <li>
-                    <a href={photo.href} target="_blank" rel="noopener" aria-label={openLabel(photo)} title={photo.caption}>
+                    <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)} title={photo.caption}>
                       <Image src={photo.image} widths={[160, 240, 360]} sizes={job.pair ? '(min-width: 900px) 130px, 30vw' : '(min-width: 900px) 280px, 32vw'} quality={70} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
                       {photo.stage && <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>}
                     </a>
@@ -278,6 +278,22 @@ const openLabel = (photo: Photo) =>
       ))}
     </div>
   </div>
+
+  {/* Photo viewer. Filled in by the script below; the links keep their href so
+      the full-size photo still opens if the script never runs. */}
+  <dialog class="viewer" data-viewer aria-label="Photo viewer">
+    <figure>
+      <img data-viewer-img alt="" />
+      <figcaption>
+        <span class="stage" data-viewer-stage hidden></span>
+        <span data-viewer-caption></span>
+        <span class="viewer-count" data-viewer-count></span>
+      </figcaption>
+    </figure>
+    <button type="button" class="viewer-btn viewer-close" data-viewer-close aria-label="Close photo">✕</button>
+    <button type="button" class="viewer-btn viewer-prev" data-viewer-prev aria-label="Previous photo">‹</button>
+    <button type="button" class="viewer-btn viewer-next" data-viewer-next aria-label="Next photo">›</button>
+  </dialog>
 </section>
 
 <script>
@@ -308,6 +324,66 @@ const openLabel = (photo: Photo) =>
       });
     });
   });
+
+  // Photo viewer: clicking a photo enlarges it in place. Arrows (buttons, keys
+  // or a swipe) step through the photos of the same job; Esc, ✕ or a click on
+  // the dark backdrop closes it.
+  const viewer = document.querySelector<HTMLDialogElement>('[data-viewer]');
+  if (viewer && typeof viewer.showModal === 'function') {
+    const img = viewer.querySelector<HTMLImageElement>('[data-viewer-img]')!;
+    const stage = viewer.querySelector<HTMLElement>('[data-viewer-stage]')!;
+    const caption = viewer.querySelector<HTMLElement>('[data-viewer-caption]')!;
+    const count = viewer.querySelector<HTMLElement>('[data-viewer-count]')!;
+    const prev = viewer.querySelector<HTMLButtonElement>('[data-viewer-prev]')!;
+    const next = viewer.querySelector<HTMLButtonElement>('[data-viewer-next]')!;
+    let group: HTMLAnchorElement[] = [];
+    let index = 0;
+
+    function show(i: number) {
+      index = (i + group.length) % group.length;
+      const link = group[index];
+      const thumb = link.querySelector('img');
+      img.src = link.href;
+      img.alt = thumb?.alt ?? '';
+      caption.textContent = link.dataset.caption ?? '';
+      const label = link.dataset.stage ?? '';
+      stage.textContent = label;
+      stage.hidden = !label;
+      stage.classList.toggle('is-before', label === 'Before');
+      count.textContent = group.length > 1 ? `${index + 1} / ${group.length}` : '';
+      prev.hidden = next.hidden = group.length < 2;
+    }
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-zoom]').forEach((link) => {
+      link.addEventListener('click', (event) => {
+        event.preventDefault();
+        const panel = link.closest('.job-panel') ?? document;
+        group = Array.from(panel.querySelectorAll<HTMLAnchorElement>('[data-zoom]'));
+        show(group.indexOf(link));
+        viewer.showModal();
+      });
+    });
+
+    prev.addEventListener('click', () => show(index - 1));
+    next.addEventListener('click', () => show(index + 1));
+    viewer.querySelector('[data-viewer-close]')!.addEventListener('click', () => viewer.close());
+    // A click that lands on the dialog itself (not the photo or buttons) is the backdrop.
+    viewer.addEventListener('click', (event) => {
+      if (event.target === viewer) viewer.close();
+    });
+    viewer.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(index - 1);
+      if (event.key === 'ArrowRight') show(index + 1);
+    });
+    viewer.addEventListener('close', () => img.removeAttribute('src'));
+
+    let startX = 0;
+    viewer.addEventListener('touchstart', (event) => { startX = event.touches[0].clientX; }, { passive: true });
+    viewer.addEventListener('touchend', (event) => {
+      const dx = event.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 50 && group.length > 1) show(index + (dx < 0 ? 1 : -1));
+    });
+  }
 </script>
 
 <style>
@@ -393,7 +469,36 @@ const openLabel = (photo: Photo) =>
     .job-more.is-only ul { --cols: 3; --gap: .625rem; }
     .thumb-caption { font-size: .75rem; }
   }
+  /* Photo viewer: fills the screen; the empty area around the photo is the
+     click-to-close backdrop. */
+  .job-pair a, .job-more a { cursor: zoom-in; }
+  .viewer { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: clamp(3.5rem, 6vw, 4.5rem) clamp(.75rem, 6vw, 5rem) 1.25rem; border: 0; background: rgb(10 11 14 / 96%); color: white; }
+  .viewer::backdrop { background: rgb(10 11 14 / 60%); }
+  .viewer[open] { display: flex; align-items: center; justify-content: center; animation: viewer-in .25s var(--ease-out-expo); }
+  .viewer figure { display: flex; flex-direction: column; align-items: center; max-width: 100%; max-height: 100%; }
+  .viewer img { width: auto; max-width: 100%; max-height: calc(100dvh - 9rem); border-radius: .75rem; object-fit: contain; box-shadow: 0 20px 60px rgb(0 0 0 / 50%); }
+  .viewer figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem .75rem; margin-top: .875rem; font-size: .875rem; color: #e8e5e1; text-align: center; }
+  .viewer .stage { position: static; box-shadow: none; }
+  .viewer-count { color: #a3a5aa; font-variant-numeric: tabular-nums; }
+  .viewer-btn { position: absolute; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: rgb(255 255 255 / 12%); color: white; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color .2s; }
+  .viewer-btn:hover { background: rgb(255 255 255 / 24%); }
+  .viewer-close { top: 1rem; right: 1rem; font-size: 1.125rem; }
+  .viewer-prev, .viewer-next { top: 50%; transform: translateY(-50%); font-size: 2rem; padding-bottom: .2rem; }
+  .viewer-prev { left: clamp(.5rem, 2vw, 1.5rem); }
+  .viewer-next { right: clamp(.5rem, 2vw, 1.5rem); }
+  .viewer-btn[hidden] { display: none; }
+  @keyframes viewer-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: none; } }
+  @media (max-width: 719px) {
+    /* On phones the arrows sit under the photo so they never cover it. */
+    .viewer-prev, .viewer-next { top: auto; bottom: 1rem; transform: none; }
+    .viewer-prev { left: calc(50% - 3.25rem); }
+    .viewer-next { right: calc(50% - 3.25rem); }
+    .viewer { padding-bottom: 4.5rem; }
+    .viewer img { max-height: calc(100dvh - 11rem); }
+  }
+
   @media (prefers-reduced-motion: reduce) {
+    .viewer[open] { animation: none; }
     .job-panel:not([hidden]) { animation: none; }
     .job-pair img, .job-more img { transition: none; }
     .job-pair a:hover img, .job-more a:hover img { transform: none; }
