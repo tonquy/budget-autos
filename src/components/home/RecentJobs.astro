@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
 import before from '../../assets/images/jobs/before.webp';
 import after from '../../assets/images/jobs/after.webp';
 import caliper from '../../assets/images/jobs/caliper-detail.webp';
@@ -11,7 +12,6 @@ import hoodFront from '../../assets/images/jobs/hood-dent/front.webp';
 import hoodHeadOn from '../../assets/images/jobs/hood-dent/head-on.webp';
 import hoodTop from '../../assets/images/jobs/hood-dent/hood-top.webp';
 import hoodEdge from '../../assets/images/jobs/hood-dent/hood-edge.webp';
-const media = '/jobs/electric-brake';
 import hoodClose from '../../assets/images/jobs/hood-dent/hood-close.webp';
 import hoodBeforeFront from '../../assets/images/jobs/hood-dent/before-front.webp';
 import hoodBeforeClose from '../../assets/images/jobs/hood-dent/before-close.webp';
@@ -20,235 +20,382 @@ import quarterBeforeSide from '../../assets/images/jobs/quarter-dent/before-side
 import quarterBeforeRear from '../../assets/images/jobs/quarter-dent/before-rear.webp';
 import quarterAfterSide from '../../assets/images/jobs/quarter-dent/after-side.webp';
 import quarterAfterPanel from '../../assets/images/jobs/quarter-dent/after-panel.webp';
+import glassBefore1 from '../../assets/images/jobs/window-repair/before1.webp';
+import glassBefore2 from '../../assets/images/jobs/window-repair/before2.webp';
+import glassBefore3 from '../../assets/images/jobs/window-repair/before3.webp';
+import glassBefore4 from '../../assets/images/jobs/window-repair/before4.webp';
+import glassAfter1 from '../../assets/images/jobs/window-repair/after1.webp';
+import glassAfter2 from '../../assets/images/jobs/window-repair/after2.webp';
+
+/*
+  Recent work, one job at a time. A tab row picks the job; each panel leads
+  with one before/after pair and tucks the remaining photos into a thumbnail
+  strip, so the homepage never turns into a long photo scroll. Every photo
+  links to its full-size copy under /public/jobs/.
+*/
+
+type Stage = 'Before' | 'After';
+type Photo = {
+  image: ImageMetadata;
+  href: string;
+  stage?: Stage;
+  caption: string;
+  alt: string;
+  focus?: string;
+  reading?: string;
+};
+type Job = {
+  id: string;
+  tab: string;
+  title: string;
+  intro: string;
+  /** Aspect ratio of the lead before/after pair. */
+  ratio: string;
+  pair?: [Photo, Photo];
+  more: Photo[];
+  note?: string;
+};
+
+const brakeMedia = '/jobs/electric-brake';
 const hoodMedia = '/jobs/hood-dent';
 const quarterMedia = '/jobs/quarter-dent';
-// Red Mazda CX-5 hood dent. Each before photo sits beside the matching
-// finished view; the last two are extra finished-repair angles.
-const hoodPhotos = [
-  { image: hoodBeforeFront, file: 'before-front', stage: 'Before', focus: 'center 48%', caption: 'Dent in the middle of the hood', alt: 'Red Mazda CX-5 before the repair, with a dent visible in the middle of its dusty hood.' },
-  { image: hoodFront, file: 'front', stage: 'After', focus: 'center', caption: 'Hood and front end after repair', alt: 'Red Mazda CX-5 photographed from the front corner after the hood dent repair, with a smooth, even hood.' },
-  { image: hoodBeforeReflection, file: 'before-reflection', stage: 'Before', focus: 'center 42%', caption: 'Reflection bending around the dent', alt: 'Before the repair: tree and sky reflections twist into a swirl around the dent in the hood.' },
-  { image: hoodTop, file: 'hood-top', stage: 'After', focus: 'center 60%', caption: 'Even reflections across the panel', alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.' },
-  { image: hoodBeforeClose, file: 'before-close', stage: 'Before', focus: 'center 52%', caption: 'The dent up close', alt: 'Close view of the dent in the red hood before the repair, with dust on the paint around it.' },
-  { image: hoodClose, file: 'hood-close', stage: 'After', focus: 'center 60%', caption: 'The same panel up close', alt: 'Close view of the repaired red hood, smooth with unbroken sky reflections.' },
-  { image: hoodHeadOn, file: 'head-on', stage: 'After', focus: 'center', caption: 'Straight-on view of the finished hood', alt: 'Red Mazda CX-5 photographed head-on after the hood dent repair.' },
-  { image: hoodEdge, file: 'hood-edge', stage: 'After', focus: 'center 60%', caption: 'Hood edge and fender gap', alt: 'Close view of the repaired hood edge where it meets the fender, showing an even panel and gap.' },
+const glassMedia = '/jobs/window-repair';
+
+const jobs: Job[] = [
+  {
+    id: 'windshield',
+    tab: 'Windshield',
+    title: 'Cracked windshield replaced',
+    intro: 'This windshield came in with a large crack spreading across the driver’s line of sight. We removed the damaged glass and installed a new windshield.',
+    ratio: '4 / 3',
+    pair: [
+      { image: glassBefore4, href: `${glassMedia}/before4.webp`, stage: 'Before', caption: 'Crack spreading from the impact point', alt: 'View from the driver’s seat before the repair, with cracks radiating across the windshield from a single impact point.' },
+      { image: glassAfter1, href: `${glassMedia}/after1.webp`, stage: 'After', caption: 'Clear new glass from the driver’s seat', alt: 'View from the driver’s seat after the repair, looking out through the new, crack-free windshield at night.' },
+    ],
+    more: [
+      { image: glassBefore2, href: `${glassMedia}/before2.webp`, stage: 'Before', caption: 'The impact point from outside', alt: 'Outside view of the cracked windshield before the repair, with lines spreading out from the impact point.' },
+      { image: glassAfter2, href: `${glassMedia}/after2.webp`, stage: 'After', caption: 'New windshield installed', alt: 'Black SUV after the repair with its new windshield installed and tape holding the trim at the top edge.' },
+      { image: glassBefore1, href: `${glassMedia}/before1.webp`, stage: 'Before', caption: 'Damage across the driver side', alt: 'Outside view of the windshield before the repair, with cracks running across the driver side.' },
+      { image: glassBefore3, href: `${glassMedia}/before3.webp`, stage: 'Before', caption: 'Passenger-side view of the old glass', alt: 'Windshield before the repair seen from the passenger side, with trees reflected in the glass.' },
+    ],
+    note: 'Before and after photographed at the shop.',
+  },
+  {
+    id: 'brakes',
+    tab: 'Brakes',
+    title: 'Brake drag & overheating',
+    intro: 'A brake inspection traced uneven temperatures to seized calipers.',
+    ratio: '4 / 5',
+    pair: [
+      { image: before, href: `${brakeMedia}/before.webp`, stage: 'Before', reading: '396.9°F', caption: 'Thermal reading at the wheel', alt: 'Before repair: thermal camera at the wheel reads 396.9°F.' },
+      { image: after, href: `${brakeMedia}/after.webp`, stage: 'After', reading: '119.8°F', caption: 'Thermal reading at the wheel', alt: 'After repair: thermal camera at the wheel reads 119.8°F.' },
+    ],
+    more: [
+      { image: caliper, href: `${brakeMedia}/caliper-detail.webp`, caption: 'Brake caliper close-up', alt: 'Close-up of the brake caliper and pads during the brake inspection.' },
+      { image: brake, href: `${brakeMedia}/brake-detail.webp`, caption: 'A second look at the assembly', alt: 'Second view of the brake assembly and pads during the job.' },
+    ],
+    note: 'Actual readings photographed during this job.',
+  },
+  {
+    id: 'hood-dent',
+    tab: 'Hood dent',
+    title: 'Hood dent repair',
+    intro: 'A Mazda CX-5 came in with a dent in the middle of its hood.',
+    ratio: '4 / 3',
+    pair: [
+      { image: hoodBeforeFront, href: `${hoodMedia}/before-front.webp`, stage: 'Before', focus: 'center 48%', caption: 'Dent in the middle of the hood', alt: 'Red Mazda CX-5 before the repair, with a dent visible in the middle of its dusty hood.' },
+      { image: hoodFront, href: `${hoodMedia}/front.webp`, stage: 'After', caption: 'Hood and front end after repair', alt: 'Red Mazda CX-5 photographed from the front corner after the hood dent repair, with a smooth, even hood.' },
+    ],
+    more: [
+      { image: hoodBeforeReflection, href: `${hoodMedia}/before-reflection.webp`, stage: 'Before', focus: 'center 42%', caption: 'Reflection bending around the dent', alt: 'Before the repair: tree and sky reflections twist into a swirl around the dent in the hood.' },
+      { image: hoodTop, href: `${hoodMedia}/hood-top.webp`, stage: 'After', focus: 'center 60%', caption: 'Even reflections across the panel', alt: 'Looking down the repaired red hood toward the grille, with clean reflections across the panel.' },
+      { image: hoodBeforeClose, href: `${hoodMedia}/before-close.webp`, stage: 'Before', focus: 'center 52%', caption: 'The dent up close', alt: 'Close view of the dent in the red hood before the repair, with dust on the paint around it.' },
+      { image: hoodClose, href: `${hoodMedia}/hood-close.webp`, stage: 'After', focus: 'center 60%', caption: 'The same panel up close', alt: 'Close view of the repaired red hood, smooth with unbroken sky reflections.' },
+      { image: hoodHeadOn, href: `${hoodMedia}/head-on.webp`, stage: 'After', caption: 'Straight-on view of the finished hood', alt: 'Red Mazda CX-5 photographed head-on after the hood dent repair.' },
+      { image: hoodEdge, href: `${hoodMedia}/hood-edge.webp`, stage: 'After', focus: 'center 60%', caption: 'Hood edge and fender gap', alt: 'Close view of the repaired hood edge where it meets the fender, showing an even panel and gap.' },
+    ],
+    note: 'Before and after photographed in our lot.',
+  },
+  {
+    id: 'quarter-panel',
+    tab: 'Quarter panel',
+    title: 'Rear quarter panel dent',
+    intro: 'A Genesis sedan came in with a dented rear quarter panel and chipped paint beside the trunk lid.',
+    ratio: '4 / 5',
+    pair: [
+      { image: quarterBeforeSide, href: `${quarterMedia}/before-side.webp`, stage: 'Before', caption: 'Dent beside the trunk lid', alt: 'White Genesis sedan before the repair, with a deep dent in the rear quarter panel beside the trunk lid and chipped paint at the corner.' },
+      { image: quarterAfterSide, href: `${quarterMedia}/after-side.webp`, stage: 'After', caption: 'Smooth panel down to the tail light', alt: 'White Genesis sedan after the repair, with a smooth rear quarter panel running past the fuel door to the tail light.' },
+    ],
+    more: [
+      { image: quarterBeforeRear, href: `${quarterMedia}/before-rear.webp`, stage: 'Before', caption: 'Creased panel above the tail light', alt: 'White Genesis sedan before the repair, seen from behind, with the quarter panel creased above the tail light.' },
+      { image: quarterAfterPanel, href: `${quarterMedia}/after-panel.webp`, stage: 'After', caption: 'Repaired quarter panel and fuel door', alt: 'Close view of the repaired white quarter panel around the fuel door, with even paint above the rear wheel.' },
+    ],
+    note: 'Before and after photographed in our lot.',
+  },
+  {
+    id: 'workshop',
+    tab: 'Workshop',
+    title: 'Inside the workshop',
+    intro: 'A look at the bays and the work in progress.',
+    ratio: '3 / 4',
+    more: [
+      { image: engines, href: '/jobs/workshop/img-3187.webp', caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
+      { image: engineBay, href: '/jobs/workshop/img-3188.webp', caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
+      { image: exposedBrake, href: '/jobs/workshop/img-2923.webp', caption: 'A closer look at the brakes', alt: 'Brake caliper and rotor exposed with the wheel removed.' },
+    ],
+  },
 ];
-// White Genesis sedan rear quarter panel: damage on arrival beside the finished panel.
-const quarterPhotos = [
-  { image: quarterBeforeSide, file: 'before-side', stage: 'Before', caption: 'Dent beside the trunk lid', alt: 'White Genesis sedan before the repair, with a deep dent in the rear quarter panel beside the trunk lid and chipped paint at the corner.' },
-  { image: quarterAfterSide, file: 'after-side', stage: 'After', caption: 'Smooth panel down to the tail light', alt: 'White Genesis sedan after the repair, with a smooth rear quarter panel running past the fuel door to the tail light.' },
-  { image: quarterBeforeRear, file: 'before-rear', stage: 'Before', caption: 'Creased panel above the tail light', alt: 'White Genesis sedan before the repair, seen from behind, with the quarter panel creased above the tail light.' },
-  { image: quarterAfterPanel, file: 'after-panel', stage: 'After', caption: 'Repaired quarter panel and fuel door', alt: 'Close view of the repaired white quarter panel around the fuel door, with even paint above the rear wheel.' },
-];
-const workshopPhotos = [
-  { image: engines, file: 'img-3187', caption: 'Engines in the workshop', alt: 'Engine assemblies resting on pallets in the workshop.' },
-  { image: engineBay, file: 'img-3188', caption: 'Inside the engine bay', alt: 'Engine bay with the engine removed and the transmission visible.' },
-  { image: exposedBrake, file: 'img-2923', caption: 'A closer look at the brakes', alt: 'Brake caliper and rotor exposed with the wheel removed.' },
-];
+
 const workshopVideos = [
   { file: 'img-3189', caption: 'Engine bay walkthrough' },
   { file: 'img-2918', caption: 'Brake assembly close-up' },
 ];
+
+const tabThumb = (job: Job) => (job.pair ? job.pair[1] : job.more[0]);
+const openLabel = (photo: Photo) =>
+  `Open ${photo.stage ? `${photo.stage.toLowerCase()} photo: ` : ''}${photo.caption.toLowerCase()} (new tab)`;
 ---
 
 <section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
   <div class="container-shop">
     <div data-reveal class="jobs-heading">
       <h2 id="recent-jobs-title" class="font-display text-3xl font-bold sm:text-4xl">Recent work.</h2>
+      <p>Pick a job to see it before and after.</p>
     </div>
 
-    <article class="job-study" aria-labelledby="brake-job-title">
-      <div data-reveal class="job-story">
-        <h3 id="brake-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Brake drag &amp; overheating</h3>
-        <p class="job-intro">A brake inspection traced uneven temperatures to seized calipers.</p>
-      </div>
-
-      <div data-reveal="stagger" class="temperature-pair">
-        <figure>
-          <figcaption><span>Before</span><strong>396.9°F</strong></figcaption>
-          <a href={`${media}/before.webp`} target="_blank" rel="noopener" aria-label="Open before photo: thermal camera reading 396.9 degrees Fahrenheit (new tab)">
-            <Image src={before} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="Before repair: thermal camera at the wheel reads 396.9°F." width="1200" height="1600" loading="lazy" decoding="async" />
-          </a>
-        </figure>
-        <figure class="after-photo">
-          <figcaption><span>After</span><strong>119.8°F</strong></figcaption>
-          <a href={`${media}/after.webp`} target="_blank" rel="noopener" aria-label="Open after photo: thermal camera reading 119.8 degrees Fahrenheit (new tab)">
-            <Image src={after} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt="After repair: thermal camera at the wheel reads 119.8°F." width="1200" height="1600" loading="lazy" decoding="async" />
-          </a>
-        </figure>
-        <p class="photo-note">Actual readings photographed during this job.</p>
-      </div>
-
-      <details class="job-details">
-        <summary>Inspection notes &amp; footage <span aria-hidden="true">+</span></summary>
-        <div class="technician-notes">
-          <h4>What we found</h4>
-          <p>The customer reported shaking, possible brake overheating and one instance of stalling. We scanned the vehicle, cleared stored parking-brake codes linked to earlier low voltage, and road-tested it. The test did not reproduce the stalling or excessive shaking, and no warning lights were active.</p>
-          <p>Front and rear brake readings were <strong>316–327°F on the driver side</strong> and <strong>396–416°F on the passenger side</strong>, where seized calipers were causing brake drag.</p>
-          <h4>Recommended service</h4>
-          <ul>
-            <li><strong>Required:</strong> Replace both front calipers to correct binding.</li>
-            <li><strong>Recommended:</strong> Replace pads and rotors at all four wheels to address pulsation and promote even wear.</li>
-            <li><strong>Recommended:</strong> Clean and inspect the rear calipers; replacement was advised because they showed signs of drag.</li>
-          </ul>
-        </div>
-        <div class="inspection-grid">
-          <figure>
-            <a href={`${media}/caliper-detail.webp`} target="_blank" rel="noopener" aria-label="Open brake caliper close-up (new tab)">
-              <Image src={caliper} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 240px, (min-width: 640px) 30vw, 90vw" quality={75} alt="Close-up of the brake caliper and pads during the brake inspection." width="1200" height="1600" loading="lazy" decoding="async" />
-            </a>
-            <figcaption>Brake caliper close-up</figcaption>
-          </figure>
-          <figure>
-            <a href={`${media}/brake-detail.webp`} target="_blank" rel="noopener" aria-label="Open second brake assembly close-up (new tab)">
-              <Image src={brake} widths={[240, 400, 600, 800]} sizes="(min-width: 840px) 240px, (min-width: 640px) 30vw, 90vw" quality={75} alt="Second view of the brake assembly and pads during the job." width="1200" height="1600" loading="lazy" decoding="async" />
-            </a>
-            <figcaption>A second look at the assembly</figcaption>
-          </figure>
-          <figure>
-            <video controls muted playsinline preload="none" width="720" height="1280" poster={`${media}/video-poster.webp`} aria-label="Brake inspection video, no audio">
-              <source src={`${media}/inspection.mp4`} type="video/mp4" />
-              <a href={`${media}/inspection.mp4`}>Download the inspection video</a>.
-            </video>
-            <figcaption>Inspection footage · <a href={`${media}/inspection.mp4`} download>Download MP4</a></figcaption>
-          </figure>
-        </div>
-      </details>
-    </article>
-
-    <article class="job-study hood-study" aria-labelledby="hood-job-title">
-      <div data-reveal class="job-story">
-        <h3 id="hood-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Hood dent repair</h3>
-        <p class="job-intro">A Mazda CX-5 came in with a dent in the middle of its hood. The before photos sit beside the same views after the repair.</p>
-      </div>
-
-      <div data-reveal="stagger" class="hood-gallery">
-        {hoodPhotos.map((photo) => (
-          <figure>
-            <a href={`${hoodMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.stage.toLowerCase()} photo: ${photo.caption.toLowerCase()} (new tab)`}>
-              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} style={`object-position: ${photo.focus}`} loading="lazy" decoding="async" />
-            </a>
-            <figcaption><span class:list={[photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>{photo.caption}</figcaption>
-          </figure>
-        ))}
-        <p class="photo-note">Before and after photographed in our lot.</p>
-      </div>
-    </article>
-
-    <article class="job-study hood-study" aria-labelledby="quarter-job-title">
-      <div data-reveal class="job-story">
-        <h3 id="quarter-job-title" class="font-display text-2xl font-semibold sm:text-3xl">Rear quarter panel dent</h3>
-        <p class="job-intro">A Genesis sedan came in with a dented rear quarter panel and chipped paint beside the trunk lid. The before photos sit beside the finished panel.</p>
-      </div>
-
-      <div data-reveal="stagger" class="hood-gallery is-tall">
-        {quarterPhotos.map((photo) => (
-          <figure>
-            <a href={`${quarterMedia}/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.stage.toLowerCase()} photo: ${photo.caption.toLowerCase()} (new tab)`}>
-              <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 840px) 374px, 45vw" quality={75} alt={photo.alt} loading="lazy" decoding="async" />
-            </a>
-            <figcaption><span class:list={[photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>{photo.caption}</figcaption>
-          </figure>
-        ))}
-        <p class="photo-note">Before and after photographed in our lot.</p>
-      </div>
-    </article>
-
-    <div class="workshop-gallery" aria-labelledby="workshop-title">
-      <div data-reveal class="job-story">
-        <h3 id="workshop-title" class="font-display">Inside the workshop</h3>
-      </div>
-      <div data-reveal="stagger" class="workshop-photos">
-        {workshopPhotos.map((photo) => (
-          <figure>
-            <a href={`/jobs/workshop/${photo.file}.webp`} target="_blank" rel="noopener" aria-label={`Open ${photo.caption.toLowerCase()} photo (new tab)`}>
-              <Image src={photo.image} widths={[180, 320, 480, 640]} sizes="(min-width: 840px) 244px, 30vw" quality={72} alt={photo.alt} loading="lazy" decoding="async" />
-            </a>
-            <figcaption>{photo.caption}</figcaption>
-          </figure>
+    <div class="jobs" data-jobs data-reveal>
+      <div class="job-tabs" role="tablist" aria-label="Recent jobs">
+        {jobs.map((job, i) => (
+          <button
+            type="button"
+            role="tab"
+            id={`job-tab-${job.id}`}
+            aria-controls={`job-panel-${job.id}`}
+            aria-selected={i === 0 ? 'true' : 'false'}
+            tabindex={i === 0 ? 0 : -1}
+          >
+            <Image src={tabThumb(job).image} widths={[64, 96]} sizes="32px" quality={60} alt="" loading="lazy" decoding="async" />
+            <span>{job.tab}</span>
+          </button>
         ))}
       </div>
-      <details class="job-details">
-        <summary>Watch workshop videos <span aria-hidden="true">+</span></summary>
-        <div class="inspection-grid workshop-videos">
-          {workshopVideos.map((video) => (
-            <figure>
-              <video controls muted playsinline preload="none" width="720" height="1280" poster={`/jobs/workshop/${video.file}-poster.webp`} aria-label={`${video.caption}, no audio`}>
-                <source src={`/jobs/workshop/${video.file}-silent.mp4`} type="video/mp4" />
-                <a href={`/jobs/workshop/${video.file}-silent.mp4`}>Download the video</a>.
-              </video>
-              <figcaption>{video.caption} · <a href={`/jobs/workshop/${video.file}-silent.mp4`} download>Download MP4</a></figcaption>
-            </figure>
-          ))}
-        </div>
-      </details>
+
+      {jobs.map((job, i) => (
+        <article
+          class:list={["job-panel", job.ratio === "4 / 5" && "is-portrait"]}
+          role="tabpanel"
+          id={`job-panel-${job.id}`}
+          aria-labelledby={`job-tab-${job.id}`}
+          hidden={i !== 0}
+          style={`--pair-ratio: ${job.ratio}`}
+        >
+          <header class="job-story">
+            <h3 class="font-display">{job.title}</h3>
+            <p>{job.intro}</p>
+          </header>
+
+          {job.pair && (
+            <div class="job-pair">
+              {job.pair.map((photo) => (
+                <figure>
+                  <a href={photo.href} target="_blank" rel="noopener" aria-label={openLabel(photo)}>
+                    <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 900px) 420px, 46vw" quality={75} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
+                    <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>
+                  </a>
+                  <figcaption>
+                    {photo.reading ? (
+                      <strong class:list={['reading', photo.stage === 'Before' && 'is-before']}>{photo.reading}</strong>
+                    ) : null}
+                    {photo.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
+
+          {job.more.length > 0 && (
+            <div class:list={['job-more', !job.pair && 'is-only']}>
+              {job.pair && <p class="more-label">More photos from this job</p>}
+              <ul>
+                {job.more.map((photo) => (
+                  <li>
+                    <a href={photo.href} target="_blank" rel="noopener" aria-label={openLabel(photo)} title={photo.caption}>
+                      <Image src={photo.image} widths={[160, 240, 360]} sizes={job.pair ? '(min-width: 900px) 130px, 30vw' : '(min-width: 900px) 280px, 32vw'} quality={70} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
+                      {photo.stage && <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>}
+                    </a>
+                    {!job.pair && <p class="thumb-caption">{photo.caption}</p>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {job.id === 'brakes' && (
+            <details class="job-details">
+              <summary>Inspection notes &amp; footage <span aria-hidden="true">+</span></summary>
+              <div class="technician-notes">
+                <h4>What we found</h4>
+                <p>The customer reported shaking, possible brake overheating and one instance of stalling. We scanned the vehicle, cleared stored parking-brake codes linked to earlier low voltage, and road-tested it. The test did not reproduce the stalling or excessive shaking, and no warning lights were active.</p>
+                <p>Front and rear brake readings were <strong>316–327°F on the driver side</strong> and <strong>396–416°F on the passenger side</strong>, where seized calipers were causing brake drag.</p>
+                <h4>Recommended service</h4>
+                <ul>
+                  <li><strong>Required:</strong> Replace both front calipers to correct binding.</li>
+                  <li><strong>Recommended:</strong> Replace pads and rotors at all four wheels to address pulsation and promote even wear.</li>
+                  <li><strong>Recommended:</strong> Clean and inspect the rear calipers; replacement was advised because they showed signs of drag.</li>
+                </ul>
+              </div>
+              <div class="video-grid is-single">
+                <figure>
+                  <video controls muted playsinline preload="none" width="720" height="1280" poster={`${brakeMedia}/video-poster.webp`} aria-label="Brake inspection video, no audio">
+                    <source src={`${brakeMedia}/inspection.mp4`} type="video/mp4" />
+                    <a href={`${brakeMedia}/inspection.mp4`}>Download the inspection video</a>.
+                  </video>
+                  <figcaption>Inspection footage · <a href={`${brakeMedia}/inspection.mp4`} download>Download MP4</a></figcaption>
+                </figure>
+              </div>
+            </details>
+          )}
+
+          {job.id === 'workshop' && (
+            <details class="job-details">
+              <summary>Watch workshop videos <span aria-hidden="true">+</span></summary>
+              <div class="video-grid">
+                {workshopVideos.map((video) => (
+                  <figure>
+                    <video controls muted playsinline preload="none" width="720" height="1280" poster={`/jobs/workshop/${video.file}-poster.webp`} aria-label={`${video.caption}, no audio`}>
+                      <source src={`/jobs/workshop/${video.file}-silent.mp4`} type="video/mp4" />
+                      <a href={`/jobs/workshop/${video.file}-silent.mp4`}>Download the video</a>.
+                    </video>
+                    <figcaption>{video.caption} · <a href={`/jobs/workshop/${video.file}-silent.mp4`} download>Download MP4</a></figcaption>
+                  </figure>
+                ))}
+              </div>
+            </details>
+          )}
+
+          {job.note && <p class="photo-note">{job.note}</p>}
+        </article>
+      ))}
     </div>
   </div>
 </section>
+
+<script>
+  // Tabs: click or arrow keys switch the visible job. Panels are hidden on the
+  // server except the first, so the section loads at one job's height.
+  document.querySelectorAll<HTMLElement>('[data-jobs]').forEach((root) => {
+    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+
+    function select(tab: HTMLButtonElement, focus = false) {
+      tabs.forEach((t) => {
+        const active = t === tab;
+        t.setAttribute('aria-selected', String(active));
+        t.tabIndex = active ? 0 : -1;
+        const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
+        if (panel) panel.hidden = !active;
+      });
+      if (focus) tab.focus();
+      tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    }
+
+    tabs.forEach((tab, i) => {
+      tab.addEventListener('click', () => select(tab));
+      tab.addEventListener('keydown', (event) => {
+        const keys: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 };
+        if (!(event.key in keys)) return;
+        event.preventDefault();
+        select(tabs[(keys[event.key] + tabs.length) % tabs.length], true);
+      });
+    });
+  });
+</script>
 
 <style>
   .recent-work { padding-block: clamp(3.5rem, 7vw, 6rem); }
   .jobs-heading { text-align: center; }
   .jobs-heading h2 { font-size: clamp(2.25rem, 4vw, 3rem); line-height: 1.1; }
-  .job-study { width: 100%; max-width: 48rem; margin: 1.5rem auto 0; }
-  .job-story { text-align: center; }
-  .job-story h3 { font-size: clamp(1.125rem, 2.5vw, 1.375rem); font-weight: 500; letter-spacing: -.02em; }
-  .job-intro { margin-top: .5rem; color: var(--color-steel-700); font-size: 1rem; line-height: 1.6; }
-  .temperature-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
-  .temperature-pair figure { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--color-paper); }
-  .temperature-pair figure > a { display: block; overflow: hidden; }
-  .temperature-pair figcaption { order: 1; display: flex; align-items: center; justify-content: space-between; gap: .5rem; padding: 1.25rem; }
-  .temperature-pair figcaption span { color: var(--color-steel-700); font-size: .875rem; font-weight: 500; }
-  .temperature-pair figcaption strong { font-family: var(--font-display); font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.03em; line-height: 1.2; }
-  .temperature-pair figure:not(.after-photo) figcaption strong { color: #b42318; }
-  .after-photo figcaption strong { color: var(--color-success); }
+  .jobs-heading p { margin-top: .5rem; color: var(--color-steel-700); font-size: 1rem; }
+  /* --gutter mirrors .container-shop padding so the phone tab row can bleed edge to edge. */
+  .jobs { --gutter: 1.25rem; max-width: 54rem; margin: 2rem auto 0; }
+  @media (min-width: 640px) { .jobs { --gutter: 2rem; } }
   img { display: block; width: 100%; height: auto; }
-  .temperature-pair img { transition: transform .35s var(--ease-out-expo); }
-  .temperature-pair a:hover img { transform: scale(1.025); }
-  .photo-note { grid-column: 1 / -1; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
-  .hood-study { margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--color-steel-300); }
-  .hood-gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem; margin-top: 2rem; }
-  .hood-gallery figure { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--color-paper); }
-  .hood-gallery figure > a { display: block; overflow: hidden; }
-  .hood-gallery img { aspect-ratio: 4 / 3; object-fit: cover; transition: transform .35s var(--ease-out-expo); }
-  .hood-gallery.is-tall img { aspect-ratio: 3 / 4; }
-  .hood-gallery a:hover img { transform: scale(1.025); }
-  .hood-gallery figcaption { display: flex; align-items: center; gap: .625rem; padding: .875rem 1rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.5; }
-  .hood-gallery figcaption span { flex-shrink: 0; padding: .125rem .5rem; border-radius: 999px; background: color-mix(in srgb, var(--color-success) 14%, transparent); color: var(--color-success); font-size: .6875rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-  .hood-gallery figcaption span.is-before { background: color-mix(in srgb, #b42318 12%, transparent); color: #b42318; }
+
+  /* Tab row: wraps on desktop, scrolls sideways on phones. */
+  .job-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
+  .job-tabs button { display: inline-flex; align-items: center; gap: .5rem; flex-shrink: 0; min-height: 2.75rem; padding: .3rem .9rem .3rem .3rem; border: 1px solid var(--color-steel-300); border-radius: 999px; background: var(--color-surface); color: var(--color-ink); font-size: .875rem; font-weight: 600; cursor: pointer; transition: background-color .2s, border-color .2s, color .2s; }
+  .job-tabs button:hover { border-color: var(--color-steel-700); }
+  .job-tabs button[aria-selected='true'] { border-color: var(--color-ink); background: var(--color-ink); color: white; }
+  .job-tabs img { width: 2rem; height: 2rem; border-radius: 999px; object-fit: cover; }
+
+  .job-panel { margin-top: 1.75rem; padding: clamp(1rem, 3vw, 1.75rem); border-radius: calc(var(--radius-card) + .25rem); background: var(--color-paper); }
+  .job-panel:not([hidden]) { animation: panel-in .35s var(--ease-out-expo) both; }
+  @keyframes panel-in { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
+  .job-story { text-align: center; }
+  .job-story h3 { font-size: clamp(1.25rem, 2.6vw, 1.5rem); font-weight: 600; letter-spacing: -.02em; }
+  .job-story p { max-width: 38rem; margin: .4rem auto 0; color: var(--color-steel-700); font-size: .9375rem; line-height: 1.6; }
+
+  .job-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+  .job-pair figure { overflow: hidden; border-radius: var(--radius-card); background: var(--color-surface); }
+  .job-pair a, .job-more a { position: relative; display: block; overflow: hidden; }
+  .job-pair img { aspect-ratio: var(--pair-ratio); object-fit: cover; transition: transform .35s var(--ease-out-expo); }
+  /* Portrait pairs stay narrower so every tab lands at a similar height. */
+  .job-panel.is-portrait .job-pair { max-width: 36rem; margin-inline: auto; }
+  .job-pair a:hover img, .job-more a:hover img { transform: scale(1.03); }
+  .job-pair figcaption { display: flex; align-items: baseline; gap: .6rem; padding: .75rem 1rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.45; }
+  .reading { font-family: var(--font-display); font-size: clamp(1.25rem, 2.6vw, 1.625rem); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--color-success); }
+  .reading.is-before { color: #b42318; }
+
+  /* Before/After chip pinned to the photo corner. */
+  .stage { position: absolute; top: .625rem; left: .625rem; padding: .2rem .55rem; border-radius: 999px; background: var(--color-success); color: white; font-size: .6875rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 2px 6px rgb(0 0 0 / 25%); }
+  .stage.is-before { background: #b42318; }
+
+  .job-more { margin-top: 1.25rem; }
+  .more-label { margin-bottom: .625rem; text-align: center; color: var(--color-steel-700); font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+  .job-more ul { --cols: 6; --gap: .625rem; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
+  .job-more li { width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
+  .job-more li a { border-radius: .625rem; }
+  .job-more img { aspect-ratio: 1; object-fit: cover; transition: transform .35s var(--ease-out-expo); }
+  .job-more .stage { top: .35rem; left: .35rem; padding: .1rem .4rem; font-size: .5625rem; }
+  .job-more.is-only { margin-top: 1.5rem; }
+  .job-more.is-only ul { --cols: 3; --gap: 1rem; }
+  .job-more.is-only img { aspect-ratio: 3 / 4; }
+  .job-more.is-only li a { border-radius: var(--radius-card); }
+  .thumb-caption { margin-top: .5rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.45; }
+
+  .photo-note { margin-top: 1rem; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
+
   .job-details { margin-top: 1.25rem; }
-  .technician-notes { margin-top: 1.5rem; padding: clamp(1.25rem, 3vw, 2rem); border-radius: var(--radius-card); background: var(--color-paper); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
+  summary { width: fit-content; margin-inline: auto; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); background: var(--color-surface); font-size: .875rem; font-weight: 600; list-style: none; transition: border-color .2s; }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { border-color: var(--color-steel-700); }
+  summary span { font-size: 1.25rem; font-weight: 400; line-height: 1; }
+  details[open] summary span { transform: rotate(45deg); }
+  .technician-notes { margin-top: 1.25rem; padding: clamp(1.25rem, 3vw, 1.75rem); border-radius: var(--radius-card); background: var(--color-surface); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
   .technician-notes h4 { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
   .technician-notes h4:not(:first-child) { margin-top: 1.5rem; }
   .technician-notes p { margin-top: .75rem; }
   .technician-notes ul { margin-top: .75rem; padding-left: 1.25rem; list-style: disc; }
   .technician-notes li + li { margin-top: .5rem; }
-  .workshop-gallery { max-width: 48rem; margin: 3rem auto 0; padding-top: 2.5rem; border-top: 1px solid var(--color-steel-300); }
-  .workshop-photos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .workshop-photos a { display: block; }
-  .workshop-photos img { aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); }
-  .workshop-photos figcaption { margin-top: .65rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.5; }
-  summary { width: fit-content; margin-inline: auto; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); font-size: .875rem; font-weight: 600; list-style: none; transition: background-color .2s, border-color .2s; }
-  summary::-webkit-details-marker { display: none; }
-  summary:hover { background: var(--color-paper); border-color: var(--color-steel-700); }
-  summary span { font-size: 1.25rem; font-weight: 400; line-height: 1; }
-  details[open] summary span { transform: rotate(45deg); }
-  .inspection-grid { display: grid; gap: 1.5rem; padding-top: 2rem; }
-  .inspection-grid img, video { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: var(--radius-card); }
-  video { display: block; aspect-ratio: 9 / 16; height: auto; object-fit: contain; background: var(--color-ink); }
-  .inspection-grid figcaption { margin-top: .75rem; font-size: .875rem; color: var(--color-steel-700); }
-  .inspection-grid figcaption a { color: var(--color-accent-dark); text-decoration: underline; text-underline-offset: .2em; }
-  @media (min-width: 640px) {
-    .inspection-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .workshop-videos { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 30rem; margin: 1.25rem auto 0; }
+  .video-grid.is-single { grid-template-columns: minmax(0, 15rem); justify-content: center; }
+  video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; border-radius: var(--radius-card); background: var(--color-ink); }
+  .video-grid figcaption { margin-top: .6rem; font-size: .8125rem; color: var(--color-steel-700); }
+  .video-grid figcaption a { color: var(--color-accent-dark); text-decoration: underline; text-underline-offset: .2em; }
+
+  @media (max-width: 719px) {
+    .job-tabs { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin-inline: calc(var(--gutter, 1.25rem) * -1); padding: .125rem var(--gutter, 1.25rem) .375rem; scrollbar-width: none; scroll-snap-type: x proximity; }
+    .job-tabs::-webkit-scrollbar { display: none; }
+    .job-tabs button { scroll-snap-align: start; }
+    .job-panel { margin-top: 1rem; }
+    .job-pair { gap: .625rem; margin-top: 1.125rem; }
+    .job-pair figcaption { flex-direction: column; gap: .15rem; padding: .6rem .7rem; font-size: .75rem; }
+    .job-more ul { --cols: 4; --gap: .5rem; }
+    .job-more.is-only ul { --cols: 3; --gap: .625rem; }
+    .thumb-caption { font-size: .75rem; }
   }
-  @media (max-width: 479px) {
-    .temperature-pair { gap: .75rem; }
-    .temperature-pair figcaption { flex-direction: column; align-items: flex-start; padding: .875rem; }
-    .hood-gallery { gap: .75rem; }
-    .hood-gallery figcaption { flex-direction: column; align-items: flex-start; gap: .375rem; padding: .75rem; }
-    .workshop-photos { gap: .65rem; }
+  @media (prefers-reduced-motion: reduce) {
+    .job-panel:not([hidden]) { animation: none; }
+    .job-pair img, .job-more img { transition: none; }
+    .job-pair a:hover img, .job-more a:hover img { transform: none; }
   }
-  @media (prefers-reduced-motion: reduce) { .temperature-pair img, .hood-gallery img { transition: none; } .temperature-pair a:hover img, .hood-gallery a:hover img { transform: none; } }
 </style>
