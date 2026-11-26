@@ -27,11 +27,13 @@ import glassBefore4 from '../../assets/images/jobs/window-repair/before4.webp';
 import glassAfter1 from '../../assets/images/jobs/window-repair/after1.webp';
 import glassAfter2 from '../../assets/images/jobs/window-repair/after2.webp';
 
+
 /*
-  Recent work, one job at a time. A tab row picks the job; each panel leads
-  with one before/after pair and tucks the remaining photos into a thumbnail
-  strip, so the homepage never turns into a long photo scroll. Every photo
-  links to its full-size copy under /public/jobs/.
+  Recent work as a scroll story. Every job is a chapter stacked down the page;
+  as each one scrolls into view its title rises, the before photo slides in from
+  the left, the after from the right, and the extra photos pop up in turn. A
+  sticky rail on desktop tracks which job you are on. Every photo links to its
+  full-size copy under /public/jobs/ and opens in the on-page viewer.
 */
 
 type Stage = 'Before' | 'After';
@@ -151,131 +153,131 @@ const workshopVideos = [
   { file: 'img-2918', caption: 'Brake assembly close-up' },
 ];
 
-const tabThumb = (job: Job) => (job.pair ? job.pair[1] : job.more[0]);
 const openLabel = (photo: Photo) =>
   `View larger: ${photo.stage ? `${photo.stage.toLowerCase()}, ` : ''}${photo.caption.toLowerCase()}`;
+const pad = (n: number) => String(n).padStart(2, '0');
 ---
 
-<section id="recent-jobs" class="recent-work bg-surface" aria-labelledby="recent-jobs-title">
+<section id="recent-jobs" class="recent-work" aria-labelledby="recent-jobs-title">
   <div class="container-shop">
-    <div data-reveal class="jobs-heading">
-      <h2 id="recent-jobs-title" class="font-display text-3xl font-bold sm:text-4xl">Recent work.</h2>
-      <p>Pick a job to see it before and after.</p>
+    <div class="jobs-heading">
+      <p class="eyebrow">From our bays</p>
+      <h2 id="recent-jobs-title" class="font-display">Recent work.</h2>
+      <p class="lede">Real cars, real repairs. Keep scrolling to see each one before and after.</p>
     </div>
 
-    <div class="jobs" data-jobs data-reveal>
-      <div class="job-tabs" role="tablist" aria-label="Recent jobs">
+    <div class="flow" data-flow>
+      {/* Desktop chapter rail: sticks beside the jobs and tracks where you are. */}
+      <nav class="rail" aria-label="Jump to a job">
+        <ol>
+          {jobs.map((job, i) => (
+            <li>
+              <a href={`#job-${job.id}`} data-rail={job.id}>
+                <span class="rail-num">{pad(i + 1)}</span>
+                <span>{job.tab}</span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+
+      <div class="chapters">
         {jobs.map((job, i) => (
-          <button
-            type="button"
-            role="tab"
-            id={`job-tab-${job.id}`}
-            aria-controls={`job-panel-${job.id}`}
-            aria-selected={i === 0 ? 'true' : 'false'}
-            tabindex={i === 0 ? 0 : -1}
+          <article
+            class:list={['chapter', job.ratio === '4 / 5' && 'is-portrait', !job.pair && 'is-gallery']}
+            id={`job-${job.id}`}
+            data-chapter={job.id}
+            style={`--pair-ratio: ${job.ratio}`}
+            aria-labelledby={`job-title-${job.id}`}
           >
-            <Image src={tabThumb(job).image} widths={[64, 96]} sizes="32px" quality={60} alt="" loading="lazy" decoding="async" />
-            <span>{job.tab}</span>
-          </button>
-        ))}
-      </div>
+            <header class="chapter-head">
+              <p class="chapter-kicker"><span>{pad(i + 1)}</span> / {pad(jobs.length)} · {job.tab}</p>
+              <h3 id={`job-title-${job.id}`} class="font-display">{job.title}</h3>
+              <p>{job.intro}</p>
+            </header>
 
-      {jobs.map((job, i) => (
-        <article
-          class:list={["job-panel", job.ratio === "4 / 5" && "is-portrait"]}
-          role="tabpanel"
-          id={`job-panel-${job.id}`}
-          aria-labelledby={`job-tab-${job.id}`}
-          hidden={i !== 0}
-          style={`--pair-ratio: ${job.ratio}`}
-        >
-          <header class="job-story">
-            <h3 class="font-display">{job.title}</h3>
-            <p>{job.intro}</p>
-          </header>
-
-          {job.pair && (
-            <div class="job-pair">
-              {job.pair.map((photo) => (
-                <figure>
-                  <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)}>
-                    <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 900px) 420px, 46vw" quality={75} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
-                    <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>
-                  </a>
-                  <figcaption>
-                    {photo.reading ? (
-                      <strong class:list={['reading', photo.stage === 'Before' && 'is-before']}>{photo.reading}</strong>
-                    ) : null}
-                    {photo.caption}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
-          )}
-
-          {job.more.length > 0 && (
-            <div class:list={['job-more', !job.pair && 'is-only']}>
-              {job.pair && <p class="more-label">More photos from this job</p>}
-              <ul>
-                {job.more.map((photo) => (
-                  <li>
-                    <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)} title={photo.caption}>
-                      <Image src={photo.image} widths={[160, 240, 360]} sizes={job.pair ? '(min-width: 900px) 130px, 30vw' : '(min-width: 900px) 280px, 32vw'} quality={70} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
-                      {photo.stage && <span class:list={['stage', photo.stage === 'Before' && 'is-before']}>{photo.stage}</span>}
+            {job.pair && (
+              <div class="pair">
+                {job.pair.map((photo, p) => (
+                  <figure class:list={['pair-photo', p === 0 ? 'from-left' : 'from-right']}>
+                    <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)}>
+                      <Image src={photo.image} widths={[320, 480, 640, 800]} sizes="(min-width: 1024px) 340px, 46vw" quality={75} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
+                      <span class:list={['stage', photo.stage === 'After' && 'is-after']}>{photo.stage}</span>
                     </a>
-                    {!job.pair && <p class="thumb-caption">{photo.caption}</p>}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
-          {job.id === 'brakes' && (
-            <details class="job-details">
-              <summary>Inspection notes &amp; footage <span aria-hidden="true">+</span></summary>
-              <div class="technician-notes">
-                <h4>What we found</h4>
-                <p>The customer reported shaking, possible brake overheating and one instance of stalling. We scanned the vehicle, cleared stored parking-brake codes linked to earlier low voltage, and road-tested it. The test did not reproduce the stalling or excessive shaking, and no warning lights were active.</p>
-                <p>Front and rear brake readings were <strong>316–327°F on the driver side</strong> and <strong>396–416°F on the passenger side</strong>, where seized calipers were causing brake drag.</p>
-                <h4>Recommended service</h4>
-                <ul>
-                  <li><strong>Required:</strong> Replace both front calipers to correct binding.</li>
-                  <li><strong>Recommended:</strong> Replace pads and rotors at all four wheels to address pulsation and promote even wear.</li>
-                  <li><strong>Recommended:</strong> Clean and inspect the rear calipers; replacement was advised because they showed signs of drag.</li>
-                </ul>
-              </div>
-              <div class="video-grid is-single">
-                <figure>
-                  <video controls muted playsinline preload="none" width="720" height="1280" poster={`${brakeMedia}/video-poster.webp`} aria-label="Brake inspection video, no audio">
-                    <source src={`${brakeMedia}/inspection.mp4`} type="video/mp4" />
-                    <a href={`${brakeMedia}/inspection.mp4`}>Download the inspection video</a>.
-                  </video>
-                  <figcaption>Inspection footage · <a href={`${brakeMedia}/inspection.mp4`} download>Download MP4</a></figcaption>
-                </figure>
-              </div>
-            </details>
-          )}
-
-          {job.id === 'workshop' && (
-            <details class="job-details">
-              <summary>Watch workshop videos <span aria-hidden="true">+</span></summary>
-              <div class="video-grid">
-                {workshopVideos.map((video) => (
-                  <figure>
-                    <video controls muted playsinline preload="none" width="720" height="1280" poster={`/jobs/workshop/${video.file}-poster.webp`} aria-label={`${video.caption}, no audio`}>
-                      <source src={`/jobs/workshop/${video.file}-silent.mp4`} type="video/mp4" />
-                      <a href={`/jobs/workshop/${video.file}-silent.mp4`}>Download the video</a>.
-                    </video>
-                    <figcaption>{video.caption} · <a href={`/jobs/workshop/${video.file}-silent.mp4`} download>Download MP4</a></figcaption>
+                    <figcaption>
+                      {photo.reading && <strong class:list={['reading', photo.stage === 'After' && 'is-after']}>{photo.reading}</strong>}
+                      {photo.caption}
+                    </figcaption>
                   </figure>
                 ))}
+                <span class="pair-arrow" aria-hidden="true">→</span>
               </div>
-            </details>
-          )}
+            )}
 
-          {job.note && <p class="photo-note">{job.note}</p>}
-        </article>
-      ))}
+            {job.more.length > 0 && (
+              <div class="more">
+                {job.pair && <p class="more-label">More from this job</p>}
+                <ul>
+                  {job.more.map((photo, m) => (
+                    <li style={`--i: ${m}`}>
+                      <a href={photo.href} data-zoom data-caption={photo.caption} data-stage={photo.stage} aria-label={openLabel(photo)} title={photo.caption}>
+                        <Image src={photo.image} widths={[160, 240, 360, 480]} sizes={job.pair ? '(min-width: 1024px) 120px, 30vw' : '(min-width: 1024px) 230px, 32vw'} quality={70} alt={photo.alt} style={photo.focus ? `object-position: ${photo.focus}` : undefined} loading="lazy" decoding="async" />
+                        {photo.stage && <span class:list={['stage', photo.stage === 'After' && 'is-after']}>{photo.stage}</span>}
+                      </a>
+                      {!job.pair && <p class="thumb-caption">{photo.caption}</p>}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {job.id === 'brakes' && (
+              <details class="job-details">
+                <summary>Inspection notes &amp; footage <span aria-hidden="true">+</span></summary>
+                <div class="technician-notes">
+                  <h4>What we found</h4>
+                  <p>The customer reported shaking, possible brake overheating and one instance of stalling. We scanned the vehicle, cleared stored parking-brake codes linked to earlier low voltage, and road-tested it. The test did not reproduce the stalling or excessive shaking, and no warning lights were active.</p>
+                  <p>Front and rear brake readings were <strong>316–327°F on the driver side</strong> and <strong>396–416°F on the passenger side</strong>, where seized calipers were causing brake drag.</p>
+                  <h4>Recommended service</h4>
+                  <ul>
+                    <li><strong>Required:</strong> Replace both front calipers to correct binding.</li>
+                    <li><strong>Recommended:</strong> Replace pads and rotors at all four wheels to address pulsation and promote even wear.</li>
+                    <li><strong>Recommended:</strong> Clean and inspect the rear calipers; replacement was advised because they showed signs of drag.</li>
+                  </ul>
+                </div>
+                <div class="video-grid is-single">
+                  <figure>
+                    <video controls muted playsinline preload="none" width="720" height="1280" poster={`${brakeMedia}/video-poster.webp`} aria-label="Brake inspection video, no audio">
+                      <source src={`${brakeMedia}/inspection.mp4`} type="video/mp4" />
+                      <a href={`${brakeMedia}/inspection.mp4`}>Download the inspection video</a>.
+                    </video>
+                    <figcaption>Inspection footage · <a href={`${brakeMedia}/inspection.mp4`} download>Download MP4</a></figcaption>
+                  </figure>
+                </div>
+              </details>
+            )}
+
+            {job.id === 'workshop' && (
+              <details class="job-details">
+                <summary>Watch workshop videos <span aria-hidden="true">+</span></summary>
+                <div class="video-grid">
+                  {workshopVideos.map((video) => (
+                    <figure>
+                      <video controls muted playsinline preload="none" width="720" height="1280" poster={`/jobs/workshop/${video.file}-poster.webp`} aria-label={`${video.caption}, no audio`}>
+                        <source src={`/jobs/workshop/${video.file}-silent.mp4`} type="video/mp4" />
+                        <a href={`/jobs/workshop/${video.file}-silent.mp4`}>Download the video</a>.
+                      </video>
+                      <figcaption>{video.caption} · <a href={`/jobs/workshop/${video.file}-silent.mp4`} download>Download MP4</a></figcaption>
+                    </figure>
+                  ))}
+                </div>
+              </details>
+            )}
+
+            {job.note && <p class="photo-note">{job.note}</p>}
+          </article>
+        ))}
+      </div>
     </div>
   </div>
 
@@ -297,32 +299,48 @@ const openLabel = (photo: Photo) =>
 </section>
 
 <script>
-  // Tabs: click or arrow keys switch the visible job. Panels are hidden on the
-  // server except the first, so the section loads at one job's height.
-  document.querySelectorAll<HTMLElement>('[data-jobs]').forEach((root) => {
-    const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+  // Scroll story: each job "plays" once as it scrolls into view (title rises,
+  // before slides in from the left, after from the right, extra photos pop up).
+  // Content is visible by default; the hidden starting pose is only armed once
+  // this script runs, so a failed script never leaves the section blank.
+  document.querySelectorAll<HTMLElement>('[data-flow]').forEach((flow) => {
+    const chapters = Array.from(flow.querySelectorAll<HTMLElement>('[data-chapter]'));
+    const railLinks = new Map(
+      Array.from(flow.querySelectorAll<HTMLAnchorElement>('[data-rail]')).map((a) => [a.dataset.rail, a]),
+    );
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!('IntersectionObserver' in window)) return;
 
-    function select(tab: HTMLButtonElement, focus = false) {
-      tabs.forEach((t) => {
-        const active = t === tab;
-        t.setAttribute('aria-selected', String(active));
-        t.tabIndex = active ? 0 : -1;
-        const panel = document.getElementById(t.getAttribute('aria-controls') ?? '');
-        if (panel) panel.hidden = !active;
-      });
-      if (focus) tab.focus();
-      tab.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+    if (!reduceMotion) {
+      flow.classList.add('is-armed');
+      const play = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-in');
+            play.unobserve(entry.target);
+          });
+        },
+        { rootMargin: '0px 0px -18% 0px', threshold: 0.12 },
+      );
+      chapters.forEach((c) => play.observe(c));
     }
 
-    tabs.forEach((tab, i) => {
-      tab.addEventListener('click', () => select(tab));
-      tab.addEventListener('keydown', (event) => {
-        const keys: Record<string, number> = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: tabs.length - 1 };
-        if (!(event.key in keys)) return;
-        event.preventDefault();
-        select(tabs[(keys[event.key] + tabs.length) % tabs.length], true);
-      });
-    });
+    // Rail highlight: whichever chapter crosses the middle band of the screen.
+    const track = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const id = (entry.target as HTMLElement).dataset.chapter;
+          railLinks.forEach((link, key) => {
+            if (key === id) link.setAttribute('aria-current', 'step');
+            else link.removeAttribute('aria-current');
+          });
+        });
+      },
+      { rootMargin: '-45% 0px -50% 0px' },
+    );
+    chapters.forEach((c) => track.observe(c));
   });
 
   // Photo viewer: clicking a photo enlarges it in place. Arrows (buttons, keys
@@ -349,7 +367,7 @@ const openLabel = (photo: Photo) =>
       const label = link.dataset.stage ?? '';
       stage.textContent = label;
       stage.hidden = !label;
-      stage.classList.toggle('is-before', label === 'Before');
+      stage.classList.toggle('is-after', label === 'After');
       count.textContent = group.length > 1 ? `${index + 1} / ${group.length}` : '';
       prev.hidden = next.hidden = group.length < 2;
     }
@@ -357,8 +375,8 @@ const openLabel = (photo: Photo) =>
     document.querySelectorAll<HTMLAnchorElement>('[data-zoom]').forEach((link) => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
-        const panel = link.closest('.job-panel') ?? document;
-        group = Array.from(panel.querySelectorAll<HTMLAnchorElement>('[data-zoom]'));
+        const chapter = link.closest('.chapter') ?? document;
+        group = Array.from(chapter.querySelectorAll<HTMLAnchorElement>('[data-zoom]'));
         show(group.indexOf(link));
         viewer.showModal();
       });
@@ -387,98 +405,134 @@ const openLabel = (photo: Photo) =>
 </script>
 
 <style>
-  .recent-work { padding-block: clamp(3.5rem, 7vw, 6rem); }
-  .jobs-heading { text-align: center; }
-  .jobs-heading h2 { font-size: clamp(2.25rem, 4vw, 3rem); line-height: 1.1; }
-  .jobs-heading p { margin-top: .5rem; color: var(--color-steel-700); font-size: 1rem; }
-  /* --gutter mirrors .container-shop padding so the phone tab row can bleed edge to edge. */
-  .jobs { --gutter: 1.25rem; max-width: 54rem; margin: 2rem auto 0; }
-  @media (min-width: 640px) { .jobs { --gutter: 2rem; } }
+  .recent-work { padding-block: clamp(4rem, 8vw, 7rem); background: var(--color-surface); }
   img { display: block; width: 100%; height: auto; }
 
-  /* Tab row: wraps on desktop, scrolls sideways on phones. */
-  .job-tabs { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; }
-  .job-tabs button { display: inline-flex; align-items: center; gap: .5rem; flex-shrink: 0; min-height: 2.75rem; padding: .3rem .9rem .3rem .3rem; border: 1px solid var(--color-steel-300); border-radius: 999px; background: var(--color-surface); color: var(--color-ink); font-size: .875rem; font-weight: 600; cursor: pointer; transition: background-color .2s, border-color .2s, color .2s; }
-  .job-tabs button:hover { border-color: var(--color-steel-700); }
-  .job-tabs button[aria-selected='true'] { border-color: var(--color-ink); background: var(--color-ink); color: white; }
-  .job-tabs img { width: 2rem; height: 2rem; border-radius: 999px; object-fit: cover; }
+  /* Heading */
+  .jobs-heading { max-width: 40rem; margin-inline: auto; text-align: center; }
+  .eyebrow { color: var(--color-accent-dark); font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+  .jobs-heading h2 { margin-top: .5rem; font-size: clamp(2.5rem, 5vw, 3.75rem); font-weight: 700; line-height: 1.02; letter-spacing: -.035em; }
+  .lede { margin-top: .875rem; color: var(--color-steel-700); font-size: 1.0625rem; line-height: 1.55; }
 
-  .job-panel { margin-top: 1.75rem; padding: clamp(1rem, 3vw, 1.75rem); border-radius: calc(var(--radius-card) + .25rem); background: var(--color-paper); }
-  .job-panel:not([hidden]) { animation: panel-in .35s var(--ease-out-expo) both; }
-  @keyframes panel-in { from { opacity: 0; transform: translateY(.5rem); } to { opacity: 1; transform: none; } }
-  .job-story { text-align: center; }
-  .job-story h3 { font-size: clamp(1.25rem, 2.6vw, 1.5rem); font-weight: 600; letter-spacing: -.02em; }
-  .job-story p { max-width: 38rem; margin: .4rem auto 0; color: var(--color-steel-700); font-size: .9375rem; line-height: 1.6; }
+  /* Layout: sticky rail + chapters on desktop, chapters only on phones. */
+  .flow { max-width: 68rem; margin: clamp(2.5rem, 5vw, 4rem) auto 0; }
+  .rail { display: none; }
+  @media (min-width: 1024px) {
+    .flow { display: grid; grid-template-columns: 11rem minmax(0, 1fr); gap: 3.5rem; }
+    .rail { display: block; position: sticky; top: 7rem; align-self: start; }
+    .rail ol { position: relative; display: grid; gap: .25rem; padding-left: 1rem; border-left: 1px solid var(--color-steel-200); }
+    .rail a { position: relative; display: flex; align-items: baseline; gap: .75rem; padding: .5rem 0; color: var(--color-steel-500); font-size: .9375rem; font-weight: 600; transition: color .3s var(--ease-out-expo); }
+    .rail a::before { content: ''; position: absolute; left: calc(-1rem - 1px); top: .35rem; bottom: .35rem; width: 2px; background: var(--color-ink); transform: scaleY(0); transition: transform .4s var(--ease-out-expo); }
+    .rail a:hover { color: var(--color-ink); }
+    .rail a[aria-current] { color: var(--color-ink); }
+    .rail a[aria-current]::before { transform: scaleY(1); }
+    .rail-num { font-family: var(--font-display); font-size: .75rem; font-variant-numeric: tabular-nums; letter-spacing: .04em; }
+  }
 
-  .job-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.5rem; }
-  .job-pair figure { overflow: hidden; border-radius: var(--radius-card); background: var(--color-surface); }
-  .job-pair a, .job-more a { position: relative; display: block; overflow: hidden; }
-  .job-pair img { aspect-ratio: var(--pair-ratio); object-fit: cover; transition: transform .35s var(--ease-out-expo); }
-  /* Portrait pairs stay narrower so every tab lands at a similar height. */
-  .job-panel.is-portrait .job-pair { max-width: 36rem; margin-inline: auto; }
-  .job-pair a:hover img, .job-more a:hover img { transform: scale(1.03); }
-  .job-pair figcaption { display: flex; align-items: baseline; gap: .6rem; padding: .75rem 1rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.45; }
-  .reading { font-family: var(--font-display); font-size: clamp(1.25rem, 2.6vw, 1.625rem); font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--color-success); }
-  .reading.is-before { color: #b42318; }
+  /* Chapters */
+  .chapters { display: grid; gap: clamp(4.5rem, 10vw, 8rem); }
+  .chapter { scroll-margin-top: 6rem; }
+  .chapter-kicker { color: var(--color-steel-500); font-family: var(--font-display); font-size: .8125rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; font-variant-numeric: tabular-nums; }
+  .chapter-kicker span { color: var(--color-accent-dark); }
+  .chapter-head h3 { margin-top: .5rem; font-size: clamp(1.75rem, 3.6vw, 2.5rem); font-weight: 700; line-height: 1.08; letter-spacing: -.03em; }
+  .chapter-head > p:last-child { max-width: 36rem; margin-top: .75rem; color: var(--color-steel-700); font-size: 1rem; line-height: 1.6; }
 
-  /* Before/After chip pinned to the photo corner. */
-  .stage { position: absolute; top: .625rem; left: .625rem; padding: .2rem .55rem; border-radius: 999px; background: var(--color-success); color: white; font-size: .6875rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; box-shadow: 0 2px 6px rgb(0 0 0 / 25%); }
-  .stage.is-before { background: #b42318; }
+  /* Before/after pair, always side by side. */
+  .pair { position: relative; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(.625rem, 2vw, 1.25rem); margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+  .chapter.is-portrait .pair { max-width: 40rem; }
+  .pair-photo a, .more a { position: relative; display: block; overflow: hidden; border-radius: var(--radius-card); background: var(--color-steel-100); cursor: zoom-in; }
+  .pair-photo img { aspect-ratio: var(--pair-ratio); object-fit: cover; transition: transform .6s var(--ease-out-expo); }
+  .pair-photo a:hover img, .more a:hover img { transform: scale(1.04); }
+  .pair-photo figcaption { display: flex; align-items: baseline; gap: .6rem; margin-top: .75rem; color: var(--color-steel-700); font-size: .875rem; line-height: 1.45; }
+  .pair-arrow { position: absolute; top: calc(50% - 1.5rem); left: 50%; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; margin-left: -1.375rem; border: 4px solid var(--color-surface); border-radius: 999px; background: var(--color-ink); color: white; font-size: 1.125rem; font-weight: 700; z-index: 1; }
+  .reading { font-family: var(--font-display); font-size: clamp(1.25rem, 2.6vw, 1.75rem); font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--color-steel-500); }
+  .reading.is-after { color: var(--color-ink); }
 
-  .job-more { margin-top: 1.25rem; }
-  .more-label { margin-bottom: .625rem; text-align: center; color: var(--color-steel-700); font-size: .75rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-  .job-more ul { --cols: 6; --gap: .625rem; display: flex; flex-wrap: wrap; justify-content: center; gap: var(--gap); }
-  .job-more li { width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
-  .job-more li a { border-radius: .625rem; }
-  .job-more img { aspect-ratio: 1; object-fit: cover; transition: transform .35s var(--ease-out-expo); }
-  .job-more .stage { top: .35rem; left: .35rem; padding: .1rem .4rem; font-size: .5625rem; }
-  .job-more.is-only { margin-top: 1.5rem; }
-  .job-more.is-only ul { --cols: 3; --gap: 1rem; }
-  .job-more.is-only img { aspect-ratio: 3 / 4; }
-  .job-more.is-only li a { border-radius: var(--radius-card); }
-  .thumb-caption { margin-top: .5rem; color: var(--color-steel-700); font-size: .8125rem; line-height: 1.45; }
+  /* Stage chip: dark glass for Before, white for After. No red/green. */
+  .stage { position: absolute; top: .75rem; left: .75rem; padding: .3rem .7rem; border-radius: 999px; background: rgb(23 24 28 / 72%); color: white; font-size: .6875rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+  .stage.is-after { background: white; color: var(--color-ink); box-shadow: 0 2px 10px rgb(0 0 0 / 18%); }
 
-  .photo-note { margin-top: 1rem; text-align: center; color: var(--color-steel-700); font-size: .8125rem; }
+  /* More photos strip */
+  .more { margin-top: 1.5rem; }
+  .more-label { margin-bottom: .75rem; color: var(--color-steel-500); font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+  .more ul { --cols: 6; --gap: .625rem; display: flex; flex-wrap: wrap; gap: var(--gap); }
+  .more li { width: calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); }
+  .more a { border-radius: .75rem; }
+  .more img { aspect-ratio: 1; object-fit: cover; transition: transform .6s var(--ease-out-expo); }
+  .more .stage { top: .4rem; left: .4rem; padding: .15rem .45rem; font-size: .5625rem; }
+  .chapter.is-gallery .more { margin-top: clamp(1.5rem, 3vw, 2.25rem); }
+  .chapter.is-gallery .more ul { --cols: 3; --gap: 1rem; }
+  .chapter.is-gallery .more img { aspect-ratio: 3 / 4; }
+  .chapter.is-gallery .more a { border-radius: var(--radius-card); }
+  .thumb-caption { margin-top: .6rem; color: var(--color-steel-700); font-size: .875rem; line-height: 1.45; }
 
-  .job-details { margin-top: 1.25rem; }
-  summary { width: fit-content; margin-inline: auto; cursor: pointer; display: flex; justify-content: center; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); background: var(--color-surface); font-size: .875rem; font-weight: 600; list-style: none; transition: border-color .2s; }
+  .photo-note { margin-top: 1rem; color: var(--color-steel-500); font-size: .8125rem; }
+
+  /* Details (notes and videos) */
+  .job-details { margin-top: 1.5rem; }
+  summary { width: fit-content; cursor: pointer; display: flex; align-items: center; gap: .75rem; min-height: 3rem; padding: .65rem 1.25rem; border: 1px solid var(--color-steel-300); border-radius: var(--radius-control); background: var(--color-surface); font-size: .875rem; font-weight: 600; list-style: none; transition: border-color .2s; }
   summary::-webkit-details-marker { display: none; }
   summary:hover { border-color: var(--color-steel-700); }
-  summary span { font-size: 1.25rem; font-weight: 400; line-height: 1; }
+  summary span { font-size: 1.25rem; font-weight: 400; line-height: 1; transition: transform .2s; }
   details[open] summary span { transform: rotate(45deg); }
-  .technician-notes { margin-top: 1.25rem; padding: clamp(1.25rem, 3vw, 1.75rem); border-radius: var(--radius-card); background: var(--color-surface); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
+  .technician-notes { margin-top: 1.25rem; padding: clamp(1.25rem, 3vw, 1.75rem); border-radius: var(--radius-card); background: var(--color-paper); font-size: .9375rem; line-height: 1.7; color: var(--color-steel-700); }
   .technician-notes h4 { color: var(--color-ink); font-family: var(--font-display); font-size: 1rem; font-weight: 600; }
   .technician-notes h4:not(:first-child) { margin-top: 1.5rem; }
   .technician-notes p { margin-top: .75rem; }
   .technician-notes ul { margin-top: .75rem; padding-left: 1.25rem; list-style: disc; }
   .technician-notes li + li { margin-top: .5rem; }
-  .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 30rem; margin: 1.25rem auto 0; }
-  .video-grid.is-single { grid-template-columns: minmax(0, 15rem); justify-content: center; }
+  .video-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; max-width: 30rem; margin-top: 1.25rem; }
+  .video-grid.is-single { grid-template-columns: minmax(0, 15rem); }
   video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; border-radius: var(--radius-card); background: var(--color-ink); }
   .video-grid figcaption { margin-top: .6rem; font-size: .8125rem; color: var(--color-steel-700); }
   .video-grid figcaption a { color: var(--color-accent-dark); text-decoration: underline; text-underline-offset: .2em; }
 
   @media (max-width: 719px) {
-    .job-tabs { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; margin-inline: calc(var(--gutter, 1.25rem) * -1); padding: .125rem var(--gutter, 1.25rem) .375rem; scrollbar-width: none; scroll-snap-type: x proximity; }
-    .job-tabs::-webkit-scrollbar { display: none; }
-    .job-tabs button { scroll-snap-align: start; }
-    .job-panel { margin-top: 1rem; }
-    .job-pair { gap: .625rem; margin-top: 1.125rem; }
-    .job-pair figcaption { flex-direction: column; gap: .15rem; padding: .6rem .7rem; font-size: .75rem; }
-    .job-more ul { --cols: 4; --gap: .5rem; }
-    .job-more.is-only ul { --cols: 3; --gap: .625rem; }
+    .pair-photo figcaption { flex-direction: column; gap: .1rem; margin-top: .5rem; font-size: .75rem; }
+    .pair-arrow { width: 2.25rem; height: 2.25rem; margin-left: -1.125rem; top: calc(50% - 1.75rem); font-size: .9375rem; border-width: 3px; }
+    .stage { top: .5rem; left: .5rem; padding: .2rem .5rem; font-size: .5625rem; }
+    .more ul { --cols: 4; --gap: .5rem; }
+    .chapter.is-gallery .more ul { --cols: 3; --gap: .625rem; }
     .thumb-caption { font-size: .75rem; }
   }
+
+  /* ---------------------------------------------------------------
+     Scroll choreography. Only armed once the script runs (.is-armed),
+     and each chapter plays once when it enters view (.is-in).
+     --------------------------------------------------------------- */
+  .flow.is-armed .chapter-head > * { opacity: 0; transform: translateY(24px); }
+  .flow.is-armed .pair-photo { opacity: 0; }
+  .flow.is-armed .pair-photo.from-left { transform: translateX(-12%) rotate(-2deg); }
+  .flow.is-armed .pair-photo.from-right { transform: translateX(12%) rotate(2deg); }
+  .flow.is-armed .pair-photo img { transform: scale(1.12); }
+  .flow.is-armed .pair-arrow { opacity: 0; transform: scale(.4); }
+  .flow.is-armed .more-label, .flow.is-armed .more li, .flow.is-armed .photo-note, .flow.is-armed .job-details { opacity: 0; transform: translateY(20px) scale(.94); }
+
+  .flow.is-armed .chapter.is-in .chapter-head > * { opacity: 1; transform: none; transition: opacity .7s var(--ease-out-expo), transform .7s var(--ease-out-expo); }
+  .flow.is-armed .chapter.is-in .chapter-head > :nth-child(2) { transition-delay: .08s; }
+  .flow.is-armed .chapter.is-in .chapter-head > :nth-child(3) { transition-delay: .16s; }
+
+  .flow.is-armed .chapter.is-in .pair-photo { opacity: 1; transform: none; transition: opacity .8s var(--ease-out-expo) .25s, transform 1s var(--ease-out-expo) .25s; }
+  .flow.is-armed .chapter.is-in .pair-photo.from-right { transition-delay: .45s; }
+  .flow.is-armed .chapter.is-in .pair-photo img { transform: scale(1); transition: transform 1.4s var(--ease-out-expo) .25s; }
+  .flow.is-armed .chapter.is-in .pair-photo a:hover img { transform: scale(1.04); transition-duration: .6s; transition-delay: 0s; }
+  .flow.is-armed .chapter.is-in .pair-arrow { opacity: 1; transform: none; transition: opacity .4s ease .85s, transform .6s cubic-bezier(.34, 1.56, .64, 1) .85s; }
+
+  .flow.is-armed .chapter.is-in .more-label { opacity: 1; transform: none; transition: opacity .5s ease .8s, transform .6s var(--ease-out-expo) .8s; }
+  .flow.is-armed .chapter.is-in .more li { opacity: 1; transform: none; transition: opacity .5s ease, transform .7s cubic-bezier(.34, 1.4, .64, 1); transition-delay: calc(.9s + var(--i, 0) * 80ms); }
+  .flow.is-armed .chapter.is-gallery.is-in .more li { transition-delay: calc(.3s + var(--i, 0) * 120ms); }
+  .flow.is-armed .chapter.is-in .photo-note, .flow.is-armed .chapter.is-in .job-details { opacity: 1; transform: none; transition: opacity .6s ease 1.1s, transform .6s var(--ease-out-expo) 1.1s; }
+
   /* Photo viewer: fills the screen; the empty area around the photo is the
      click-to-close backdrop. */
-  .job-pair a, .job-more a { cursor: zoom-in; }
   .viewer { width: 100vw; max-width: none; height: 100dvh; max-height: none; margin: 0; padding: clamp(3.5rem, 6vw, 4.5rem) clamp(.75rem, 6vw, 5rem) 1.25rem; border: 0; background: rgb(10 11 14 / 96%); color: white; }
   .viewer::backdrop { background: rgb(10 11 14 / 60%); }
   .viewer[open] { display: flex; align-items: center; justify-content: center; animation: viewer-in .25s var(--ease-out-expo); }
   .viewer figure { display: flex; flex-direction: column; align-items: center; max-width: 100%; max-height: 100%; }
   .viewer img { width: auto; max-width: 100%; max-height: calc(100dvh - 9rem); border-radius: .75rem; object-fit: contain; box-shadow: 0 20px 60px rgb(0 0 0 / 50%); }
   .viewer figcaption { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem .75rem; margin-top: .875rem; font-size: .875rem; color: #e8e5e1; text-align: center; }
-  .viewer .stage { position: static; box-shadow: none; }
+  .viewer .stage { position: static; background: rgb(255 255 255 / 16%); }
+  .viewer .stage.is-after { background: white; color: var(--color-ink); }
   .viewer-count { color: #a3a5aa; font-variant-numeric: tabular-nums; }
   .viewer-btn { position: absolute; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 999px; background: rgb(255 255 255 / 12%); color: white; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background-color .2s; }
   .viewer-btn:hover { background: rgb(255 255 255 / 24%); }
@@ -499,8 +553,7 @@ const openLabel = (photo: Photo) =>
 
   @media (prefers-reduced-motion: reduce) {
     .viewer[open] { animation: none; }
-    .job-panel:not([hidden]) { animation: none; }
-    .job-pair img, .job-more img { transition: none; }
-    .job-pair a:hover img, .job-more a:hover img { transform: none; }
+    .pair-photo img, .more img, .rail a::before { transition: none; }
+    .pair-photo a:hover img, .more a:hover img { transform: none; }
   }
 </style>
