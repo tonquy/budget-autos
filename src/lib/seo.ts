@@ -279,18 +279,49 @@ export function serviceJsonLd(siteUrl: string, service: Service) {
   };
 }
 
+// Homepage FAQ, phrased the way people type these questions into Google
+// ("People also ask" style). Every answer uses only facts the shop has
+// confirmed elsewhere on the site - no prices, guarantees or policies invented.
+// Also emitted as FAQPage schema on the homepage.
 export const homeFaqs: FaqItem[] = [
   {
-    question: `Where is ${business.name} located?`,
-    answer: `${business.name} is at ${business.address.line1}, ${business.address.city}, ${business.address.state} ${business.address.zip}. We're open Monday-Friday 9:00 AM-5:00 PM, and Saturdays by appointment.`,
+    question: `Where is ${business.name} and what are your hours?`,
+    answer: `We're at ${business.address.line1}, ${business.address.city}, ${business.address.state} ${business.address.zip}. Open Monday-Friday 9:00 AM-5:00 PM, Saturdays by appointment only, and closed Sunday.`,
   },
   {
-    question: 'How do I reach the shop about a repair?',
-    answer: `Three ways: book an appointment online, text us at ${business.phoneDisplay}, or call the same number. Texting is usually fastest - send your name, your vehicle, what it's doing, and a photo if you have one. We reply with the next step, usually within the hour during shop hours.`,
+    question: 'Can I get a repair quote before bringing my car in?',
+    answer: `Yes, and it's free. Use the instant quote form or text ${business.phoneDisplay} with your vehicle, what it's doing, and a photo if you have one. You get a quote before any work starts, and estimates are based on the Mitchell 1 labor guide so the numbers come from an industry standard, not a guess.`,
   },
   {
-    question: `What auto repairs do you handle in ${business.address.city}?`,
-    answer:
-      'Engine diagnostics, maintenance and repair, brakes, suspension and alignment, electrical systems, presale inspections, and general repairs. If it isn’t listed, text us a photo anyway - we’ll tell you if we can help.',
+    question: 'How much does a check engine light diagnostic cost?',
+    answer: `It depends on the vehicle and the problem, so ask when you book. If you text us the code or a photo of the dash, we can often tell you what to expect before you come in. After the scan, we explain what we found in plain English before recommending any repair.`,
+  },
+  {
+    question: 'Do I need an appointment?',
+    answer: `Booking ahead is the best way to make sure a bay is ready for you. You can book online in a minute, text us, or call ${business.phoneDisplay}. Saturday visits are by appointment only.`,
+  },
+  {
+    question: 'Is it worth getting a second opinion on a car repair estimate?',
+    answer: 'Often, yes, especially on a big bill. Send us the estimate from another shop and we\'ll help you understand what was recommended, compare the scope, and talk through what actually needs attention first.',
+  },
+  {
+    question: 'Will you do any work without asking me first?',
+    answer: 'No. We explain the repair options and give you a quote first, and nothing gets ordered or repaired until you approve it.',
+  },
+  {
+    question: 'What makes and models do you work on?',
+    answer: `Most domestic and import cars, trucks and SUVs. We handle engine diagnostics, engine repair and maintenance, brakes, suspension and alignment, electrical problems, and presale inspections. If something is outside what we do, we'll tell you up front.`,
+  },
+  {
+    question: 'Can I get a rental car while my car is being repaired?',
+    answer: 'Yes. You can request a rental vehicle for $35 a day while your car is in the shop. Fill out the short rental form or ask when you drop off.',
+  },
+  {
+    question: 'Is Budget Autos Repair a licensed repair shop?',
+    answer: `Yes. We're a ${business.registration.label} (registration #${business.registration.number}), family-owned and repairing cars in ${business.address.city} since ${business.foundedYear}.`,
+  },
+  {
+    question: 'Do you offer a warranty on repairs?',
+    answer: 'Ask us for the written parts and labor terms for your specific repair before you approve the work. Coverage can depend on the part and the job.',
   },
 ];

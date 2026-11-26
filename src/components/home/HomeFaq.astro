@@ -10,26 +10,56 @@ interface Props {
 
 const {
   faqs = homeFaqs,
-  title = 'Questions before you come in.',
-  intro = 'Straight answers about location, quotes, and what we fix.',
+  title = 'Questions people ask us.',
+  intro = 'Straight answers about quotes, hours, and what we fix.',
 } = Astro.props;
 ---
 
-<section class="border-t border-black/5 bg-surface py-20 sm:py-28">
+{/* Accordion built on <details>: works without JavaScript, every answer stays
+    in the HTML for search engines, and the matching FAQPage schema is added
+    by the page that renders this. */}
+<section id="faq" class="faq border-t border-black/5 bg-surface py-20 sm:py-28" aria-labelledby="faq-title">
   <div data-reveal class="container-shop max-w-3xl">
-    <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+    <h2 id="faq-title" class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
       {title}
     </h2>
     <p class="mt-3 text-steel-700">
       {intro}
     </p>
-    <dl class="mt-10 divide-y divide-black/5">
+    <div class="faq-list mt-10">
       {faqs.map((faq) => (
-        <div class="py-5 first:pt-0 last:pb-0">
-          <dt class="font-display text-lg font-semibold text-ink">{faq.question}</dt>
-          <dd class="mt-2 leading-relaxed text-steel-700">{faq.answer}</dd>
-        </div>
+        <details>
+          <summary>
+            <span class="font-display">{faq.question}</span>
+            <span class="faq-icon" aria-hidden="true"></span>
+          </summary>
+          <p>{faq.answer}</p>
+        </details>
       ))}
-    </dl>
+    </div>
   </div>
 </section>
+
+<style>
+  .faq-list { border-top: 1px solid rgb(0 0 0 / 8%); }
+  details { border-bottom: 1px solid rgb(0 0 0 / 8%); }
+  summary { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; padding: 1.25rem 0; color: var(--color-ink); font-size: 1.0625rem; font-weight: 600; line-height: 1.4; list-style: none; cursor: pointer; }
+  summary::-webkit-details-marker { display: none; }
+  summary:hover { color: var(--color-accent-dark); }
+  .faq-icon { position: relative; flex-shrink: 0; width: 2rem; height: 2rem; border: 1px solid var(--color-steel-300); border-radius: 999px; transition: background-color .2s, border-color .2s, transform .3s var(--ease-out-expo); }
+  .faq-icon::before, .faq-icon::after { content: ''; position: absolute; top: 50%; left: 50%; width: .75rem; height: 1.5px; margin: -.75px 0 0 -.375rem; background: currentColor; }
+  .faq-icon::after { transform: rotate(90deg); transition: transform .3s var(--ease-out-expo); }
+  details[open] .faq-icon { background: var(--color-ink); border-color: var(--color-ink); color: white; }
+  details[open] .faq-icon::after { transform: rotate(0deg); }
+  details p { max-width: 42rem; padding: 0 3rem 1.5rem 0; color: var(--color-steel-700); line-height: 1.7; }
+  details[open] p { animation: faq-open .35s var(--ease-out-expo); }
+  @keyframes faq-open { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 639px) {
+    summary { font-size: 1rem; }
+    details p { padding-right: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    details[open] p { animation: none; }
+    .faq-icon, .faq-icon::after { transition: none; }
+  }
+</style>
